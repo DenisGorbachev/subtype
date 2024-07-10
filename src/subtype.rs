@@ -1,24 +1,27 @@
 #[macro_export]
 macro_rules! define_subtype {
     () => {
+        $crate::define_subtype!(());
+    };
+    (($($meta:meta),*)) => {
         use $crate::traits::transform::Transform;
 
         #[derive(Ord, PartialOrd, Eq, PartialEq, Hash, Clone, Copy, Debug)]
-        #[cfg_attr(feature = "derive_more", derive(derive_more::Deref, derive_more::From, derive_more::Into, derive_more::AsRef))]
-        #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-        #[cfg_attr(feature = "serde", serde(transparent))]
+        #[derive(derive_more::Deref, derive_more::From, derive_more::Into, derive_more::AsRef)]
+        $(#[$meta])*
         #[repr(transparent)]
         pub struct Subtype<Value, Transformer: Transform<Value>> {
             #[deref]
+            #[as_ref]
             value: Value,
-            phantom: PhantomData<Transformer>,
+            phantom: std::marker::PhantomData<Transformer>,
         }
 
         impl<Value, Transformer: Transform<Value>> Subtype<Value, Transformer> {
             pub fn new(value: impl Into<Value>) -> Result<Self, <Transformer as Transform<Value>>::Error> {
                 Ok(Self {
                     value: Transformer::transform(value.into())?,
-                    phantom: PhantomData,
+                    phantom: std::marker::PhantomData,
                 })
             }
 
@@ -38,5 +41,21 @@ macro_rules! define_subtype {
                 Ok(())
             }
         }
+
+        // impl<Value, Transformer: Transform<Value>> TryFrom<Value> for Subtype<Value, Transformer> {
+        //     type Error = <Transformer as Transform<Value>>::Error;
+        //
+        //     fn try_from(value: Value) -> Result<Self, Self::Error> {
+        //         Self::new(value)
+        //     }
+        // }
+        //
+        // impl<'a, Value: Clone, Transformer: Transform<Value>> TryFrom<&'a Value> for Subtype<Value, Transformer> {
+        //     type Error = <Transformer as Transform<Value>>::Error;
+        //
+        //     fn try_from(value: &'a Value) -> Result<Self, Self::Error> {
+        //         Self::new(value.clone())
+        //     }
+        // }
     };
 }
