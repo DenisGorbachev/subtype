@@ -1,5 +1,4 @@
 use crate::traits::check::Check;
-use crate::traits::transform::Transform;
 use crate::{impl_transform_as_validate, impl_validate_as_check};
 
 #[derive(Eq, PartialEq, Hash, Clone, Copy, Debug)]

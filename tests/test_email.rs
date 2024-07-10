@@ -1,3 +1,6 @@
-use subtype::define_subtype;
+#[allow(dead_code)]
+pub struct Email(String);
 
-define_subtype!();
+// impl_new!(Email, String, NonEmpty);
+
+fn main() {}

@@ -1,11 +1,24 @@
 #[macro_export]
-macro_rules! define_subtype {
-    () => {
-        $crate::define_subtype!(());
-    };
-    (($($meta:meta),*)) => {
-        use $crate::traits::transform::Transform;
+macro_rules! impl_new {
+    ($newtype:ty, $oldtype:ty, $transformer:ty) => {
+        impl $newtype {
+            pub fn new(value: impl Into<$oldtype>) -> Result<Self, <$transformer as $crate::traits::transform::Transform<$oldtype>>::Error> {
+                let value = $crate::traits::transform::Transform::<$transformer>::transform(value.into())?;
+                Ok(Self(value))
+            }
 
+            // pub fn set(&mut self, value: impl Into<Value>) -> Result<(), <Transformer as Transform<Value>>::Error> {
+            //     let value = Transformer::transform(value.into())?;
+            //     self.value = value;
+            //     Ok(())
+            // }
+        }
+    };
+}
+
+#[macro_export]
+macro_rules! impl_try_from {
+    (($($meta:meta),*)) => {
         #[derive(Ord, PartialOrd, Eq, PartialEq, Hash, Clone, Copy, Debug)]
         #[derive(derive_more::Deref, derive_more::From, derive_more::Into, derive_more::AsRef)]
         $(#[$meta])*

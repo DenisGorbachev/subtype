@@ -6,15 +6,21 @@ pub trait Validate<Value> {
 
 #[macro_export]
 macro_rules! impl_validate_as_check {
-    ($checker:ty) => {
-        impl<Value> $crate::traits::validate::Validate<Value> for $checker {
-            type Error = $crate::validation_error::ValidationError<$checker>;
+    ($checker:ident) => {
+        $crate::impl_validate_as_check!($checker, <>);
+    };
+    ($checker:ident, <$($generics:ident),*>) => {
+        $crate::impl_validate_as_check!($checker, <$($generics),*>, where);
+    };
+    ($checker:ident, <$($generics:ident),*>, where $($where_clause:tt)*) => {
+        impl<Value, $($generics),*> $crate::traits::validate::Validate<Value> for $checker<$($generics),*> where $($where_clause)* {
+            type Error = $crate::validation_error::ValidationError<$checker<$($generics),*>>;
 
             fn validate(value: &Value) -> Option<Self::Error> {
-                if <$checker as $crate::traits::check::Check<Value>>::check(value) {
+                if <$checker<$($generics),*> as $crate::traits::check::Check<Value>>::check(value) {
                     None
                 } else {
-                    Some($crate::validation_error::ValidationError::<$checker>::new())
+                    Some($crate::validation_error::ValidationError::<$checker<$($generics),*>>::new())
                 }
             }
         }

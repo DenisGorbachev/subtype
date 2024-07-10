@@ -8,17 +8,17 @@ pub struct ValidationError<Checker> {
     phantom: PhantomData<Checker>,
 }
 
-impl<Checker> Default for ValidationError<Checker> {
-    fn default() -> Self {
-        Self::new()
-    }
-}
-
 impl<Checker> ValidationError<Checker> {
     pub fn new() -> Self {
         Self {
             phantom: PhantomData,
         }
+    }
+}
+
+impl<Checker> Default for ValidationError<Checker> {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
