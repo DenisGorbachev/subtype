@@ -1,8 +1,9 @@
 #![cfg(feature = "num-traits")]
 
 use crate::traits::check::Check;
-use crate::{impl_transform_as_validate, impl_validate_as_check};
+use crate::{transform_as_validate, validate_as_check};
 use num_traits::Zero;
+use std::fmt::Debug;
 
 #[derive(Eq, PartialEq, Hash, Clone, Copy, Debug)]
 pub struct NonZero;
@@ -13,6 +14,6 @@ impl<V: Zero> Check<V> for NonZero {
     }
 }
 
-impl_validate_as_check!(NonZero, <>, where Value: Zero);
+validate_as_check!(impl<V> Validate<V> for NonZero where V: Zero);
 
-impl_transform_as_validate!(NonZero, <>, where Value: Zero);
+transform_as_validate!(impl<V> Transform<V> for NonZero where V: Zero);

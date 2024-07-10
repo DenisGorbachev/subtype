@@ -1,17 +1,21 @@
 #[macro_export]
 macro_rules! impl_new {
-    ($newtype:ty, $oldtype:ty, $transformer:ty) => {
-        impl $newtype {
+    ($transformer:ty, $oldtype:ty, impl$(<$($generics:tt),*>)? for $newtype:ty $(where $($where_clause:tt)*)?) => {
+        impl$(<$($generics),*>)? $newtype $(where $($where_clause)*)? {
             pub fn new(value: impl Into<$oldtype>) -> Result<Self, <$transformer as $crate::traits::transform::Transform<$oldtype>>::Error> {
-                let value = $crate::traits::transform::Transform::<$transformer>::transform(value.into())?;
+                let value = <$transformer as $crate::traits::transform::Transform<$oldtype>>::transform(value.into())?;
                 Ok(Self(value))
             }
 
-            // pub fn set(&mut self, value: impl Into<Value>) -> Result<(), <Transformer as Transform<Value>>::Error> {
-            //     let value = Transformer::transform(value.into())?;
-            //     self.value = value;
-            //     Ok(())
-            // }
+            pub fn set(&mut self, value: impl Into<$oldtype>) -> Result<(), <$transformer as $crate::traits::transform::Transform<$oldtype>>::Error> {
+                let value = <$transformer as $crate::traits::transform::Transform<$oldtype>>::transform(value.into())?;
+                self.0 = value;
+                Ok(())
+            }
+
+            // pub fn mut(&mut self, f: impl FnOnce(&mut $oldtype))
+
+            // try_mut
         }
     };
 }

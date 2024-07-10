@@ -4,11 +4,11 @@ use std::marker::PhantomData;
 use derive_more::Error;
 
 #[derive(Error, Eq, PartialEq, Hash, Clone, Copy, Debug)]
-pub struct ValidationError<Checker> {
-    phantom: PhantomData<Checker>,
+pub struct ValidationError<Validator> {
+    phantom: PhantomData<Validator>,
 }
 
-impl<Checker> ValidationError<Checker> {
+impl<Validator> ValidationError<Validator> {
     pub fn new() -> Self {
         Self {
             phantom: PhantomData,
@@ -16,7 +16,7 @@ impl<Checker> ValidationError<Checker> {
     }
 }
 
-impl<Checker> Default for ValidationError<Checker> {
+impl<Validator> Default for ValidationError<Validator> {
     fn default() -> Self {
         Self::new()
     }

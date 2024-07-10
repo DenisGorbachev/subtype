@@ -5,19 +5,13 @@ pub trait Transform<Value> {
 }
 
 #[macro_export]
-macro_rules! impl_transform_as_validate {
-    ($validator:ident) => {
-        $crate::impl_transform_as_validate!($validator, <>);
-    };
-    ($validator:ident, <$($generics:ident),*>) => {
-        $crate::impl_transform_as_validate!($validator, <$($generics),*>, where);
-    };
-    ($validator:ident, <$($generics:ident),*>, where $($where_clause:tt)*) => {
-        impl<Value, $($generics),*> $crate::traits::transform::Transform<Value> for $validator<$($generics),*> where $($where_clause)* {
-            type Error = <$validator<$($generics),*> as $crate::traits::validate::Validate<Value>>::Error;
+macro_rules! transform_as_validate {
+    (impl$(<$($generics:tt),*>)? Transform<$target:ty> for $validator:ty $(where $($where_clause:tt)*)?) => {
+        impl<$($($generics),*)*> $crate::traits::transform::Transform<$target> for $validator where $($($where_clause)*)* {
+            type Error = <$validator as $crate::traits::validate::Validate<$target>>::Error;
 
-            fn transform(value: Value) -> Result<Value, Self::Error> {
-                match <$validator<$($generics),*> as $crate::traits::validate::Validate<Value>>::validate(&value) {
+            fn transform(value: $target) -> Result<$target, Self::Error> {
+                match <$validator as $crate::traits::validate::Validate<$target>>::validate(&value) {
                     None => Ok(value),
                     Some(error) => Err(error),
                 }
