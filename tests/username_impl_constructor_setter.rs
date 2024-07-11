@@ -10,8 +10,8 @@ pub mod macro_name_scope;
 pub struct Username(String);
 
 impl_self_constructor_setter_with_validation!(impl for Username, NonEmpty, String, tuple, value, new, set);
-impl_try_from_own!(impl  TryFrom <   String > for Username , < NonEmpty as  Transform < String >> :: Error , new );
-impl_try_from_ref!( impl < 'a > TryFrom < & 'a String > for Username , < NonEmpty as  Transform < String >> :: Error , new );
+impl_try_from_own!(impl TryFrom<String> for Username, <NonEmpty as Transform<String>>::Error, new);
+impl_try_from_ref!(impl TryFrom<&String> for Username, <NonEmpty as Transform<String>>::Error, new);
 
 fn main() {
     assert_eq!(Username::new(""), Err(ValidationError::<NonEmpty>::new()));

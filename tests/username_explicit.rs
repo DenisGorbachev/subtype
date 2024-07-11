@@ -12,8 +12,8 @@ impl Username {
     setter_with_validation!(pub fn set, NonEmpty, String, tuple, value);
 }
 impl_try_from_own!(impl TryFrom<String> for Username, <NonEmpty as Transform<String>>::Error, new);
-impl_try_from_ref!(impl<'a> TryFrom<&'a String> for Username, <NonEmpty as Transform<String>>::Error, new, Clone::clone);
-impl_try_from_ref!(impl<'a> TryFrom<&'a str> for Username, <NonEmpty as Transform<String>>::Error, new);
+impl_try_from_ref!(impl TryFrom<&String> for Username, <NonEmpty as Transform<String>>::Error, new, Clone::clone);
+impl_try_from_ref!(impl TryFrom<&str> for Username, <NonEmpty as Transform<String>>::Error, new);
 
 fn main() {
     assert_eq!(Username::new(""), Err(ValidationError::<NonEmpty>::new()));
