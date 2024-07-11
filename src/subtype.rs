@@ -64,7 +64,7 @@ macro_rules! newtype {
         $(#[$meta])*
         $visibility struct $newtype$(<$($generics),*>)?($oldtype) $(where $($where_clause)*)?;
 
-        $crate::impl_self_constructor_setter_without_validation!(impl$(<$($generics),*>)? for $newtype $(where ($($where_clause)*))?, $oldtype, tuple, value);
+        $crate::impl_self_constructor_setter_without_validation!(impl$(<$($generics),*>)? for $newtype $(where ($($where_clause)*))?, $oldtype, tuple, value, new, set);
     };
     ($(#[$meta:meta])* $visibility:vis struct $newtype:ident$(<$($generics:tt),*>)? $(where ($($where_clause:tt)*))? { $field:ident: $oldtype:ty $(,)? }) => {
         $(#[$meta])*
@@ -72,7 +72,7 @@ macro_rules! newtype {
             $field: $oldtype
         }
 
-        $crate::impl_self_constructor_setter_without_validation!(impl$(<$($generics),*>)? for $newtype $(where ($($where_clause)*))?, $oldtype, regular, $field);
+        $crate::impl_self_constructor_setter_without_validation!(impl$(<$($generics),*>)? for $newtype $(where ($($where_clause)*))?, $oldtype, regular, $field, new, set);
     };
 }
 
@@ -95,28 +95,37 @@ macro_rules! newtype_derive_auto {
 #[macro_export]
 macro_rules! impl_all_with_validation {
     (impl$(<$($generics:tt),*>)? for $newtype:ty $(where ($($where_clause:tt)*))?, $transformer:ty, $oldtype:ty, $style:ident, $field:ident) => {
-        $crate::impl_self_constructor_setter_with_validation!(impl$(<$($generics),*>)? for $newtype $(where ($($where_clause)*))?, $transformer, $oldtype, $style, $field);
+        $crate::impl_self_constructor_setter_with_validation!(impl$(<$($generics),*>)? for $newtype $(where ($($where_clause)*))?, $transformer, $oldtype, $style, $field, new, set);
         $crate::impl_try_from_own!(impl$(<$($generics),*>)? TryFrom<$oldtype> for $newtype $(where ($($where_clause)*))?, <$transformer as $crate::traits::transform::Transform<$oldtype>>::Error, new);
-        $crate::impl_try_from_ref_clone!(impl<'a $(, $($generics),*)?> TryFrom<&'a $oldtype> for $newtype $(where ($($where_clause)*))?, <$transformer as $crate::traits::transform::Transform<$oldtype>>::Error, new);
+        $crate::impl_try_from_ref!(impl<'a $(, $($generics),*)?> TryFrom<&'a $oldtype> for $newtype $(where ($($where_clause)*))?, <$transformer as $crate::traits::transform::Transform<$oldtype>>::Error, new, Clone::clone);
+    };
+}
+
+#[macro_export]
+macro_rules! impl_all_without_validation {
+    (impl$(<$($generics:tt),*>)? for $newtype:ty $(where ($($where_clause:tt)*))?, $transformer:ty, $oldtype:ty, $style:ident, $field:ident) => {
+        $crate::impl_self_constructor_setter_without_validation!(impl$(<$($generics),*>)? for $newtype $(where ($($where_clause)*))?, $transformer, $oldtype, $style, $field, new, set);
+        $crate::impl_from_own!(impl$(<$($generics),*>)? From<$oldtype> for $newtype $(where ($($where_clause)*))?, new);
+        $crate::impl_from_ref!(impl<'a $(, $($generics),*)?> From<&'a $oldtype> for $newtype $(where ($($where_clause)*))?, new, Clone::clone);
     };
 }
 
 #[macro_export]
 macro_rules! impl_self_constructor_setter_with_validation {
-    (impl$(<$($generics:tt),*>)? for $newtype:ty $(where ($($where_clause:tt)*))?, $transformer:ty, $oldtype:ty, $style:ident, $field:ident) => {
+    (impl$(<$($generics:tt),*>)? for $newtype:ty $(where ($($where_clause:tt)*))?, $transformer:ty, $oldtype:ty, $style:ident, $field:ident, $constructor_method:ident, $setter_method:ident) => {
         impl$(<$($generics),*>)? $newtype $(where ($($where_clause)*))? {
-            $crate::constructor_with_validation!(pub fn new, $transformer, $oldtype, $style, $field);
-            $crate::setter_with_validation!(pub fn set, $transformer, $oldtype, $style, $field);
+            $crate::constructor_with_validation!(pub fn $constructor_method, $transformer, $oldtype, $style, $field);
+            $crate::setter_with_validation!(pub fn $setter_method, $transformer, $oldtype, $style, $field);
         }
     }
 }
 
 #[macro_export]
 macro_rules! impl_self_constructor_setter_without_validation {
-    (impl$(<$($generics:tt),*>)? for $newtype:ty $(where ($($where_clause:tt)*))?, $oldtype:ty, $style:ident, $field:ident) => {
+    (impl$(<$($generics:tt),*>)? for $newtype:ty $(where ($($where_clause:tt)*))?, $oldtype:ty, $style:ident, $field:ident, $constructor_method:ident, $setter_method:ident) => {
         impl$(<$($generics),*>)? $newtype $(where ($($where_clause)*))? {
-            $crate::constructor_without_validation!(pub fn new, $oldtype, $style, $field);
-            $crate::setter_without_validation!(pub fn set, $oldtype, $style, $field);
+            $crate::constructor_without_validation!(pub fn $constructor_method, $oldtype, $style, $field);
+            $crate::setter_without_validation!(pub fn $setter_method, $oldtype, $style, $field);
         }
     }
 }
@@ -176,13 +185,39 @@ macro_rules! impl_try_from_own {
 }
 
 #[macro_export]
-macro_rules! impl_try_from_ref_clone {
+macro_rules! impl_try_from_ref {
     (impl<'a $(, $($generics:tt),*)?> TryFrom<&'a $oldtype:ty> for $newtype:ty $(where ($($where_clause:tt)*))?, $error:ty, $method:ident $(, $wrapper:expr)?) => {
         impl<'a $(, $($generics),*)?> TryFrom<&'a $oldtype> for $newtype $(where $($where_clause)*)? {
             type Error = $error;
 
             fn try_from(value: &'a $oldtype) -> Result<Self, Self::Error> {
-                Self::$method(value.clone())
+                Self::$method($($wrapper)?(value))
+            }
+        }
+    };
+}
+
+#[macro_export]
+macro_rules! impl_from_own {
+    (impl$(<$($generics:tt),*>)? From<$oldtype:ty> for $newtype:ty $(where ($($where_clause:tt)*))?, $method:ident $(, $wrapper:expr)?) => {
+        impl$(<$($generics),*>)? From<$oldtype> for $newtype $(where $($where_clause)*)? {
+            type Error = $error;
+
+            fn try_from(value: $oldtype) -> Result<Self, Self::Error> {
+                Self::$method($($wrapper)?(value))
+            }
+        }
+    };
+}
+
+#[macro_export]
+macro_rules! impl_from_ref {
+    (impl<'a $(, $($generics:tt),*)?> From<&'a $oldtype:ty> for $newtype:ty $(where ($($where_clause:tt)*))?, $error:ty, $method:ident $(, $wrapper:expr)?) => {
+        impl<'a $(, $($generics),*)?> From<&'a $oldtype> for $newtype $(where $($where_clause)*)? {
+            type Error = $error;
+
+            fn try_from(value: &'a $oldtype) -> Result<Self, Self::Error> {
+                Self::$method($($wrapper)?(value))
             }
         }
     };
