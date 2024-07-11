@@ -16,7 +16,9 @@ macro_rules! newtype_with_validation {
     };
     ($(#[$meta:meta])* $visibility:vis struct $newtype:ident$(<$($generics:tt),*>)? $(where ($($where_clause:tt)*))? { $field:ident: $oldtype:ty | $transformer:ty }) => {
         $(#[$meta])*
-        $visibility struct $newtype$(<$($generics),*>)?($oldtype) $(where $($where_clause)*)?;
+        $visibility struct $newtype$(<$($generics),*>)? $(where $($where_clause)*)? {
+            $field: $oldtype
+        }
 
         impl_all!(impl$(<$($generics),*>)? for $newtype $(where ($($where_clause)*))?, $transformer, $oldtype, regular, $field);
     };
