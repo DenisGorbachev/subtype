@@ -1,6 +1,6 @@
-use subtype::newtype_special;
+use subtype::newtype_derive_auto;
 
-newtype_special!(
+newtype_derive_auto!(
     pub struct MyString(String);
 );
 

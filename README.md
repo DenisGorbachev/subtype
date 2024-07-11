@@ -1,5 +1,10 @@
 # Subtype
 
+## Benefits
+
+* You can implement custom validation
+* You can use either tuple structs or regular structs (`struct Username(String)` or `struct Username { value: String }`)
+
 ## Constraint types
 
 * Constraint types must be empty structs (without fields)
