@@ -15,3 +15,5 @@ macro_rules! test_newtype {
 }
 
 test_newtype!(Username, String, regular, value);
+
+// newtype!(#[derive_auto] pub struct Hi(String););

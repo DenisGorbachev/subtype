@@ -8,24 +8,44 @@
 
 #[macro_export]
 macro_rules! newtype {
-    (#[derive_auto] $(#[$meta:meta])* $visibility:vis struct $newtype:ident$(<$($generics:tt),*>)?($oldtype:ty | $transformer:ty) $(where ($($where_clause:tt)*))?$(;)?) => {
-        $crate::newtype_derive_auto!(
-            $(#[$meta])*
-            $visibility struct $newtype$(<$($generics),*>)?($oldtype) $(where $($where_clause)*)?;
-        );
-
-        $crate::impl_all_with_validation!(impl$(<$($generics),*>)? for $newtype $(where ($($where_clause)*))?, $transformer, $oldtype, tuple, value);
-    };
-    (#[derive_auto] $(#[$meta:meta])* $visibility:vis struct $newtype:ident$(<$($generics:tt),*>)? $(where ($($where_clause:tt)*))? { $field:ident: $oldtype:ty | $transformer:ty $(,)? }) => {
-        $crate::newtype_derive_auto!(
-            $(#[$meta])*
-            $visibility struct $newtype$(<$($generics),*>)? $(where $($where_clause)*)? {
-                $field: $oldtype
-            }
-        );
-
-        $crate::impl_all_with_validation!(impl$(<$($generics),*>)? for $newtype $(where ($($where_clause)*))?, $transformer, $oldtype, regular, $field);
-    };
+    // --- #[derive_auto]
+    // (#[derive_auto] $(#[$meta:meta])* $visibility:vis struct $newtype:ident$(<$($generics:tt),*>)?($oldtype:ty | $transformer:ty) $(where ($($where_clause:tt)*))?$(;)?) => {
+    //     $crate::newtype_derive_auto!(
+    //         $(#[$meta])*
+    //         $visibility struct $newtype$(<$($generics),*>)?($oldtype) $(where $($where_clause)*)?;
+    //     );
+    //
+    //     $crate::impl_all_with_validation!(impl$(<$($generics),*>)? for $newtype $(where ($($where_clause)*))?, $transformer, $oldtype, tuple, value);
+    // };
+    // (#[derive_auto] $(#[$meta:meta])* $visibility:vis struct $newtype:ident$(<$($generics:tt),*>)? $(where ($($where_clause:tt)*))? { $field:ident: $oldtype:ty | $transformer:ty $(,)? }) => {
+    //     $crate::newtype_derive_auto!(
+    //         $(#[$meta])*
+    //         $visibility struct $newtype$(<$($generics),*>)? $(where $($where_clause)*)? {
+    //             $field: $oldtype
+    //         }
+    //     );
+    //
+    //     $crate::impl_all_with_validation!(impl$(<$($generics),*>)? for $newtype $(where ($($where_clause)*))?, $transformer, $oldtype, regular, $field);
+    // };
+    // (#[derive_auto] $(#[$meta:meta])* $visibility:vis struct $newtype:ident$(<$($generics:tt),*>)?($oldtype:ty) $(where ($($where_clause:tt)*))?$(;)?) => {
+    //     $crate::newtype_derive_auto!(
+    //         $(#[$meta])*
+    //         $visibility struct $newtype$(<$($generics),*>)?($oldtype) $(where $($where_clause)*)?;
+    //     );
+    //
+    //     $crate::impl_self_constructor_setter_without_validation!(impl$(<$($generics),*>)? for $newtype $(where ($($where_clause)*))?, $oldtype, tuple, value);
+    // };
+    // (#[derive_auto] $(#[$meta:meta])* $visibility:vis struct $newtype:ident$(<$($generics:tt),*>)? $(where ($($where_clause:tt)*))? { $field:ident: $oldtype:ty $(,)? }) => {
+    //     $crate::newtype_derive_auto!(
+    //         $(#[$meta])*
+    //         $visibility struct $newtype$(<$($generics),*>)? $(where $($where_clause)*)? {
+    //             $field: $oldtype
+    //         }
+    //     );
+    //
+    //     $crate::impl_self_constructor_setter_without_validation!(impl$(<$($generics),*>)? for $newtype $(where ($($where_clause)*))?, $oldtype, regular, $field);
+    // };
+    // --- #[not(derive_auto)]
     ($(#[$meta:meta])* $visibility:vis struct $newtype:ident$(<$($generics:tt),*>)?($oldtype:ty | $transformer:ty) $(where ($($where_clause:tt)*))?$(;)?) => {
         $(#[$meta])*
         $visibility struct $newtype$(<$($generics),*>)?($oldtype) $(where $($where_clause)*)?;
@@ -62,7 +82,14 @@ macro_rules! newtype_derive_auto {
         #[derive(Clone, Debug)]
         $(#[$meta])*
         $visibility struct $newtype(String);
-    }
+    };
+    ($(#[$meta:meta])* $visibility:vis struct $newtype:ident { $field:ident: String }$(;)?) => {
+        #[derive(Clone, Debug)]
+        $(#[$meta])*
+        $visibility struct $newtype {
+            $field: String
+        }
+    };
 }
 
 #[macro_export]
