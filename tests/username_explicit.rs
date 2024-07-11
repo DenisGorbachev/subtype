@@ -8,8 +8,8 @@ use subtype::{constructor, impl_try_from_own, impl_try_from_ref_clone, setter};
 pub struct Username(String);
 
 impl Username {
-    constructor!(pub fn new, NonEmpty, String);
-    setter!(pub fn set, NonEmpty, String);
+    constructor!(pub fn new, NonEmpty, String, tuple, value);
+    setter!(pub fn set, NonEmpty, String, tuple, value);
 }
 impl_try_from_own!(impl TryFrom<String> for Username, <NonEmpty as Transform<String>>::Error, new);
 impl_try_from_ref_clone!(impl<'a> TryFrom<&'a String> for Username, <NonEmpty as Transform<String>>::Error, new);

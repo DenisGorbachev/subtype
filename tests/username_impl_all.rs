@@ -6,7 +6,7 @@ use subtype::validation_error::ValidationError;
 #[derive(PartialOrd, PartialEq, Clone, Debug)]
 pub struct Username(String);
 
-impl_all!(impl for Username, NonEmpty, String);
+impl_all!(impl for Username, NonEmpty, String, tuple, value);
 
 fn main() {
     assert_eq!(Username::new(""), Err(ValidationError::<NonEmpty>::new()));
