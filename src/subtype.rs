@@ -7,7 +7,7 @@ macro_rules! impl_all {
 
 #[macro_export]
 macro_rules! constructor {
-    ($visibility:vis fn $name:ident, $newtype:ty, $transformer:ty, $oldtype:ty) => {
+    ($visibility:vis fn $name:ident, $transformer:ty, $oldtype:ty) => {
             $visibility fn $name(value: impl Into<$oldtype>) -> Result<Self, <$transformer as $crate::traits::transform::Transform<$oldtype>>::Error> {
                 let value = <$transformer as $crate::traits::transform::Transform<$oldtype>>::transform(value.into())?;
                 Ok(Self(value))
@@ -17,7 +17,7 @@ macro_rules! constructor {
 
 #[macro_export]
 macro_rules! setter {
-    ($visibility:vis fn $name:ident, $newtype:ty, $transformer:ty, $oldtype:ty) => {
+    ($visibility:vis fn $name:ident, $transformer:ty, $oldtype:ty) => {
             $visibility fn $name(&mut self, value: impl Into<$oldtype>) -> Result<(), <$transformer as $crate::traits::transform::Transform<$oldtype>>::Error> {
                 let value = <$transformer as $crate::traits::transform::Transform<$oldtype>>::transform(value.into())?;
                 self.0 = value;
@@ -27,22 +27,27 @@ macro_rules! setter {
 }
 
 #[macro_export]
-macro_rules! impl_try_from_owned_as_delegate {
-    (impl$(<$($generics:tt),*>)? TryFrom<$oldtype:ty> for $newtype:ty $(where ($($where_clause:tt)*))?, $method:ident, $error:ty) => {
+macro_rules! impl_try_from_own {
+    (impl$(<$($generics:tt),*>)? TryFrom<$oldtype:ty> for $newtype:ty $(where ($($where_clause:tt)*))?, $error:ty, $method:ident $(, $wrapper:expr)?) => {
         impl$(<$($generics),*>)? TryFrom<$oldtype> for $newtype $(where $($where_clause)*)? {
             type Error = $error;
 
             fn try_from(value: $oldtype) -> Result<Self, Self::Error> {
-                Self::$method(value)
+                Self::$method($($wrapper)?(value))
             }
         }
+    };
+}
 
-        // impl<'a, Value: Clone, Transformer: Transform<Value>> TryFrom<&'a Value> for Subtype<Value, Transformer> {
-        //     type Error = <Transformer as Transform<Value>>::Error;
-        //
-        //     fn try_from(value: &'a Value) -> Result<Self, Self::Error> {
-        //         Self::new(value.clone())
-        //     }
-        // }
+#[macro_export]
+macro_rules! impl_try_from_ref {
+    (impl<'a $(, $($generics:tt),*)?> TryFrom<&'a $oldtype:ty> for $newtype:ty $(where ($($where_clause:tt)*))?, $error:ty, $method:ident $(, $wrapper:expr)?) => {
+        impl<'a $(, $($generics),*)?> TryFrom<&'a $oldtype> for $newtype $(where $($where_clause)*)? {
+            type Error = $error;
+
+            fn try_from(value: &'a $oldtype) -> Result<Self, Self::Error> {
+                Self::$method(value.clone())
+            }
+        }
     };
 }
