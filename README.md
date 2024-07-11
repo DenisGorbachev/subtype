@@ -11,6 +11,7 @@
 
 * Error types must derive `Error` (obviously)
 * Error types must take ownership of the value that triggered the error, so that the caller would have access to the value in an error handler
+* Error type fields must be `pub`
 
 # # Similar crates
 

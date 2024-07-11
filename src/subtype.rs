@@ -8,9 +8,11 @@
 
 #[macro_export]
 macro_rules! newtype_with_validation {
-    ($(#[$meta:meta])* $visibility:vis struct $newtype:ident$(<$($generics:tt),*>)?($oldtype:ty) $(where $($where_clause:tt)*)?; transfomer = $transformer:ty;) => {
+    ($(#[$meta:meta])* $visibility:vis struct $newtype:ident$(<$($generics:tt),*>)?($oldtype:ty | $transformer:ty) $(where ($($where_clause:tt)*))?$(;)?) => {
         $(#[$meta])*
         $visibility struct $newtype$(<$($generics),*>)?($oldtype) $(where $($where_clause)*)?;
+
+        impl_all!(impl$(<$($generics),*>)? for $newtype $(where ($($where_clause)*))?, $transformer, $oldtype);
     };
 }
 
@@ -31,7 +33,7 @@ macro_rules! newtype_special {
 #[macro_export]
 macro_rules! impl_all {
     (impl$(<$($generics:tt),*>)? for $newtype:ty $(where ($($where_clause:tt)*))?, $transformer:ty, $oldtype:ty) => {
-        $crate::impl_constructor_setter!(impl$(<$($generics),*>)? $newtype $(where ($($where_clause)*))?, $transformer, $oldtype);
+        $crate::impl_constructor_setter!(impl$(<$($generics),*>)? for $newtype $(where ($($where_clause)*))?, $transformer, $oldtype);
         $crate::impl_try_from_own!(impl$(<$($generics),*>)? TryFrom<$oldtype> for $newtype $(where ($($where_clause)*))?, <$transformer as $crate::traits::transform::Transform<$oldtype>>::Error, new);
         $crate::impl_try_from_ref_clone!(impl<'a $(, $($generics),*)?> TryFrom<&'a $oldtype> for $newtype $(where ($($where_clause)*))?, <$transformer as $crate::traits::transform::Transform<$oldtype>>::Error, new);
     };
