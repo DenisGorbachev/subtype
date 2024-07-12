@@ -2,6 +2,13 @@
 name = "subtype"
 version = "0.1.0"
 edition = "2021"
+license-file = "LICENSE"
+description = ""
+homepage = "https://github.com/DenisGorbachev/subtype"
+repository = "https://github.com/DenisGorbachev/subtype"
+readme = "README.md"
+keywords = ["newtype", "validation"]
+categories = ["rust-patterns"]
 
 [dependencies]
 derive_more = { version = "0.99.18" }
