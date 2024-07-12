@@ -2,10 +2,10 @@
 ///
 /// Compare:
 ///
-/// * `Into<A> for B` gets `a: A` from `b: B` via `let a: A = b.into()`.
-/// * `Value<A> for B` gets `a: A` from `B` via `let a = B::value()`.
+/// * `let a: A = b.into()` using `Into<A> for B` to get `a: A` from `b` (value).
+/// * `let a: A = B::conjure()` using `Conjure<A> for B` to get `a: A` from `B` (type).
 ///
 /// This has better performance than `B::default().into()` because it avoids creating an intermediate value.
-pub trait Value<T> {
-    fn value() -> T;
+pub trait Conjure<T> {
+    fn conjure() -> T;
 }
