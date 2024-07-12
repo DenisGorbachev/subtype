@@ -10,6 +10,6 @@ impl<T> Check<T> for Pass {
     }
 }
 
-validate_as_check!(impl<T> Validate<T> for Pass);
+validate_as_check!(impl[T] Validate<T> for Pass);
 
-transform_as_validate!(impl<T> Transform<T> for Pass);
+transform_as_validate!(impl[T] Transform<T> for Pass);

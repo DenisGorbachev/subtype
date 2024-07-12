@@ -18,8 +18,8 @@ impl<T> Check<Vec<T>> for NonEmpty {
 
 validate_as_check!(impl Validate<String> for NonEmpty);
 
-validate_as_check!(impl<T> Validate<Vec<T>> for NonEmpty);
+validate_as_check!(impl[T] Validate<Vec<T>> for NonEmpty);
 
 transform_as_validate!(impl Transform<String> for NonEmpty);
 
-transform_as_validate!(impl<T> Transform<Vec<T>> for NonEmpty);
+transform_as_validate!(impl[T] Transform<Vec<T>> for NonEmpty);

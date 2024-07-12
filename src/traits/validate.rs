@@ -6,8 +6,8 @@ pub trait Validate<Value> {
 
 #[macro_export]
 macro_rules! validate_as_check {
-    (impl$(<$($generics:tt),*>)? Validate<$target:ty> for $checker:ty $(where $($where_clause:tt)*)?) => {
-        impl<$($($generics),*)*> $crate::traits::validate::Validate<$target> for $checker where $($($where_clause)*)* {
+    (impl$([$($generics:tt)*])? Validate<$target:ty> for $checker:ty $(where [$($where_clause:tt)*])?) => {
+        impl$(<$($generics)*>)? $crate::traits::validate::Validate<$target> for $checker where $($($where_clause)*)* {
             type Error = $crate::validation_error::ValidationError<$checker>;
 
             fn validate(value: &$target) -> Option<Self::Error> {

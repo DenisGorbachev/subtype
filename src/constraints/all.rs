@@ -10,7 +10,7 @@ use crate::traits::validate::Validate;
 pub struct All<Checker>(PhantomData<Checker>);
 
 // TODO: Use fmt_derive
-#[derive(Error, Eq, PartialEq, Hash, Clone, Copy, Debug)]
+#[derive(Error, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy, Debug)]
 pub struct AllError<Error> {
     pub invalid_index: usize,
     pub error: Error,

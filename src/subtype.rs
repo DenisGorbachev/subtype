@@ -1,78 +1,78 @@
 // #[macro_export]
 // macro_rules! newtype {
-//     ($(#[$meta:meta])* $visibility:vis struct $newtype:ident$(<$($generics:tt),*>)?($oldtype:ty) $(where $($where_clause:tt)*)?$(;)?) => {
+//     ($(#[$meta:meta])* $visibility:vis struct $newtype:ident$([$($generics:tt)*])?($oldtype:ty) $(where $($where_clause:tt)*)?$(;)?) => {
 //         $(#[$meta])*
-//         $visibility struct $newtype$(<$($generics),*>)?($oldtype) $(where $($where_clause)*)?;
+//         $visibility struct $newtype$(<$($generics)*>)?($oldtype) $(where $($where_clause)*)?;
 //     };
 // }
 
 #[macro_export]
 macro_rules! newtype {
     // --- #[derive_auto]
-    // (#[derive_auto] $(#[$meta:meta])* $visibility:vis struct $newtype:ident$(<$($generics:tt),*>)?($oldtype:ty | $transformer:ty) $(where ($($where_clause:tt)*))?$(;)?) => {
+    // (#[derive_auto] $(#[$meta:meta])* $visibility:vis struct $newtype:ident$([$($generics:tt)*])?($oldtype:ty | $transformer:ty) $(where [$($where_clause:tt)*])?$(;)?) => {
     //     $crate::newtype_derive_auto!(
     //         $(#[$meta])*
-    //         $visibility struct $newtype$(<$($generics),*>)?($oldtype) $(where $($where_clause)*)?;
+    //         $visibility struct $newtype$(<$($generics)*>)?($oldtype) $(where $($where_clause)*)?;
     //     );
     //
-    //     $crate::impl_all_with_validation!(impl$(<$($generics),*>)? for $newtype $(where ($($where_clause)*))?, $transformer, $oldtype, tuple, value);
+    //     $crate::impl_all_with_validation!(impl$(<$($generics)*>)? for $newtype $(where [$($where_clause)*])?, $transformer, $oldtype, tuple, value);
     // };
-    // (#[derive_auto] $(#[$meta:meta])* $visibility:vis struct $newtype:ident$(<$($generics:tt),*>)? $(where ($($where_clause:tt)*))? { $field:ident: $oldtype:ty | $transformer:ty $(,)? }) => {
+    // (#[derive_auto] $(#[$meta:meta])* $visibility:vis struct $newtype:ident$([$($generics:tt)*])? $(where [$($where_clause:tt)*])? { $field:ident: $oldtype:ty | $transformer:ty $(,)? }) => {
     //     $crate::newtype_derive_auto!(
     //         $(#[$meta])*
-    //         $visibility struct $newtype$(<$($generics),*>)? $(where $($where_clause)*)? {
+    //         $visibility struct $newtype$(<$($generics)*>)? $(where $($where_clause)*)? {
     //             $field: $oldtype
     //         }
     //     );
     //
-    //     $crate::impl_all_with_validation!(impl$(<$($generics),*>)? for $newtype $(where ($($where_clause)*))?, $transformer, $oldtype, regular, $field);
+    //     $crate::impl_all_with_validation!(impl$(<$($generics)*>)? for $newtype $(where [$($where_clause)*])?, $transformer, $oldtype, regular, $field);
     // };
-    // (#[derive_auto] $(#[$meta:meta])* $visibility:vis struct $newtype:ident$(<$($generics:tt),*>)?($oldtype:ty) $(where ($($where_clause:tt)*))?$(;)?) => {
+    // (#[derive_auto] $(#[$meta:meta])* $visibility:vis struct $newtype:ident$([$($generics:tt)*])?($oldtype:ty) $(where [$($where_clause:tt)*])?$(;)?) => {
     //     $crate::newtype_derive_auto!(
     //         $(#[$meta])*
-    //         $visibility struct $newtype$(<$($generics),*>)?($oldtype) $(where $($where_clause)*)?;
+    //         $visibility struct $newtype$(<$($generics)*>)?($oldtype) $(where $($where_clause)*)?;
     //     );
     //
-    //     $crate::impl_self_constructor_setter_without_validation!(impl$(<$($generics),*>)? for $newtype $(where ($($where_clause)*))?, $oldtype, tuple, value);
+    //     $crate::impl_self_constructor_setter_without_validation!(impl$(<$($generics)*>)? for $newtype $(where [$($where_clause)*])?, $oldtype, tuple, value);
     // };
-    // (#[derive_auto] $(#[$meta:meta])* $visibility:vis struct $newtype:ident$(<$($generics:tt),*>)? $(where ($($where_clause:tt)*))? { $field:ident: $oldtype:ty $(,)? }) => {
+    // (#[derive_auto] $(#[$meta:meta])* $visibility:vis struct $newtype:ident$([$($generics:tt)*])? $(where [$($where_clause:tt)*])? { $field:ident: $oldtype:ty $(,)? }) => {
     //     $crate::newtype_derive_auto!(
     //         $(#[$meta])*
-    //         $visibility struct $newtype$(<$($generics),*>)? $(where $($where_clause)*)? {
+    //         $visibility struct $newtype$(<$($generics)*>)? $(where $($where_clause)*)? {
     //             $field: $oldtype
     //         }
     //     );
     //
-    //     $crate::impl_self_constructor_setter_without_validation!(impl$(<$($generics),*>)? for $newtype $(where ($($where_clause)*))?, $oldtype, regular, $field);
+    //     $crate::impl_self_constructor_setter_without_validation!(impl$(<$($generics)*>)? for $newtype $(where [$($where_clause)*])?, $oldtype, regular, $field);
     // };
     // --- #[not(derive_auto)]
-    ($(#[$meta:meta])* $visibility:vis struct $newtype:ident$(<$($generics:tt),*>)?($oldtype:ty | $transformer:ty) $(where ($($where_clause:tt)*))?$(;)?) => {
+    ($(#[$meta:meta])* $visibility:vis struct $newtype:ident$([$($generics:tt)*])?($oldtype:ty | $transformer:ty) $(where [$($where_clause:tt)*])?$(;)?) => {
         $(#[$meta])*
-        $visibility struct $newtype$(<$($generics),*>)?($oldtype) $(where $($where_clause)*)?;
+        $visibility struct $newtype$(<$($generics)*>)?($oldtype) $(where $($where_clause)*)?;
 
-        $crate::impl_all_with_validation!(impl$(<$($generics),*>)? for $newtype $(where ($($where_clause)*))?, $transformer, $oldtype, tuple, value);
+        $crate::impl_all_with_validation!(impl$(<$($generics)*>)? for $newtype $(where [$($where_clause)*])?, $transformer, $oldtype, tuple, value);
     };
-    ($(#[$meta:meta])* $visibility:vis struct $newtype:ident$(<$($generics:tt),*>)? $(where ($($where_clause:tt)*))? { $field:ident: $oldtype:ty | $transformer:ty $(,)? }) => {
+    ($(#[$meta:meta])* $visibility:vis struct $newtype:ident$([$($generics:tt)*])? $(where [$($where_clause:tt)*])? { $field:ident: $oldtype:ty | $transformer:ty $(,)? }) => {
         $(#[$meta])*
-        $visibility struct $newtype$(<$($generics),*>)? $(where $($where_clause)*)? {
+        $visibility struct $newtype$(<$($generics)*>)? $(where $($where_clause)*)? {
             $field: $oldtype
         }
 
-        $crate::impl_all_with_validation!(impl$(<$($generics),*>)? for $newtype $(where ($($where_clause)*))?, $transformer, $oldtype, regular, $field);
+        $crate::impl_all_with_validation!(impl$(<$($generics)*>)? for $newtype $(where [$($where_clause)*])?, $transformer, $oldtype, regular, $field);
     };
-    ($(#[$meta:meta])* $visibility:vis struct $newtype:ident$(<$($generics:tt),*>)?($oldtype:ty) $(where ($($where_clause:tt)*))?$(;)?) => {
+    ($(#[$meta:meta])* $visibility:vis struct $newtype:ident$([$($generics:tt)*])?($oldtype:ty) $(where [$($where_clause:tt)*])?$(;)?) => {
         $(#[$meta])*
-        $visibility struct $newtype$(<$($generics),*>)?($oldtype) $(where $($where_clause)*)?;
+        $visibility struct $newtype$(<$($generics)*>)?($oldtype) $(where $($where_clause)*)?;
 
-        $crate::impl_all_without_validation!(impl$(<$($generics),*>)? for $newtype $(where ($($where_clause)*))?, $oldtype, tuple, value);
+        $crate::impl_all_without_validation!(impl$(<$($generics)*>)? for $newtype $(where [$($where_clause)*])?, $oldtype, tuple, value);
     };
-    ($(#[$meta:meta])* $visibility:vis struct $newtype:ident$(<$($generics:tt),*>)? $(where ($($where_clause:tt)*))? { $field:ident: $oldtype:ty $(,)? }) => {
+    ($(#[$meta:meta])* $visibility:vis struct $newtype:ident$([$($generics:tt)*])? $(where [$($where_clause:tt)*])? { $field:ident: $oldtype:ty $(,)? }) => {
         $(#[$meta])*
-        $visibility struct $newtype$(<$($generics),*>)? $(where $($where_clause)*)? {
+        $visibility struct $newtype$(<$($generics)*>)? $(where $($where_clause)*)? {
             $field: $oldtype
         }
 
-        $crate::impl_all_without_validation!(impl$(<$($generics),*>)? for $newtype $(where ($($where_clause)*))?, $oldtype, regular, $field);
+        $crate::impl_all_without_validation!(impl$(<$($generics)*>)? for $newtype $(where [$($where_clause)*])?, $oldtype, regular, $field);
     };
 }
 
@@ -94,26 +94,26 @@ macro_rules! newtype_derive_auto {
 
 #[macro_export]
 macro_rules! impl_all_with_validation {
-    (impl$(<$($generics:tt),*>)? for $newtype:ty $(where ($($where_clause:tt)*))?, $transformer:ty, $oldtype:ty, $style:ident, $field:ident) => {
-        $crate::impl_self_constructor_setter_with_validation!(impl$(<$($generics),*>)? for $newtype $(where ($($where_clause)*))?, $transformer, $oldtype, $style, $field, new, set);
-        $crate::impl_try_from_own!(impl$(<$($generics),*>)? TryFrom<$oldtype> for $newtype $(where ($($where_clause)*))?, <$transformer as $crate::traits::transform::Transform<$oldtype>>::Error, new);
-        $crate::impl_try_from_ref!(impl$(<$($generics),*>)? TryFrom<&$oldtype> for $newtype $(where ($($where_clause)*))?, <$transformer as $crate::traits::transform::Transform<$oldtype>>::Error, new, Clone::clone);
+    (impl$([$($generics:tt)*])? for $newtype:ty $(where [$($where_clause:tt)*])?, $transformer:ty, $oldtype:ty, $style:ident, $field:ident) => {
+        $crate::impl_self_constructor_setter_with_validation!(impl$(<$($generics)*>)? for $newtype $(where [$($where_clause)*])?, $transformer, $oldtype, $style, $field, new, set);
+        $crate::impl_try_from_own!(impl$(<$($generics)*>)? TryFrom<$oldtype> for $newtype $(where [$($where_clause)*])?, <$transformer as $crate::traits::transform::Transform<$oldtype>>::Error, new);
+        $crate::impl_try_from_ref!(impl$(<$($generics)*>)? TryFrom<&$oldtype> for $newtype $(where [$($where_clause)*])?, <$transformer as $crate::traits::transform::Transform<$oldtype>>::Error, new, Clone::clone);
     };
 }
 
 #[macro_export]
 macro_rules! impl_all_without_validation {
-    (impl$(<$($generics:tt),*>)? for $newtype:ty $(where ($($where_clause:tt)*))?, $oldtype:ty, $style:ident, $field:ident) => {
-        $crate::impl_self_constructor_setter_without_validation!(impl$(<$($generics),*>)? for $newtype $(where ($($where_clause)*))?, $oldtype, $style, $field, new, set);
-        $crate::impl_from_own!(impl$(<$($generics),*>)? From<$oldtype> for $newtype $(where ($($where_clause)*))?, new);
-        $crate::impl_from_ref!(impl$(<$($generics),*>)? From<&$oldtype> for $newtype $(where ($($where_clause)*))?, new, Clone::clone);
+    (impl$([$($generics:tt)*])? for $newtype:ty $(where [$($where_clause:tt)*])?, $oldtype:ty, $style:ident, $field:ident) => {
+        $crate::impl_self_constructor_setter_without_validation!(impl$(<$($generics)*>)? for $newtype $(where [$($where_clause)*])?, $oldtype, $style, $field, new, set);
+        $crate::impl_from_own!(impl$(<$($generics)*>)? From<$oldtype> for $newtype $(where [$($where_clause)*])?, new);
+        $crate::impl_from_ref!(impl$(<$($generics)*>)? From<&$oldtype> for $newtype $(where [$($where_clause)*])?, new, Clone::clone);
     };
 }
 
 #[macro_export]
 macro_rules! impl_self_constructor_setter_with_validation {
-    (impl$(<$($generics:tt),*>)? for $newtype:ty $(where ($($where_clause:tt)*))?, $transformer:ty, $oldtype:ty, $style:ident, $field:ident, $constructor_method:ident, $setter_method:ident) => {
-        impl$(<$($generics),*>)? $newtype $(where ($($where_clause)*))? {
+    (impl$([$($generics:tt)*])? for $newtype:ty $(where [$($where_clause:tt)*])?, $transformer:ty, $oldtype:ty, $style:ident, $field:ident, $constructor_method:ident, $setter_method:ident) => {
+        impl$(<$($generics)*>)? $newtype $(where [$($where_clause)*])? {
             $crate::constructor_with_validation!(pub fn $constructor_method, $transformer, $oldtype, $style, $field);
             $crate::setter_with_validation!(pub fn $setter_method, $transformer, $oldtype, $style, $field);
         }
@@ -122,8 +122,8 @@ macro_rules! impl_self_constructor_setter_with_validation {
 
 #[macro_export]
 macro_rules! impl_self_constructor_setter_without_validation {
-    (impl$(<$($generics:tt),*>)? for $newtype:ty $(where ($($where_clause:tt)*))?, $oldtype:ty, $style:ident, $field:ident, $constructor_method:ident, $setter_method:ident) => {
-        impl$(<$($generics),*>)? $newtype $(where ($($where_clause)*))? {
+    (impl$([$($generics:tt)*])? for $newtype:ty $(where [$($where_clause:tt)*])?, $oldtype:ty, $style:ident, $field:ident, $constructor_method:ident, $setter_method:ident) => {
+        impl$(<$($generics)*>)? $newtype $(where [$($where_clause)*])? {
             $crate::constructor_without_validation!(pub fn $constructor_method, $oldtype, $style, $field);
             $crate::setter_without_validation!(pub fn $setter_method, $oldtype, $style, $field);
         }
@@ -173,8 +173,8 @@ macro_rules! setter_without_validation {
 
 #[macro_export]
 macro_rules! impl_try_from_own {
-    (impl$(<$($generics:tt),*>)? TryFrom<$oldtype:ty> for $newtype:ty $(where ($($where_clause:tt)*))?, $error:ty, $method:ident $(, $wrapper:expr)?) => {
-        impl$(<$($generics),*>)? TryFrom<$oldtype> for $newtype $(where $($where_clause)*)? {
+    (impl$([$($generics:tt)*])? TryFrom<$oldtype:ty> for $newtype:ty $(where [$($where_clause:tt)*])?, $error:ty, $method:ident $(, $wrapper:expr)?) => {
+        impl$(<$($generics)*>)? TryFrom<$oldtype> for $newtype $(where $($where_clause)*)? {
             type Error = $error;
 
             fn try_from(value: $oldtype) -> Result<Self, Self::Error> {
@@ -186,8 +186,8 @@ macro_rules! impl_try_from_own {
 
 #[macro_export]
 macro_rules! impl_try_from_ref {
-    (impl$(<$($generics:tt),*>)? TryFrom<&$oldtype:ty> for $newtype:ty $(where ($($where_clause:tt)*))?, $error:ty, $method:ident $(, $wrapper:expr)?) => {
-        impl$(<$($generics),*>)? TryFrom<&$oldtype> for $newtype $(where $($where_clause)*)? {
+    (impl$([$($generics:tt)*])? TryFrom<&$oldtype:ty> for $newtype:ty $(where [$($where_clause:tt)*])?, $error:ty, $method:ident $(, $wrapper:expr)?) => {
+        impl$(<$($generics)*>)? TryFrom<&$oldtype> for $newtype $(where $($where_clause)*)? {
             type Error = $error;
 
             fn try_from(value: &$oldtype) -> Result<Self, Self::Error> {
@@ -199,8 +199,8 @@ macro_rules! impl_try_from_ref {
 
 #[macro_export]
 macro_rules! impl_from_own {
-    (impl$(<$($generics:tt),*>)? From<$oldtype:ty> for $newtype:ty $(where ($($where_clause:tt)*))?, $method:ident $(, $wrapper:expr)?) => {
-        impl$(<$($generics),*>)? From<$oldtype> for $newtype $(where $($where_clause)*)? {
+    (impl$([$($generics:tt)*])? From<$oldtype:ty> for $newtype:ty $(where [$($where_clause:tt)*])?, $method:ident $(, $wrapper:expr)?) => {
+        impl$(<$($generics)*>)? From<$oldtype> for $newtype $(where $($where_clause)*)? {
             fn from(value: $oldtype) -> Self {
                 Self::$method($($wrapper)?(value))
             }
@@ -210,8 +210,8 @@ macro_rules! impl_from_own {
 
 #[macro_export]
 macro_rules! impl_from_ref {
-    (impl$(<$($generics:tt),*>)? From<&$oldtype:ty> for $newtype:ty $(where ($($where_clause:tt)*))?, $method:ident $(, $wrapper:expr)?) => {
-        impl$(<$($generics),*>)? From<&$oldtype> for $newtype $(where $($where_clause)*)? {
+    (impl$([$($generics:tt)*])? From<&$oldtype:ty> for $newtype:ty $(where [$($where_clause:tt)*])?, $method:ident $(, $wrapper:expr)?) => {
+        impl$(<$($generics)*>)? From<&$oldtype> for $newtype $(where $($where_clause)*)? {
             fn from(value: &$oldtype) -> Self {
                 Self::$method($($wrapper)?(value))
             }

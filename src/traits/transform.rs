@@ -6,8 +6,8 @@ pub trait Transform<Value> {
 
 #[macro_export]
 macro_rules! transform_as_validate {
-    (impl$(<$($generics:tt),*>)? Transform<$target:ty> for $validator:ty $(where $($where_clause:tt)*)?) => {
-        impl<$($($generics),*)*> $crate::traits::transform::Transform<$target> for $validator where $($($where_clause)*)* {
+    (impl$([$($generics:tt)*])? Transform<$target:ty> for $validator:ty $(where [$($where_clause:tt)*])?) => {
+        impl$(<$($generics)*>)? $crate::traits::transform::Transform<$target> for $validator where $($($where_clause)*)* {
             type Error = <$validator as $crate::traits::validate::Validate<$target>>::Error;
 
             fn transform(value: $target) -> Result<$target, Self::Error> {

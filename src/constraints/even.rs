@@ -13,6 +13,6 @@ impl<V: IsEven> Check<V> for Even {
     }
 }
 
-validate_as_check!(impl<V> Validate<V> for Even where V: IsEven);
+validate_as_check!(impl[V] Validate<V> for Even where [V: IsEven]);
 
-transform_as_validate!(impl<V> Transform<V> for Even where V: IsEven);
+transform_as_validate!(impl[V] Transform<V> for Even where [V: IsEven]);
