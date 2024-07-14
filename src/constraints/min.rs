@@ -2,7 +2,7 @@ use std::marker::PhantomData;
 
 use crate::traits::check::Check;
 use crate::traits::conjure::Conjure;
-use crate::{transform_as_validate, validate_as_check};
+use crate::transform_as_validate_as_check;
 
 #[derive(Default, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy, Debug)]
 pub struct Min<Minimum, const INCLUSIVE: bool> {
@@ -24,9 +24,7 @@ where
     }
 }
 
-validate_as_check!(impl[Value, Minimum, const INCLUSIVE: bool] Validate<Value> for Min<Minimum, INCLUSIVE> where [Value: PartialOrd, Minimum: Conjure<Value>]);
-
-transform_as_validate!(impl[Value, Minimum, const INCLUSIVE: bool] Transform<Value> for Min<Minimum, INCLUSIVE> where [Value: PartialOrd, Minimum: Conjure<Value>]);
+transform_as_validate_as_check!(impl[Value, Minimum, const INCLUSIVE: bool] of [Value] for Min<Minimum, INCLUSIVE> where [Value: PartialOrd, Minimum: Conjure<Value>]);
 
 // TODO: Move to a separate crate & module
 pub const INCLUSIVE: bool = true;

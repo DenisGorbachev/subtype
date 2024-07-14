@@ -5,7 +5,7 @@ use std::fmt::Debug;
 use num_traits::Zero;
 
 use crate::traits::check::Check;
-use crate::{transform_as_validate, validate_as_check};
+use crate::transform_as_validate_as_check;
 
 #[derive(Eq, PartialEq, Hash, Clone, Copy, Debug)]
 pub struct NonZero;
@@ -16,6 +16,4 @@ impl<V: Zero> Check<V> for NonZero {
     }
 }
 
-validate_as_check!(impl[V] Validate<V> for NonZero where [V: Zero]);
-
-transform_as_validate!(impl[V] Transform<V> for NonZero where [V: Zero]);
+transform_as_validate_as_check!(impl[V] of [V] for NonZero where [V: Zero]);
