@@ -5,6 +5,7 @@ pub use non_empty::*;
 #[cfg(feature = "num-traits")]
 pub use non_zero::*;
 pub use pass::*;
+pub use starts_with::*;
 
 pub mod all;
 pub mod even;

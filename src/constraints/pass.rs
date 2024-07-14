@@ -1,7 +1,7 @@
 use crate::traits::check::Check;
 use crate::{transform_as_validate, validate_as_check};
 
-#[derive(Eq, PartialEq, Hash, Clone, Copy, Debug)]
+#[derive(Default, Eq, PartialEq, Hash, Clone, Copy, Debug)]
 pub struct Pass;
 
 impl<T> Check<T> for Pass {
