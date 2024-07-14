@@ -1,7 +1,23 @@
+use crate::errors::BinaryError;
+
 pub trait Transform<Value> {
     type Error;
 
     fn transform(value: Value) -> Result<Value, Self::Error>;
+}
+
+impl<A, B, ErrorA, ErrorB, Value> Transform<Value> for (A, B)
+where
+    A: Transform<Value, Error = ErrorA>,
+    B: Transform<Value, Error = ErrorB>,
+{
+    type Error = BinaryError<ErrorA, ErrorB>;
+
+    fn transform(value: Value) -> Result<Value, Self::Error> {
+        let value = A::transform(value).map_err(BinaryError::VariantA)?;
+        let value = B::transform(value).map_err(BinaryError::VariantB)?;
+        Ok(value)
+    }
 }
 
 #[macro_export]

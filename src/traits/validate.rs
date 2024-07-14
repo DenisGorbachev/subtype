@@ -1,7 +1,22 @@
+use crate::errors::BinaryError;
+
 pub trait Validate<Value> {
     type Error;
 
     fn validate(value: &Value) -> Option<Self::Error>;
+}
+
+impl<A, B, ErrorA, ErrorB, Value> Validate<Value> for (A, B)
+where
+    A: Validate<Value, Error = ErrorA>,
+    B: Validate<Value, Error = ErrorB>,
+{
+    type Error = BinaryError<ErrorA, ErrorB>;
+
+    fn validate(value: &Value) -> Option<Self::Error> {
+        None.or_else(|| A::validate(value).map(BinaryError::VariantA))
+            .or_else(|| B::validate(value).map(BinaryError::VariantB))
+    }
 }
 
 #[macro_export]
