@@ -14,3 +14,4 @@ categories = ["rust-patterns"]
 derive_more = { version = "0.99.18" }
 num-traits = { version = "0.2.0", optional = true }
 serde = { version = "1.0.0", optional = true, features = ["derive"] }
+pretty-type-name = "1.0.1"

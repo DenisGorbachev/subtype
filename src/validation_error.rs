@@ -2,6 +2,7 @@ use std::fmt::{Display, Formatter};
 use std::marker::PhantomData;
 
 use derive_more::Error;
+use pretty_type_name::pretty_type_name;
 
 #[derive(Error, Eq, PartialEq, Hash, Clone, Copy, Debug)]
 pub struct ValidationError<Validator> {
@@ -22,8 +23,8 @@ impl<Validator> Default for ValidationError<Validator> {
     }
 }
 
-impl<Validator: Default + Display> Display for ValidationError<Validator> {
+impl<Validator> Display for ValidationError<Validator> {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "validation error: {}", Validator::default())
+        write!(f, "validation error: {}", pretty_type_name::<Validator>())
     }
 }

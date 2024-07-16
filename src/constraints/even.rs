@@ -1,7 +1,7 @@
 use std::fmt::Debug;
 
 use crate::traits::check::Check;
-use crate::traits::even::IsEven;
+use crate::traits::is_even::IsEven;
 use crate::transform_as_validate_as_check;
 
 #[derive(Default, Eq, PartialEq, Hash, Clone, Copy, Debug)]

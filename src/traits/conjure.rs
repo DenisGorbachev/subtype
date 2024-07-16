@@ -1,4 +1,6 @@
-/// This trait allows to convert a type to a value. This is different from the `From` trait because it works without a specific value (doesn't take a `self` parameter).
+/// `Conjure` is like `From` but for types.
+///
+/// `Conjure` converts a type to a value. This is different from the `From` trait because it works without a specific value (doesn't take a `self` parameter).
 ///
 /// Compare:
 ///

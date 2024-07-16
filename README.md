@@ -5,6 +5,11 @@
 * You can implement custom validation
 * You can use either tuple structs or regular structs (`struct Username(String)` or `struct Username { value: String }`)
 
+## Footguns
+
+* It is possible to circumvent the validation by defining `impl From<String> for Username`. This is because an impl can construct `Username` directly without calling `Username::new`. There is no workaround for this, you just need to be careful.
+* It is possible to circumvent the validation by adding `#[derive(serde::Deserialize)]`. This is because `impl serde::Deserialize` can construct the target type directly without calling the `new` function. There's a workaround: add `#[serde(try_from = "Foo")]` where Foo is the underlying type of this newtype.
+
 ## Gotchas
 
 * In macro invocations, the generics and trait bounds must be wrapped in square brackets (`[]`) instead of angle brackets (`<>`). This is a limitation of macro_rules. It applies only to the _definitions_ of generics and trait bounds, not to their usage. See example:
