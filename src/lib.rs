@@ -9,4 +9,3 @@ pub mod sigils;
 #[cfg(test)]
 mod tests;
 pub mod traits;
-pub mod validation_error;

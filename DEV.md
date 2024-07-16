@@ -1,5 +1,10 @@
 # Development notes
 
+## Tasks
+
+* Try unifying the InvalidValueError and ValidationError
+  * ValidationError = InvalidValueError<&'a Value> (pass a ref of Value to the InvalidValueError)
+
 ## Constraints
 
 * Don't write a `impl<T> TryFrom<&T> for Username where T: ToOwned<Owned=String>`

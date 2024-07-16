@@ -5,15 +5,12 @@ use derive_more::Error;
 use pretty_type_name::pretty_type_name;
 
 #[derive(Error, Eq, PartialEq, Hash, Clone, Copy, Debug)]
-pub struct ValidationError<Validator> {
-    phantom: PhantomData<Validator>,
-}
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct ValidationError<Validator>(PhantomData<Validator>);
 
 impl<Validator> ValidationError<Validator> {
     pub fn new() -> Self {
-        Self {
-            phantom: PhantomData,
-        }
+        Self(PhantomData)
     }
 }
 
@@ -25,6 +22,8 @@ impl<Validator> Default for ValidationError<Validator> {
 
 impl<Validator> Display for ValidationError<Validator> {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "validation error: {}", pretty_type_name::<Validator>())
+        f.debug_struct("ValidationError")
+            .field("validator", &pretty_type_name::<Validator>())
+            .finish()
     }
 }

@@ -1,4 +1,4 @@
-use crate::errors::BinaryError;
+use crate::errors::binary_error::BinaryError;
 
 pub trait Transform<Value> {
     type Error;
@@ -30,6 +30,23 @@ macro_rules! transform_as_validate {
                 match <$validator as $crate::traits::validate::Validate<$target>>::validate(&value) {
                     None => Ok(value),
                     Some(error) => Err(error),
+                }
+            }
+        }
+    };
+}
+
+#[macro_export]
+macro_rules! transform_as_check {
+    (impl$([$($generics:tt)*])? Transform<$target:ty> for $checker:ty $(where [$($where_clause:tt)*])?) => {
+        impl$(<$($generics)*>)? $crate::traits::transform::Transform<$target> for $checker where $($($where_clause)*)* {
+            type Error = $crate::errors::InvalidValueError<$target, $checker>;
+
+            fn transform(value: $target) -> Result<$target, Self::Error> {
+                if <$checker as $crate::traits::check::Check<$target>>::check(&value) {
+                    Ok(value)
+                } else {
+                    Err(Self::Error::new(value))
                 }
             }
         }

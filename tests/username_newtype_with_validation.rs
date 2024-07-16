@@ -1,6 +1,6 @@
 use subtype::constraints::non_empty::NonEmpty;
+use subtype::errors::InvalidValueError;
 use subtype::newtype;
-use subtype::validation_error::ValidationError;
 
 newtype!(
     #[derive(PartialOrd, PartialEq, Clone, Debug)]
@@ -26,10 +26,11 @@ newtype!(
     }
 );
 
-fn main() {
-    assert_eq!(UsernameTupleNonEmpty::new(""), Err(ValidationError::<NonEmpty>::new()));
+#[test]
+fn username_newtype_with_validation() {
+    assert_eq!(UsernameTupleNonEmpty::new(""), Err(InvalidValueError::<String, NonEmpty>::new("")));
     assert_eq!(UsernameTupleNonEmpty::new("alice"), Ok(UsernameTupleNonEmpty("alice".to_string())));
-    assert_eq!(UsernameRegularNonEmpty::new(""), Err(ValidationError::<NonEmpty>::new()));
+    assert_eq!(UsernameRegularNonEmpty::new(""), Err(InvalidValueError::<String, NonEmpty>::new("")));
     assert_eq!(
         UsernameRegularNonEmpty::new("alice"),
         Ok(UsernameRegularNonEmpty {
@@ -41,7 +42,7 @@ fn main() {
     assert_eq!(
         UsernameRegularAny::new(""),
         UsernameRegularAny {
-            inner: "alice".to_string()
+            inner: "".to_string()
         }
     );
     assert_eq!(
