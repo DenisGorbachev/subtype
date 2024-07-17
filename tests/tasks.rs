@@ -1,6 +1,10 @@
 use derive_builder::Builder;
 use derive_more::From;
 
+use subtype::constraints::Equal;
+use subtype::containers::u32::U32;
+use subtype::newtype;
+
 // struct CanUnify<A, B>;
 //
 // pub type CanUnifyErrors = CanUnify<ValidationError<Empty>, InvalidValueError<String, Empty>>;
@@ -17,8 +21,27 @@ pub enum CanUnifyErrors {
     No,
 }
 
+#[derive(Eq, PartialEq, Hash, Clone, Copy, Debug)]
+pub struct SupportedOperators {
+    not: bool,
+    and: bool,
+    or: bool,
+}
+
+newtype!(
+    #[derive(Eq, PartialEq, Hash, Clone, Copy, Debug)]
+    pub struct ExpectedTupleSize(u32 | Equal<U32<12>>)
+);
+
+#[derive(Eq, PartialEq, Hash, Clone, Copy, Debug)]
+pub struct AndAsTuple {
+    max_tuple_size: ExpectedTupleSize,
+}
+
 #[derive(Builder, Eq, PartialEq, Hash, Clone, Copy, Debug)]
 struct Database {
+    supported_operators: SupportedOperators,
+    and_as_tuple: AndAsTuple,
     can_unify_errors: CanUnifyErrors,
 }
 
