@@ -6,7 +6,7 @@ use crate::traits::check::Check;
 use crate::traits::conjure::Conjure;
 use crate::transform_as_validate_as_check;
 
-/// Note: this order and meta-type of generic arguments is better for informative errors
+// This order and meta-type of generic arguments is better for informative errors
 #[derive(Default, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy, Debug)]
 pub struct Min<Minimum, Inclusivity>(PhantomData<(Minimum, Inclusivity)>);
 

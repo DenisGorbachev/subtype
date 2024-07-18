@@ -4,6 +4,7 @@
 
 * You can implement custom validation
 * You can use either tuple structs or regular structs (`struct Username(String)` or `struct Username { value: String }`)
+* Good IDE support (e.g. rename, go to definition)
 
 ## Features
 

@@ -65,7 +65,3 @@ where
             .collect()
     }
 }
-
-// impl_validate_as_check!(All, <Validator>);
-//
-// impl_transform_as_validate!(All, <Checker>, where Checker: Check<>);

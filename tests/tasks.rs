@@ -1,7 +1,7 @@
 use derive_builder::Builder;
 use derive_more::From;
 
-use subtype::constraints::Equal;
+use subtype::checkers::Equal;
 use subtype::containers::u32::U32;
 use subtype::newtype;
 

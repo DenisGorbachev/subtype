@@ -1,5 +1,5 @@
-use subtype::constraints::not::Not;
-use subtype::constraints::Empty;
+use subtype::checkers::not::Not;
+use subtype::checkers::Empty;
 use subtype::errors::InvalidValueError;
 use subtype::newtype;
 

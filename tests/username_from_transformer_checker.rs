@@ -1,5 +1,5 @@
-use subtype::constraints::not::Not;
-use subtype::constraints::Empty;
+use subtype::checkers::not::Not;
+use subtype::checkers::Empty;
 use subtype::constructor_from_transformer_checker;
 use subtype::errors::InvalidValueError;
 use subtype::transformers::trim::Trim;

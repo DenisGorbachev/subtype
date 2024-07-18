@@ -1,4 +1,4 @@
-pub mod constraints;
+pub mod checkers;
 pub mod containers;
 pub mod errors;
 pub mod functions;
