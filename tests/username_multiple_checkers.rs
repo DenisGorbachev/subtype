@@ -25,9 +25,10 @@ impl Username {
 #[test]
 fn username_explicit() {
     type TheTupleError = ValidationError2<ValidationError<Not<Empty>>, ValidationError<MaxLen255>>;
-    assert_eq!(Username::new(""), Err(IncorrectValueError::new("", TheTupleError::Variant1(ValidationError::new()))));
+    type TheError = IncorrectValueError<String, TheTupleError>;
+    assert_eq!(Username::new(""), Err(TheError::new("", TheTupleError::Variant1(ValidationError::new()))));
     assert_eq!(Username::new("alice"), Ok(Username("alice".to_string())));
-    assert_eq!(Username::new("a".repeat(THIS_IS_SPARTA)), Err(IncorrectValueError::new("a".repeat(THIS_IS_SPARTA), TheTupleError::Variant2(ValidationError::new()))));
+    assert_eq!(Username::new("a".repeat(THIS_IS_SPARTA)), Err(TheError::new("a".repeat(THIS_IS_SPARTA), TheTupleError::Variant2(ValidationError::new()))));
 }
 
 const THIS_IS_SPARTA: usize = 300;

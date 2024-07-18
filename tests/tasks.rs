@@ -45,6 +45,7 @@ pub struct NotTransformFixed;
 struct Database {
     not_fixed: NotTransformFixed,
     error_types_unified: bool,
+    validator_error_message_improved: bool,
     supported_operators: SupportedOperators,
     and_as_tuple: AndAsTuple,
     can_unify_errors: CanUnifyErrors,

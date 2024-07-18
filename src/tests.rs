@@ -35,3 +35,20 @@ mod transform {
         assert_eq!(error.to_string(), "InvalidValueError { value: \"hello\", validator: \"Max<U32<20>, Inclusive>\" }");
     }
 }
+
+#[cfg(test)]
+mod tuples {
+    use crate::checkers::max_len::MaxLen;
+    use crate::checkers::not::Not;
+    use crate::errors::{IncorrectValueError, ValidationError, ValidationError2};
+
+    use super::*;
+
+    #[test]
+    fn must_display_good_error_message() {
+        type TheTupleError = ValidationError2<ValidationError<Not<Empty>>, ValidationError<MaxLen<255, Inclusive>>>;
+        type TheError = IncorrectValueError<String, TheTupleError>;
+        let error = TheError::new("hello", TheTupleError::Variant1(ValidationError::new()));
+        assert_eq!(error.to_string(), "IncorrectValueError { value: \"hello\", error: Variant1(ValidationError(PhantomData<subtype::checkers::not::Not<subtype::checkers::empty::Empty>>)) }");
+    }
+}
