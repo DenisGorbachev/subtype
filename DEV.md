@@ -1,5 +1,9 @@
 # Development notes
 
+## Notes
+
+* We can't let the user provide functions because we need to know the `Error` type for `Result<Self, Error>` in `pub fn new`
+
 ## Tasks
 
 * Try unifying the InvalidValueError and ValidationError

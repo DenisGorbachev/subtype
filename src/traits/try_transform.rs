@@ -21,7 +21,7 @@ where
 }
 
 #[macro_export]
-macro_rules! transform_as_validate {
+macro_rules! try_transform_as_validate {
     (impl$([$($generics:tt)*])? Transform<$target:ty> for $validator:ty $(where [$($where_clause:tt)*])?) => {
         impl$(<$($generics)*>)? $crate::traits::try_transform::TryTransform<$target> for $validator where $($($where_clause)*)* {
             type Error = <$validator as $crate::traits::validate::Validate<$target>>::Error;
@@ -37,7 +37,7 @@ macro_rules! transform_as_validate {
 }
 
 #[macro_export]
-macro_rules! transform_as_check {
+macro_rules! try_transform_as_check {
     (impl$([$($generics:tt)*])? Transform<$target:ty> for $checker:ty $(where [$($where_clause:tt)*])?) => {
         impl$(<$($generics)*>)? $crate::traits::try_transform::TryTransform<$target> for $checker where $($($where_clause)*)* {
             type Error = $crate::errors::InvalidValueError<$target, $checker>;
