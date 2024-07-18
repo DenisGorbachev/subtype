@@ -5,6 +5,11 @@
 * You can implement custom validation
 * You can use either tuple structs or regular structs (`struct Username(String)` or `struct Username { value: String }`)
 
+## Features
+
+* Preprocessors are supported
+* Postprocessors are supported
+
 ## Footguns
 
 * It is possible to circumvent the validation by defining `impl From<String> for Username`. This is because an impl can construct `Username` directly without calling `Username::new`. There is no workaround for this, you just need to be careful.

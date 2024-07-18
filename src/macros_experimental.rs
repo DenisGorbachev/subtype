@@ -1,3 +1,4 @@
+/// There can be only one checker because the function returns a single `Result<Self, Error>` and the `Error` type can support only one checker
 #[macro_export]
 macro_rules! constructor_from_transformer_checker {
     ($visibility:vis fn $name:ident, $oldtype:ty $([$preprocessor:ty])* | $checker:ty $([$postprocessor:ty])*, $style:ident, $field:ident) => {

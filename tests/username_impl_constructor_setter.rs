@@ -10,7 +10,7 @@ pub mod macro_name_scope;
 #[derive(PartialOrd, PartialEq, Clone, Debug)]
 pub struct Username(String);
 
-impl_self_constructor_setter_with_validation!(impl for Username, Not<Empty>, String, tuple, value, new, set);
+impl_self_constructor_setter_with_validation!(impl for Username, String | Not<Empty>, tuple, value, new, set);
 impl_try_from_own!(impl TryFrom<String> for Username, <Not<Empty> as TryTransform<String>>::Error, new);
 impl_try_from_ref!(impl TryFrom<&String> for Username, <Not<Empty> as TryTransform<String>>::Error, new);
 

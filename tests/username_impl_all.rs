@@ -7,7 +7,7 @@ use subtype::impl_all_with_validation;
 #[derive(PartialOrd, PartialEq, Clone, Debug)]
 pub struct Username(String);
 
-impl_all_with_validation!(impl for Username, Not<Empty>, String, tuple, value);
+impl_all_with_validation!(impl for Username, String | Not<Empty>, tuple, value);
 
 #[test]
 fn username_impl_all() {
