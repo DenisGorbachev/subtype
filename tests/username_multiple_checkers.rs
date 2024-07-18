@@ -26,5 +26,7 @@ pub enum UsernameError {
 fn username_explicit() {
     assert_eq!(Username::new(""), Err(UsernameError::NotEmpty(InvalidValueError::<String, Not<Empty>>::new(""))));
     assert_eq!(Username::new("alice"), Ok(Username("alice".to_string())));
-    assert_eq!(Username::new("a".repeat(300)), Err(UsernameError::MaxLen(InvalidValueError::<String, MaxLen<255, Inclusive>>::new("a".repeat(300)))));
+    assert_eq!(Username::new("a".repeat(THIS_IS_SPARTA)), Err(UsernameError::MaxLen(InvalidValueError::<String, MaxLen<255, Inclusive>>::new("a".repeat(THIS_IS_SPARTA)))));
 }
+
+const THIS_IS_SPARTA: usize = 300;
