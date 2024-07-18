@@ -1,16 +1,17 @@
-use subtype::constraints::non_empty::NonEmpty;
+use subtype::constraints::not::Not;
+use subtype::constraints::Empty;
 use subtype::errors::InvalidValueError;
 use subtype::newtype;
 
 newtype!(
     #[derive(PartialOrd, PartialEq, Clone, Debug)]
-    pub struct UsernameTupleNonEmpty(String | NonEmpty);
+    pub struct UsernameTupleNotEmpty(String | Not<Empty>);
 );
 
 newtype!(
     #[derive(PartialOrd, PartialEq, Clone, Debug)]
-    pub struct UsernameRegularNonEmpty {
-        inner: String | NonEmpty
+    pub struct UsernameRegularNotEmpty {
+        inner: String | Not<Empty>
     }
 );
 
@@ -28,12 +29,12 @@ newtype!(
 
 #[test]
 fn username_newtype_with_validation() {
-    assert_eq!(UsernameTupleNonEmpty::new(""), Err(InvalidValueError::<String, NonEmpty>::new("")));
-    assert_eq!(UsernameTupleNonEmpty::new("alice"), Ok(UsernameTupleNonEmpty("alice".to_string())));
-    assert_eq!(UsernameRegularNonEmpty::new(""), Err(InvalidValueError::<String, NonEmpty>::new("")));
+    assert_eq!(UsernameTupleNotEmpty::new(""), Err(InvalidValueError::<String, Not<Empty>>::new("")));
+    assert_eq!(UsernameTupleNotEmpty::new("alice"), Ok(UsernameTupleNotEmpty("alice".to_string())));
+    assert_eq!(UsernameRegularNotEmpty::new(""), Err(InvalidValueError::<String, Not<Empty>>::new("")));
     assert_eq!(
-        UsernameRegularNonEmpty::new("alice"),
-        Ok(UsernameRegularNonEmpty {
+        UsernameRegularNotEmpty::new("alice"),
+        Ok(UsernameRegularNotEmpty {
             inner: "alice".to_string()
         })
     );

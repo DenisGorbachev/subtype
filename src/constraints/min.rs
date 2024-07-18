@@ -1,11 +1,17 @@
 use std::marker::PhantomData;
 
+use crate::containers::exclusive::Exclusive;
+use crate::containers::inclusive::Inclusive;
 use crate::traits::check::Check;
 use crate::traits::conjure::Conjure;
 use crate::transform_as_validate_as_check;
 
+/// Note: this order and meta-type of generic arguments is better for informative errors
 #[derive(Default, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy, Debug)]
 pub struct Min<Minimum, Inclusivity>(PhantomData<(Minimum, Inclusivity)>);
+
+pub type GreaterThan<Minimum> = Min<Minimum, Exclusive>;
+pub type GreaterThanOrEqual<Minimum> = Min<Minimum, Inclusive>;
 
 impl<Value, Minimum, Inclusivity> Check<Value> for Min<Minimum, Inclusivity>
 where

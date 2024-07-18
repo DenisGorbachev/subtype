@@ -20,6 +20,12 @@ impl<Value, Validator> InvalidValueError<Value, Validator> {
     }
 }
 
+impl<Value, Validator> From<Value> for InvalidValueError<Value, Validator> {
+    fn from(value: Value) -> Self {
+        Self::new(value)
+    }
+}
+
 // impl<Value: Debug, Validator: Debug> Display for InvalidValueError<Value, Validator> {
 //     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
 //         <Self as Debug>::fmt(self, f)

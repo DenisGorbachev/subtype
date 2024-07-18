@@ -6,6 +6,8 @@ use crate::traits::validate::Validate;
 
 #[cfg(test)]
 mod validate {
+    use crate::constraints::GreaterThanOrEqual;
+
     use super::*;
 
     #[test]
@@ -18,7 +20,7 @@ mod validate {
     #[test]
     fn must_display_informative_error_message_for_generic_types() {
         let value = 10u32;
-        let error = Min::<U32<20>, Inclusive>::validate(&value).unwrap();
+        let error = GreaterThanOrEqual::<U32<20>>::validate(&value).unwrap();
         assert_eq!(error.to_string(), "ValidationError { validator: \"Min<U32<20>, Inclusive>\" }")
     }
 }

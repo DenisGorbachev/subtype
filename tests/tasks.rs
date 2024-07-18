@@ -38,8 +38,12 @@ pub struct AndAsTuple {
     max_tuple_size: ExpectedTupleSize,
 }
 
+#[derive(Default, Eq, PartialEq, Hash, Clone, Copy, Debug)]
+pub struct NotTransformFixed;
+
 #[derive(Builder, Eq, PartialEq, Hash, Clone, Copy, Debug)]
 struct Database {
+    not_fixed: NotTransformFixed,
     supported_operators: SupportedOperators,
     and_as_tuple: AndAsTuple,
     can_unify_errors: CanUnifyErrors,

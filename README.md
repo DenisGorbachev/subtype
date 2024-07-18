@@ -29,6 +29,11 @@
 * Error types must take ownership of the value that triggered the error, so that the caller would have access to the value in an error handler
 * Error type fields must be `pub`
 
+## Design notes
+
+* `Min<Minimum, Inclusivity>` is used instead of `Min<Minimum, const INCLUSIVITY: bool>` because it provides more informative error messages.
+* `Min, Max, Equal` use `PartialOrd, PartialEq` instead of `Ord, Eq` because more types implement the Partial traits. Also, if the developer specifies `pub struct MyFloat(f32 | Min<0.5, Exclusive>)`, they don't want `NAN` to pass this validation. This is exactly what `Min` does by delegating to `PartialCmp`, which returns `false` for `NAN`.
+
 # # Similar crates
 
 * [refinement](https://crates.io/crates/refinement)

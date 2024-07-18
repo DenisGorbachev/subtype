@@ -1,6 +1,6 @@
 use std::marker::PhantomData;
 
-use crate::errors::ValidationError;
+use crate::errors::{InvalidValueError, ValidationError};
 use crate::traits::check::Check;
 use crate::traits::transform::Transform;
 use crate::traits::validate::Validate;
@@ -31,13 +31,18 @@ where
     }
 }
 
+/// TODO: Don't clone the value
 impl<Transformer, Value> Transform<Value> for Not<Transformer>
 where
     Transformer: Transform<Value>,
+    Value: Clone,
 {
-    type Error = ValidationError<Not<Transformer>>;
+    type Error = InvalidValueError<Value, Not<Transformer>>;
 
     fn transform(value: Value) -> Result<Value, Self::Error> {
-        Ok(value)
+        match Transformer::transform(value.clone()) {
+            Ok(_) => Err(Self::Error::new(value)),
+            Err(_) => Ok(value),
+        }
     }
 }
