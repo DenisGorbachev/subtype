@@ -1,4 +1,4 @@
-use crate::errors::binary_error::BinaryError;
+use crate::errors::error_2::Error2;
 
 pub trait Validate<Value> {
     type Error;
@@ -11,11 +11,11 @@ where
     A: Validate<Value, Error = ErrorA>,
     B: Validate<Value, Error = ErrorB>,
 {
-    type Error = BinaryError<ErrorA, ErrorB>;
+    type Error = Error2<ErrorA, ErrorB>;
 
     fn validate(value: &Value) -> Option<Self::Error> {
-        None.or_else(|| A::validate(value).map(BinaryError::VariantA))
-            .or_else(|| B::validate(value).map(BinaryError::VariantB))
+        None.or_else(|| A::validate(value).map(Error2::A))
+            .or_else(|| B::validate(value).map(Error2::B))
     }
 }
 

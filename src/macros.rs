@@ -144,6 +144,17 @@ macro_rules! constructor_with_validation {
                 Ok($crate::construct!(Self, $style, $field))
             }
     };
+    ($visibility:vis fn $name:ident, $oldtype:ty $([$preprocessor:ty])* $(| $checker:ty)+ { $error:ty } $([$postprocessor:ty])*, $style:ident, $field:ident) => {
+            $visibility fn $name($field: impl Into<$oldtype>) -> Result<Self, $error> {
+                let $field = $field.into();$(
+                let $field = <$preprocessor as $crate::traits::transform::Transform<$oldtype>>::transform($field);)*
+                $(if !<$checker as $crate::traits::check::Check<$oldtype>>::check(&$field) {
+                    return Err($crate::errors::InvalidValueError::<$oldtype, $checker>::new($field).into());
+                })+$(
+                let $field = <$postprocessor as $crate::traits::transform::Transform<$oldtype>>::transform($field);)*
+                Ok($crate::construct!(Self, $style, $field))
+            }
+    };
 }
 
 #[macro_export]

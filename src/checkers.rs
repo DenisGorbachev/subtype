@@ -4,20 +4,21 @@ pub use equal::*;
 pub use even::*;
 pub use max::*;
 pub use min::*;
-#[cfg(feature = "num-traits")]
-pub use non_zero::*;
 pub use pass::*;
 pub use starts_with::*;
+#[cfg(feature = "num-traits")]
+pub use zero::*;
 
 pub mod all;
 pub mod empty;
 pub mod equal;
 pub mod even;
 pub mod max;
+pub mod max_len;
 pub mod min;
-#[cfg(feature = "num-traits")]
-pub mod non_zero;
 pub mod not;
 pub mod or;
 pub mod pass;
 pub mod starts_with;
+#[cfg(feature = "num-traits")]
+pub mod zero;
