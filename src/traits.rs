@@ -6,4 +6,5 @@ pub mod len;
 pub mod mutate;
 pub mod show;
 pub mod transform;
+pub mod trim;
 pub mod validate;
