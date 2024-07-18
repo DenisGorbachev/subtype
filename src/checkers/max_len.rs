@@ -3,6 +3,7 @@ use std::marker::PhantomData;
 use crate::traits::check::Check;
 use crate::traits::conjure::Conjure;
 use crate::traits::len::Len;
+use crate::validate_as_check;
 
 #[derive(Default, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy, Debug)]
 pub struct MaxLen<const MAXIMUM: usize, Inclusivity>(PhantomData<Inclusivity>);
@@ -20,3 +21,8 @@ where
         }
     }
 }
+
+validate_as_check!(impl[Value, const MAXIMUM: usize, Inclusivity] Validate<Value> for MaxLen<MAXIMUM, Inclusivity> where [
+    Value: Len,
+    Inclusivity: Conjure<bool>
+]);

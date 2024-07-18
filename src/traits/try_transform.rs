@@ -40,7 +40,7 @@ macro_rules! try_transform_as_validate {
 macro_rules! try_transform_as_check {
     (impl$([$($generics:tt)*])? Transform<$target:ty> for $checker:ty $(where [$($where_clause:tt)*])?) => {
         impl$(<$($generics)*>)? $crate::traits::try_transform::TryTransform<$target> for $checker where $($($where_clause)*)* {
-            type Error = $crate::errors::InvalidValueError<$target, $checker>;
+            type Error = $crate::errors::invalid_value_error::InvalidValueError<$target, $checker>;
 
             fn try_transform(value: $target) -> Result<$target, Self::Error> {
                 if <$checker as $crate::traits::check::Check<$target>>::check(&value) {

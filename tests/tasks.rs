@@ -44,6 +44,7 @@ pub struct NotTransformFixed;
 #[derive(Builder, Eq, PartialEq, Hash, Clone, Copy, Debug)]
 struct Database {
     not_fixed: NotTransformFixed,
+    error_types_unified: bool,
     supported_operators: SupportedOperators,
     and_as_tuple: AndAsTuple,
     can_unify_errors: CanUnifyErrors,

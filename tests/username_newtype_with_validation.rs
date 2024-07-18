@@ -1,7 +1,8 @@
 use subtype::checkers::not::Not;
 use subtype::checkers::Empty;
-use subtype::errors::InvalidValueError;
+use subtype::errors::{IncorrectValueError, ValidationError};
 use subtype::newtype;
+use subtype::traits::validate::Validate;
 
 newtype!(
     #[derive(PartialOrd, PartialEq, Clone, Debug)]
@@ -29,9 +30,10 @@ newtype!(
 
 #[test]
 fn username_newtype_with_validation() {
-    assert_eq!(UsernameTupleNotEmpty::new(""), Err(InvalidValueError::<String, Not<Empty>>::new("")));
+    type TheError = IncorrectValueError<String, <Not<Empty> as Validate<String>>::Error>;
+    assert_eq!(UsernameTupleNotEmpty::new(""), Err(TheError::new("", ValidationError::new())));
     assert_eq!(UsernameTupleNotEmpty::new("alice"), Ok(UsernameTupleNotEmpty("alice".to_string())));
-    assert_eq!(UsernameRegularNotEmpty::new(""), Err(InvalidValueError::<String, Not<Empty>>::new("")));
+    assert_eq!(UsernameRegularNotEmpty::new(""), Err(TheError::new("", ValidationError::new())));
     assert_eq!(
         UsernameRegularNotEmpty::new("alice"),
         Ok(UsernameRegularNotEmpty {
