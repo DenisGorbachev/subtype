@@ -7,8 +7,8 @@ use pretty_type_name::pretty_type_name;
 #[derive(Error, Eq, PartialEq, Hash, Clone, Copy, Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct InvalidValueError<Value, Validator> {
-    value: Value,
-    validator: PhantomData<Validator>,
+    pub value: Value,
+    pub validator: PhantomData<Validator>,
 }
 
 impl<Value, Validator> InvalidValueError<Value, Validator> {

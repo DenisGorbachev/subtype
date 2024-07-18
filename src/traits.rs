@@ -5,6 +5,6 @@ pub mod is_even;
 pub mod len;
 pub mod mutate;
 pub mod show;
-pub mod transform;
 pub mod trim;
+pub mod try_transform;
 pub mod validate;

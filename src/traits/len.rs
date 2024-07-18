@@ -1,8 +1,28 @@
 pub trait Len {
-    type Size;
+    fn len(&self) -> usize;
 
-    fn len(&self) -> Self::Size;
+    fn is_empty(&self) -> bool {
+        self.len() == 0
+    }
+}
 
-    /// A default implementation can't be provided because `Self::Size` may not implement `PartialEq` and `Zero`
-    fn is_empty(&self) -> bool;
+impl Len for String {
+    /// Note that it calculates the length of string in characters, not bytes
+    fn len(&self) -> usize {
+        self.chars().count()
+    }
+
+    fn is_empty(&self) -> bool {
+        String::is_empty(self)
+    }
+}
+
+impl<T> Len for Vec<T> {
+    fn len(&self) -> usize {
+        Vec::<T>::len(self)
+    }
+
+    fn is_empty(&self) -> bool {
+        Vec::<T>::is_empty(self)
+    }
 }

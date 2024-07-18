@@ -3,7 +3,7 @@ use std::marker::PhantomData;
 use derive_more::Error;
 
 use crate::traits::check::Check;
-use crate::traits::transform::Transform;
+use crate::traits::try_transform::TryTransform;
 use crate::traits::validate::Validate;
 
 #[derive(Default, Eq, PartialEq, Hash, Clone, Copy, Debug)]
@@ -50,18 +50,18 @@ where
     }
 }
 
-impl<Item, Value, Transformer> Transform<Value> for All<Transformer>
+impl<Item, Value, Transformer> TryTransform<Value> for All<Transformer>
 where
     Value: IntoIterator<Item = Item> + FromIterator<Item>,
-    Transformer: Transform<Item>,
+    Transformer: TryTransform<Item>,
 {
-    type Error = AllError<<Transformer as Transform<Item>>::Error>;
+    type Error = AllError<<Transformer as TryTransform<Item>>::Error>;
 
-    fn transform(value: Value) -> Result<Value, Self::Error> {
+    fn try_transform(value: Value) -> Result<Value, Self::Error> {
         value
             .into_iter()
             .enumerate()
-            .map(|(index, item)| Transformer::transform(item).map_err(|error| AllError::new(index, error)))
+            .map(|(index, item)| Transformer::try_transform(item).map_err(|error| AllError::new(index, error)))
             .collect()
     }
 }

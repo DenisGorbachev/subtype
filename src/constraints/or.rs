@@ -2,7 +2,7 @@ use std::marker::PhantomData;
 
 use crate::errors::{InvalidValueError, ValidationError};
 use crate::traits::check::Check;
-use crate::traits::transform::Transform;
+use crate::traits::try_transform::TryTransform;
 use crate::traits::validate::Validate;
 
 #[derive(Eq, PartialEq, Hash, Clone, Copy, Debug)]
@@ -36,17 +36,17 @@ where
 }
 
 /// `Value: Clone` is required because `A::transform` takes ownership of the value
-impl<A, B, Value> Transform<Value> for Or<A, B>
+impl<A, B, Value> TryTransform<Value> for Or<A, B>
 where
-    A: Transform<Value>,
-    B: Transform<Value>,
+    A: TryTransform<Value>,
+    B: TryTransform<Value>,
     Value: Clone,
 {
     type Error = InvalidValueError<Value, Or<A, B>>;
 
-    fn transform(value: Value) -> Result<Value, Self::Error> {
-        A::transform(value.clone())
-            .or_else(|_| B::transform(value.clone()))
+    fn try_transform(value: Value) -> Result<Value, Self::Error> {
+        A::try_transform(value.clone())
+            .or_else(|_| B::try_transform(value.clone()))
             .map_err(|_| Self::Error::new(value))
     }
 }
