@@ -1,11 +1,11 @@
 pub trait Trim {
-    fn trim(self) -> Self;
+    fn trim(&mut self);
 }
 
 impl Trim for String {
     // TODO: Write a more efficient implementation with String::truncate and String::drain
-    fn trim(self) -> Self {
-        str::trim(self.as_str()).to_string()
+    fn trim(&mut self) {
+        *self = str::trim(self.as_str()).to_string()
     }
 }
 

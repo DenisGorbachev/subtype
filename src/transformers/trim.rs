@@ -1,3 +1,4 @@
+use crate::traits::adjust::Adjust;
 use crate::traits::transform::Transform;
 use crate::traits::trim::Trim as TrimTrait;
 use crate::traits::try_transform::TryTransform;
@@ -9,7 +10,14 @@ impl<V> Transform<V> for Trim
 where
     V: TrimTrait,
 {
-    fn transform(value: V) -> V {
+    fn transform(mut value: V) -> V {
+        value.trim();
+        value
+    }
+}
+
+impl Adjust<String> for Trim {
+    fn adjust(value: &mut String) {
         value.trim()
     }
 }
@@ -20,7 +28,8 @@ where
 {
     type Error = ();
 
-    fn try_transform(value: V) -> Result<V, Self::Error> {
-        Ok(value.trim())
+    fn try_transform(mut value: V) -> Result<V, Self::Error> {
+        value.trim();
+        Ok(value)
     }
 }

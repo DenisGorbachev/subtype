@@ -1,6 +1,6 @@
 use crate::checkers::{Empty, Max};
-use crate::containers::inclusive::Inclusive;
-use crate::containers::u32::U32;
+use crate::conjurers::inclusive::Inclusive;
+use crate::conjurers::u32::U32;
 use crate::errors::invalid_value_error::InvalidValueError;
 use crate::traits::validate::Validate;
 

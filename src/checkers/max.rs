@@ -1,7 +1,7 @@
 use std::marker::PhantomData;
 
-use crate::containers::exclusive::Exclusive;
-use crate::containers::inclusive::Inclusive;
+use crate::conjurers::exclusive::Exclusive;
+use crate::conjurers::inclusive::Inclusive;
 use crate::traits::check::Check;
 use crate::traits::conjure::Conjure;
 use crate::transform_as_validate_as_check;
@@ -33,9 +33,9 @@ transform_as_validate_as_check!(impl[Value, Maximum, Inclusivity] of [Value] for
 
 #[cfg(test)]
 mod tests {
-    use crate::containers::exclusive::Exclusive;
-    use crate::containers::inclusive::Inclusive;
-    use crate::containers::u32::U32;
+    use crate::conjurers::exclusive::Exclusive;
+    use crate::conjurers::inclusive::Inclusive;
+    use crate::conjurers::u32::U32;
 
     use super::*;
 

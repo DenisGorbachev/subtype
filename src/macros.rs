@@ -43,32 +43,67 @@ macro_rules! newtype {
     //         }
     //     );
     //
-    //     $crate::impl_self_constructor_setter_without_validation!(impl$(<$($generics)*>)? for $newtype $(where [$($where_clause)*])?, $oldtype, regular, $field);
+    // $crate::impl_self_constructor_setter_without_validation!(impl$(<$($generics)*>)? for $newtype $(where [$($where_clause)*])?, $oldtype, regular, $field);
     // };
     // --- #[not(derive_auto)]
-    ($(#[$meta:meta])* $visibility:vis struct $newtype:ident$([$($generics:tt)*])?($oldtype:ty $([$preprocessor:ty])* | $checker:ty $([$postprocessor:ty])*) $(where [$($where_clause:tt)*])?$(;)?) => {
+
+    // pub struct Username(String | Not<Empty>);
+    (
+        $(#[$meta:meta])*
+        $visibility:vis struct $newtype:ident$([$($generics:tt)*])?($oldtype:ty $([$preprocessor:ty])* | $checker:ty $([$postprocessor:ty])*)
+        $(where [$($where_clause:tt)*])?$(;)?
+    ) => {
         $(#[$meta])*
-        $visibility struct $newtype$(<$($generics)*>)?($oldtype) $(where $($where_clause)*)?;
+        $visibility struct $newtype$(<$($generics)*>)?($oldtype)
+        $(where $($where_clause)*)?;
 
         $crate::impl_all_with_validation!(impl$(<$($generics)*>)? for $newtype $(where [$($where_clause)*])?, $oldtype $([$preprocessor])* | $checker $([$postprocessor])*, tuple, value);
     };
-    ($(#[$meta:meta])* $visibility:vis struct $newtype:ident$([$($generics:tt)*])? $(where [$($where_clause:tt)*])? { $field:ident: $oldtype:ty $([$preprocessor:ty])* | $checker:ty $([$postprocessor:ty])* $(,)? }) => {
+
+    // pub struct Username {
+    //     inner: String | Not<Empty>
+    // }
+    (
+        $(#[$meta:meta])*
+        $visibility:vis struct $newtype:ident$([$($generics:tt)*])?
+        $(where [$($where_clause:tt)*])? {
+            $field:ident: $oldtype:ty $([$preprocessor:ty])* | $checker:ty $([$postprocessor:ty])* $(,)?
+        }
+    ) => {
         $(#[$meta])*
-        $visibility struct $newtype$(<$($generics)*>)? $(where $($where_clause)*)? {
+        $visibility struct $newtype$(<$($generics)*>)?
+        $(where $($where_clause)*)? {
             $field: $oldtype
         }
 
         $crate::impl_all_with_validation!(impl$(<$($generics)*>)? for $newtype $(where [$($where_clause)*])?, $oldtype $([$preprocessor])* | $checker $([$postprocessor])*, regular, $field);
     };
-    ($(#[$meta:meta])* $visibility:vis struct $newtype:ident$([$($generics:tt)*])?($oldtype:ty) $(where [$($where_clause:tt)*])?$(;)?) => {
+
+    // pub struct Username(String);
+    (
+        $(#[$meta:meta])*
+        $visibility:vis struct $newtype:ident$([$($generics:tt)*])?($oldtype:ty)
+        $(where [$($where_clause:tt)*])?$(;)?
+    ) => {
         $(#[$meta])*
         $visibility struct $newtype$(<$($generics)*>)?($oldtype) $(where $($where_clause)*)?;
 
         $crate::impl_all_without_validation!(impl$(<$($generics)*>)? for $newtype $(where [$($where_clause)*])?, $oldtype, tuple, value);
     };
-    ($(#[$meta:meta])* $visibility:vis struct $newtype:ident$([$($generics:tt)*])? $(where [$($where_clause:tt)*])? { $field:ident: $oldtype:ty $(,)? }) => {
+
+    // pub struct Username {
+    //     inner: String
+    // }
+    (
+        $(#[$meta:meta])*
+        $visibility:vis struct $newtype:ident$([$($generics:tt)*])?
+        $(where [$($where_clause:tt)*])? {
+            $field:ident: $oldtype:ty $(,)?
+        }
+    ) => {
         $(#[$meta])*
-        $visibility struct $newtype$(<$($generics)*>)? $(where $($where_clause)*)? {
+        $visibility struct $newtype$(<$($generics)*>)?
+        $(where $($where_clause)*)? {
             $field: $oldtype
         }
 

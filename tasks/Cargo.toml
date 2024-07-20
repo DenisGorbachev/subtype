@@ -1,0 +1,15 @@
+[package]
+name = "tasks"
+version = "0.1.0"
+edition = "2021"
+
+[workspace]
+
+[dependencies]
+subtype = { path = "..", features = ["time"] }
+derive_more = "0.99.18"
+anyhow = { version = "1.0.86" }
+derive_builder = "0.20.0"
+url = "2.5.2"
+url-macro = "0.1.1"
+time = "0.3.36"

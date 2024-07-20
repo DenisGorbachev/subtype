@@ -1,3 +1,4 @@
+workspace = { }
 [package]
 name = "subtype"
 version = "0.1.0"
@@ -15,6 +16,8 @@ derive_more = { version = "0.99.18" }
 num-traits = { version = "0.2.0", optional = true }
 serde = { version = "1.0.0", optional = true, features = ["derive"] }
 pretty-type-name = "1.0.1"
+time = { version = "0.3.36", optional = true }
 
 [dev-dependencies]
 derive_builder = "0.20.0"
+prae = "0.8.4"

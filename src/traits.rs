@@ -1,3 +1,4 @@
+pub mod adjust;
 pub mod check;
 pub mod conjure;
 pub mod is_empty;

@@ -4,6 +4,7 @@ pub use equal::*;
 pub use even::*;
 pub use max::*;
 pub use min::*;
+pub use not::*;
 pub use pass::*;
 pub use starts_with::*;
 #[cfg(feature = "num-traits")]

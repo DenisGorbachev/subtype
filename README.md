@@ -43,7 +43,7 @@
 # # Similar crates
 
 * [refinement](https://crates.io/crates/refinement)
-  * You can't foreign traits on a `Refinement` type (because the `Refinement` type comes from the `refinement` crate, which is also foreign to your code)
+  * You can't implement foreign traits on a `Refinement` type (because the `Refinement` type comes from the `refinement` crate, which is also foreign to your code)
   * You can't sanitize the value in the constructor
 * [nutype](https://crates.io/crates/nutype)
   * You can't return a specific error from the validation predicate
@@ -52,3 +52,9 @@
 * [synonym](https://crates.io/crates/synonym)
   * You can automatically get certain derives based on the underlying type
     * You can't get automatic derives for unknown types (for example, if `Address: Copy`, then `pub struct AddressNewtype(Address)` you won't get `impl Copy for AddressNewtype`, you need to explicitly add `#[derive(Copy)]`)
+* [aliri_braid](https://crates.io/crates/aliri_braid)
+  * It only supports `String` as the base type
+* [prae](https://github.com/teenjuna/prae)
+  * Very similar design
+  * It's actually better
+* [semval](https://github.com/slowtec/semval)

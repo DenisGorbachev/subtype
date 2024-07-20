@@ -1,5 +1,5 @@
 pub mod checkers;
-pub mod containers;
+pub mod conjurers;
 pub mod errors;
 pub mod functions;
 pub mod macros;
