@@ -1,4 +1,5 @@
 pub use all::*;
+pub use contains::*;
 pub use empty::*;
 pub use equal::*;
 pub use even::*;
@@ -11,6 +12,7 @@ pub use starts_with::*;
 pub use zero::*;
 
 pub mod all;
+pub mod contains;
 pub mod empty;
 pub mod equal;
 pub mod even;
