@@ -54,7 +54,7 @@ macro_rules! newtype {
         $visibility:vis struct $newtype:ident$([$($generics:tt)*])?($oldtype:ty $([$preprocessor:ty])* | $checker:ty $([$postprocessor:ty])*)
         $(where [$($where_clause:tt)*])?$(;)?
     ) => {
-        #[derive(derive_more::Deref, derive_more::Into)]
+        #[derive(derive_more::Deref, derive_more::AsRef, derive_more::Into)]
         $(#[$meta])*
         $visibility struct $newtype$(<$($generics)*>)?($oldtype)
         $(where $($where_clause)*)?;
@@ -85,14 +85,14 @@ macro_rules! newtype {
     // pub struct Username(String);
     (
         $(#[$meta:meta])*
-        $visibility:vis struct $newtype:ident$([$($generics:tt)*])?($oldtype:ty)
+        $visibility:vis struct $newtype:ident$([$($generics:tt)*])?($oldtype:ty $([$preprocessor:ty])*)
         $(where [$($where_clause:tt)*])?$(;)?
     ) => {
-        #[derive(derive_more::Deref, derive_more::Into)]
+        #[derive(derive_more::Deref, derive_more::AsRef, derive_more::Into)]
         $(#[$meta])*
         $visibility struct $newtype$(<$($generics)*>)?($oldtype) $(where $($where_clause)*)?;
 
-        $crate::impl_all_without_validation!(impl$(<$($generics)*>)? for $newtype $(where [$($where_clause)*])?, $oldtype, tuple, value);
+        $crate::impl_all_without_validation!(impl$(<$($generics)*>)? for $newtype $(where [$($where_clause)*])?, $oldtype $([$preprocessor])*, tuple, value);
     };
 
     // // pub struct Username {
@@ -143,8 +143,8 @@ macro_rules! impl_all_with_validation {
 
 #[macro_export]
 macro_rules! impl_all_without_validation {
-    (impl$([$($generics:tt)*])? for $newtype:ty $(where [$($where_clause:tt)*])?, $oldtype:ty, $style:ident, $field:ident) => {
-        $crate::impl_self_constructor_setter_without_validation!(impl$(<$($generics)*>)? for $newtype $(where [$($where_clause)*])?, $oldtype, $style, $field, new, set);
+    (impl$([$($generics:tt)*])? for $newtype:ty $(where [$($where_clause:tt)*])?, $oldtype:ty $([$preprocessor:ty])*, $style:ident, $field:ident) => {
+        $crate::impl_self_constructor_setter_without_validation!(impl$(<$($generics)*>)? for $newtype $(where [$($where_clause)*])?, $oldtype $([$preprocessor])*, $style, $field, new, set);
         $crate::impl_from_own!(impl$(<$($generics)*>)? From<$oldtype> for $newtype $(where [$($where_clause)*])?, new);
         $crate::impl_from_ref!(impl$(<$($generics)*>)? From<&$oldtype> for $newtype $(where [$($where_clause)*])?, new, Clone::clone);
     };
@@ -162,10 +162,10 @@ macro_rules! impl_self_constructor_setter_with_validation {
 
 #[macro_export]
 macro_rules! impl_self_constructor_setter_without_validation {
-    (impl$([$($generics:tt)*])? for $newtype:ty $(where [$($where_clause:tt)*])?, $oldtype:ty, $style:ident, $field:ident, $constructor_method:ident, $setter_method:ident) => {
+    (impl$([$($generics:tt)*])? for $newtype:ty $(where [$($where_clause:tt)*])?, $oldtype:ty $([$preprocessor:ty])*, $style:ident, $field:ident, $constructor_method:ident, $setter_method:ident) => {
         impl$(<$($generics)*>)? $newtype $(where [$($where_clause)*])? {
-            $crate::constructor_without_validation!(pub fn $constructor_method, $oldtype, $style, $field);
-            $crate::setter_without_validation!(pub fn $setter_method, $oldtype, $style, $field);
+            $crate::constructor_without_validation!(pub fn $constructor_method, $oldtype $([$preprocessor])*, $style, $field);
+            $crate::setter_without_validation!(pub fn $setter_method, $oldtype $([$preprocessor])*, $style, $field);
         }
     }
 }
@@ -200,9 +200,10 @@ macro_rules! constructor_with_validation {
 
 #[macro_export]
 macro_rules! constructor_without_validation {
-    ($visibility:vis fn $name:ident, $oldtype:ty, $style:ident, $field:ident) => {
+    ($visibility:vis fn $name:ident, $oldtype:ty $([$preprocessor:ty])*, $style:ident, $field:ident) => {
             $visibility fn $name($field: impl Into<$oldtype>) -> Self {
-                let $field = $field.into();
+                let $field = $field.into();$(
+                let $field = <$preprocessor as $crate::traits::transform::Transform<$oldtype>>::transform($field);)*
                 $crate::construct!(Self, $style, $field)
             }
     };
@@ -227,9 +228,10 @@ macro_rules! setter_with_validation {
 
 #[macro_export]
 macro_rules! setter_without_validation {
-    ($visibility:vis fn $name:ident, $oldtype:ty, $style:ident, $field:ident) => {
+    ($visibility:vis fn $name:ident, $oldtype:ty $([$preprocessor:ty])*, $style:ident, $field:ident) => {
             $visibility fn $name(&mut self, $field: impl Into<$oldtype>) {
-                let $field = $field.into();
+                let $field = $field.into();$(
+                let $field = <$preprocessor as $crate::traits::transform::Transform<$oldtype>>::transform($field);)*
                 $crate::assign!(self, $style, $field);
             }
     };
