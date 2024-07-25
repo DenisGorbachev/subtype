@@ -4,6 +4,7 @@ pub mod errors;
 pub mod functions;
 pub mod macros;
 pub mod macros_helpers;
+pub mod macros_specific;
 pub mod macros_traits;
 pub mod sigils;
 #[cfg(test)]

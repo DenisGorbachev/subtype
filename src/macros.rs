@@ -6,6 +6,7 @@
 //     };
 // }
 
+/// Cannot derive DerefMut because there might be a checker
 #[macro_export]
 macro_rules! newtype {
     // --- #[derive_auto]
@@ -53,6 +54,7 @@ macro_rules! newtype {
         $visibility:vis struct $newtype:ident$([$($generics:tt)*])?($oldtype:ty $([$preprocessor:ty])* | $checker:ty $([$postprocessor:ty])*)
         $(where [$($where_clause:tt)*])?$(;)?
     ) => {
+        #[derive(derive_more::Deref, derive_more::Into)]
         $(#[$meta])*
         $visibility struct $newtype$(<$($generics)*>)?($oldtype)
         $(where $($where_clause)*)?;
@@ -70,6 +72,7 @@ macro_rules! newtype {
             $field:ident: $oldtype:ty $([$preprocessor:ty])* | $checker:ty $([$postprocessor:ty])* $(,)?
         }
     ) => {
+        #[derive(derive_more::Deref, derive_more::Into)]
         $(#[$meta])*
         $visibility struct $newtype$(<$($generics)*>)?
         $(where $($where_clause)*)? {
@@ -85,6 +88,7 @@ macro_rules! newtype {
         $visibility:vis struct $newtype:ident$([$($generics:tt)*])?($oldtype:ty)
         $(where [$($where_clause:tt)*])?$(;)?
     ) => {
+        #[derive(derive_more::Deref, derive_more::Into)]
         $(#[$meta])*
         $visibility struct $newtype$(<$($generics)*>)?($oldtype) $(where $($where_clause)*)?;
 
@@ -101,6 +105,7 @@ macro_rules! newtype {
             $field:ident: $oldtype:ty $(,)?
         }
     ) => {
+        #[derive(derive_more::Deref, derive_more::Into)]
         $(#[$meta])*
         $visibility struct $newtype$(<$($generics)*>)?
         $(where $($where_clause)*)? {
