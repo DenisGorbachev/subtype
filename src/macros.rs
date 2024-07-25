@@ -62,25 +62,25 @@ macro_rules! newtype {
         $crate::impl_all_with_validation!(impl$(<$($generics)*>)? for $newtype $(where [$($where_clause)*])?, $oldtype $([$preprocessor])* | $checker $([$postprocessor])*, tuple, value);
     };
 
-    // pub struct Username {
-    //     inner: String | Not<Empty>
-    // }
-    (
-        $(#[$meta:meta])*
-        $visibility:vis struct $newtype:ident$([$($generics:tt)*])?
-        $(where [$($where_clause:tt)*])? {
-            $field:ident: $oldtype:ty $([$preprocessor:ty])* | $checker:ty $([$postprocessor:ty])* $(,)?
-        }
-    ) => {
-        #[derive(derive_more::Deref, derive_more::Into)]
-        $(#[$meta])*
-        $visibility struct $newtype$(<$($generics)*>)?
-        $(where $($where_clause)*)? {
-            $field: $oldtype
-        }
-
-        $crate::impl_all_with_validation!(impl$(<$($generics)*>)? for $newtype $(where [$($where_clause)*])?, $oldtype $([$preprocessor])* | $checker $([$postprocessor])*, regular, $field);
-    };
+    // // pub struct Username {
+    // //     inner: String | Not<Empty>
+    // // }
+    // (
+    //     $(#[$meta:meta])*
+    //     $visibility:vis struct $newtype:ident$([$($generics:tt)*])?
+    //     $(where [$($where_clause:tt)*])? {
+    //         $field:ident: $oldtype:ty $([$preprocessor:ty])* | $checker:ty $([$postprocessor:ty])* $(,)?
+    //     }
+    // ) => {
+    //     #[derive(derive_more::Deref, derive_more::Into)]
+    //     $(#[$meta])*
+    //     $visibility struct $newtype$(<$($generics)*>)?
+    //     $(where $($where_clause)*)? {
+    //         $field: $oldtype
+    //     }
+    //
+    //     $crate::impl_all_with_validation!(impl$(<$($generics)*>)? for $newtype $(where [$($where_clause)*])?, $oldtype $([$preprocessor])* | $checker $([$postprocessor])*, regular, $field);
+    // };
 
     // pub struct Username(String);
     (
@@ -95,25 +95,25 @@ macro_rules! newtype {
         $crate::impl_all_without_validation!(impl$(<$($generics)*>)? for $newtype $(where [$($where_clause)*])?, $oldtype, tuple, value);
     };
 
-    // pub struct Username {
-    //     inner: String
-    // }
-    (
-        $(#[$meta:meta])*
-        $visibility:vis struct $newtype:ident$([$($generics:tt)*])?
-        $(where [$($where_clause:tt)*])? {
-            $field:ident: $oldtype:ty $(,)?
-        }
-    ) => {
-        #[derive(derive_more::Deref, derive_more::Into)]
-        $(#[$meta])*
-        $visibility struct $newtype$(<$($generics)*>)?
-        $(where $($where_clause)*)? {
-            $field: $oldtype
-        }
-
-        $crate::impl_all_without_validation!(impl$(<$($generics)*>)? for $newtype $(where [$($where_clause)*])?, $oldtype, regular, $field);
-    };
+    // // pub struct Username {
+    // //     inner: String
+    // // }
+    // (
+    //     $(#[$meta:meta])*
+    //     $visibility:vis struct $newtype:ident$([$($generics:tt)*])?
+    //     $(where [$($where_clause:tt)*])? {
+    //         $field:ident: $oldtype:ty $(,)?
+    //     }
+    // ) => {
+    //     #[derive(derive_more::Deref, derive_more::Into)]
+    //     $(#[$meta])*
+    //     $visibility struct $newtype$(<$($generics)*>)?
+    //     $(where $($where_clause)*)? {
+    //         $field: $oldtype
+    //     }
+    //
+    //     $crate::impl_all_without_validation!(impl$(<$($generics)*>)? for $newtype $(where [$($where_clause)*])?, $oldtype, regular, $field);
+    // };
 }
 
 #[macro_export]
