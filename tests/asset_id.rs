@@ -1,0 +1,16 @@
+use subtype::checkers::{Contains, Empty, Not};
+use subtype::conjurers::space::Space;
+use subtype::errors::{IncorrectValueError, ValidationError, ValidationError2};
+use subtype::newtype_string;
+
+newtype_string!(
+    pub struct AssetId(String | (Not<Empty>, Not<Contains<Space>>))
+);
+
+#[test]
+fn asset_id() {
+    type InnerError = ValidationError2<ValidationError<Not<Empty>>, ValidationError<Not<Contains<Space>>>>;
+    type TheError = IncorrectValueError<String, InnerError>;
+    assert_eq!(AssetId::new(""), Err(TheError::new("", InnerError::Variant1(ValidationError::<Not<Empty>>::new()))));
+    assert_eq!(AssetId::new("usd"), Ok(AssetId("usd".to_string())));
+}

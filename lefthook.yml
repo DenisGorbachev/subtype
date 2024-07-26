@@ -11,3 +11,7 @@ pre-commit:
       run: cargo nextest run --no-fail-fast
     test-docs:
       run: cargo test --doc
+    lint-commit:
+      run: commitlint --last
+    lint-deps:
+      run: cargo machete --with-metadata

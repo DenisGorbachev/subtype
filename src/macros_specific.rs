@@ -7,7 +7,7 @@ macro_rules! newtype_string {
         $crate::newtype!(
             #[derive(derive_more::Display, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Debug)]
             $(#[$meta])*
-            $visibility struct $newtype(String $([$preprocessor])* | $checker $([$postprocessor])*)$(;)?
+            $visibility struct $newtype(String $([$preprocessor])* | $checker $([$postprocessor])*);
         );
     };
     (
@@ -17,7 +17,7 @@ macro_rules! newtype_string {
         $crate::newtype!(
             #[derive(derive_more::Display, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Debug)]
             $(#[$meta])*
-            $visibility struct $newtype(String $([$preprocessor])*)$(;)?
+            $visibility struct $newtype(String $([$preprocessor])*);
         );
     };
 }
