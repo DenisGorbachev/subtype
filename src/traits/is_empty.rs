@@ -8,7 +8,19 @@ impl IsEmpty for str {
     }
 }
 
+impl IsEmpty for &str {
+    fn is_empty(&self) -> bool {
+        str::is_empty(self)
+    }
+}
+
 impl IsEmpty for String {
+    fn is_empty(&self) -> bool {
+        String::is_empty(self)
+    }
+}
+
+impl IsEmpty for &String {
     fn is_empty(&self) -> bool {
         String::is_empty(self)
     }
@@ -20,9 +32,21 @@ impl<T> IsEmpty for [T] {
     }
 }
 
+impl<T> IsEmpty for &[T] {
+    fn is_empty(&self) -> bool {
+        <[T]>::is_empty(self)
+    }
+}
+
 impl<T> IsEmpty for Vec<T> {
     fn is_empty(&self) -> bool {
-        self.is_empty()
+        <Vec<T>>::is_empty(self)
+    }
+}
+
+impl<T> IsEmpty for &Vec<T> {
+    fn is_empty(&self) -> bool {
+        <Vec<T>>::is_empty(self)
     }
 }
 

@@ -58,3 +58,4 @@
   * Very similar design
   * It's actually better
 * [semval](https://github.com/slowtec/semval)
+* [validators](https://crates.io/crates/validators)
