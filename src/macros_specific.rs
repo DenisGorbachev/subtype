@@ -9,6 +9,7 @@ macro_rules! newtype_string {
             $(#[$meta])*
             $visibility struct $newtype(String $([$preprocessor])* | $checker $([$postprocessor])*);
         );
+        $crate::impl_try_from_ref!(impl TryFrom<&str> for $newtype, $crate::errors::IncorrectValueError<String, <$checker as $crate::traits::validate::Validate<String>>::Error>, new, ToOwned::to_owned);
     };
     (
         $(#[$meta:meta])*
@@ -19,6 +20,7 @@ macro_rules! newtype_string {
             $(#[$meta])*
             $visibility struct $newtype(String $([$preprocessor])*);
         );
+        $crate::impl_from_ref!(impl From<&str> for $newtype, new, ToOwned::to_owned);
     };
 }
 
@@ -49,6 +51,14 @@ macro_rules! newtype_static_str {
 #[cfg(test)]
 mod tests {
     use crate::checkers::{Empty, Not};
+
+    newtype_string! {
+        pub struct NewtypeStringPlain(String)
+    }
+
+    newtype_string! {
+        pub struct NewtypeStringChecker(String | Not<Empty>)
+    }
 
     newtype_static_str! {
         pub struct A(&'static str)
