@@ -1,9 +1,9 @@
 use subtype::checkers::not::Not;
 use subtype::checkers::Empty;
-use subtype::errors::{IncorrectValueError, ValidationError};
 use subtype::traits::validate::Validate;
 use subtype::transformers::trim::Trim;
 use subtype::{constructor_with_validation, impl_try_from_own, impl_try_from_ref, setter_with_validation};
+use subtype::{IncorrectValueError, ValidationError};
 
 #[allow(dead_code)]
 #[derive(PartialOrd, PartialEq, Clone, Debug)]

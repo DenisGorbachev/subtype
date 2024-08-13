@@ -1,7 +1,7 @@
 use subtype::checkers::{Contains, Empty, Not};
 use subtype::conjurers::space::Space;
-use subtype::errors::{IncorrectValueError, ValidationError, ValidationError2};
 use subtype::newtype_string;
+use subtype::{IncorrectValueError, ValidationError, ValidationError2};
 
 newtype_string!(
     pub struct AssetId(String | (Not<Empty>, Not<Contains<Space>>))

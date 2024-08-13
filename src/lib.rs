@@ -1,6 +1,6 @@
 pub mod checkers;
 pub mod conjurers;
-pub mod errors;
+mod errors;
 pub mod functions;
 pub mod macros;
 pub mod macros_helpers;
@@ -15,3 +15,5 @@ mod tests;
 pub mod traits;
 pub mod transformers;
 pub mod with_derive_neg;
+
+pub use errors::*;

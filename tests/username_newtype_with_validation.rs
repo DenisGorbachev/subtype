@@ -1,9 +1,9 @@
 use subtype::checkers::not::Not;
 use subtype::checkers::Empty;
-use subtype::errors::{IncorrectValueError, ValidationError};
 use subtype::newtype;
 use subtype::traits::validate::Validate;
 use subtype::transformers::trim::Trim;
+use subtype::{IncorrectValueError, ValidationError};
 
 newtype!(
     #[derive(PartialOrd, PartialEq, Clone, Debug)]

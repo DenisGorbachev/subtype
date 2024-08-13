@@ -3,8 +3,8 @@ use subtype::checkers::not::Not;
 use subtype::checkers::Empty;
 use subtype::conjurers::inclusive::Inclusive;
 use subtype::constructor_with_validation;
-use subtype::errors::{IncorrectValueError, ValidationError, ValidationError2};
 use subtype::transformers::trim::Trim;
+use subtype::{IncorrectValueError, ValidationError, ValidationError2};
 
 #[allow(dead_code)]
 #[derive(PartialOrd, PartialEq, Clone, Debug)]

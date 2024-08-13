@@ -136,8 +136,8 @@ macro_rules! newtype_derive_auto {
 macro_rules! impl_all_with_validation {
     (impl$([$($generics:tt)*])? for $newtype:ty $(where [$($where_clause:tt)*])?, $oldtype:ty $([$preprocessor:ty])* | $checker:ty $([$postprocessor:ty])*, $style:ident, $field:ident) => {
         $crate::impl_self_constructor_setter_with_validation!(impl$(<$($generics)*>)? for $newtype $(where [$($where_clause)*])?, $oldtype $([$preprocessor])* | $checker $([$postprocessor])*, $style, $field, new, set);
-        $crate::impl_try_from_own!(impl$(<$($generics)*>)? TryFrom<$oldtype> for $newtype $(where [$($where_clause)*])?, $crate::errors::IncorrectValueError<$oldtype, <$checker as $crate::traits::validate::Validate<$oldtype>>::Error>, new);
-        $crate::impl_try_from_ref!(impl$(<$($generics)*>)? TryFrom<&$oldtype> for $newtype $(where [$($where_clause)*])?, $crate::errors::IncorrectValueError<$oldtype, <$checker as $crate::traits::validate::Validate<$oldtype>>::Error>, new, Clone::clone);
+        $crate::impl_try_from_own!(impl$(<$($generics)*>)? TryFrom<$oldtype> for $newtype $(where [$($where_clause)*])?, $crate::IncorrectValueError<$oldtype, <$checker as $crate::traits::validate::Validate<$oldtype>>::Error>, new);
+        $crate::impl_try_from_ref!(impl$(<$($generics)*>)? TryFrom<&$oldtype> for $newtype $(where [$($where_clause)*])?, $crate::IncorrectValueError<$oldtype, <$checker as $crate::traits::validate::Validate<$oldtype>>::Error>, new, Clone::clone);
     };
 }
 
@@ -174,12 +174,12 @@ macro_rules! impl_self_constructor_setter_without_validation {
 #[macro_export]
 macro_rules! constructor_with_validation {
     ($visibility:vis fn $name:ident, $oldtype:ty $([$preprocessor:ty])* | $checker:ty $([$postprocessor:ty])*, $style:ident, $field:ident) => {
-            $visibility fn $name($field: impl Into<$oldtype>) -> Result<Self, $crate::errors::IncorrectValueError<$oldtype, <$checker as $crate::traits::validate::Validate<$oldtype>>::Error>> {
+            $visibility fn $name($field: impl Into<$oldtype>) -> Result<Self, $crate::IncorrectValueError<$oldtype, <$checker as $crate::traits::validate::Validate<$oldtype>>::Error>> {
                 let $field = $field.into();$(
                 let $field = <$preprocessor as $crate::traits::transform::Transform<$oldtype>>::transform($field);)*
                 match <$checker as $crate::traits::validate::Validate<$oldtype>>::validate(&$field) {
                     None => {}
-                    Some(err) => return Err($crate::errors::IncorrectValueError::new($field, err))
+                    Some(err) => return Err($crate::IncorrectValueError::new($field, err))
                 }$(
                 let $field = <$postprocessor as $crate::traits::transform::Transform<$oldtype>>::transform($field);)*
                 Ok($crate::construct!(Self, $style, $field))
@@ -190,7 +190,7 @@ macro_rules! constructor_with_validation {
     //             let $field = $field.into();$(
     //             let $field = <$preprocessor as $crate::traits::transform::Transform<$oldtype>>::transform($field);)*
     //             $(if !<$checker as $crate::traits::check::Check<$oldtype>>::check(&$field) {
-    //                 return Err($crate::errors::InvalidValueError::<$oldtype, $checker>::new($field).into());
+    //                 return Err($crate::InvalidValueError::<$oldtype, $checker>::new($field).into());
     //             })+$(
     //             let $field = <$postprocessor as $crate::traits::transform::Transform<$oldtype>>::transform($field);)*
     //             Ok($crate::construct!(Self, $style, $field))
@@ -212,12 +212,12 @@ macro_rules! constructor_without_validation {
 #[macro_export]
 macro_rules! setter_with_validation {
     ($visibility:vis fn $name:ident, $oldtype:ty $([$preprocessor:ty])* | $checker:ty $([$postprocessor:ty])*, $style:ident, $field:ident) => {
-            $visibility fn $name(&mut self, $field: impl Into<$oldtype>) -> Result<(), $crate::errors::IncorrectValueError<$oldtype, <$checker as $crate::traits::validate::Validate<$oldtype>>::Error>> {
+            $visibility fn $name(&mut self, $field: impl Into<$oldtype>) -> Result<(), $crate::IncorrectValueError<$oldtype, <$checker as $crate::traits::validate::Validate<$oldtype>>::Error>> {
                 let $field = $field.into();$(
                 let $field = <$preprocessor as $crate::traits::transform::Transform<$oldtype>>::transform($field);)*
                 match <$checker as $crate::traits::validate::Validate<$oldtype>>::validate(&$field) {
                     None => {}
-                    Some(err) => return Err($crate::errors::IncorrectValueError::new($field, err))
+                    Some(err) => return Err($crate::IncorrectValueError::new($field, err))
                 }$(
                 let $field = <$postprocessor as $crate::traits::transform::Transform<$oldtype>>::transform($field);)*
                 $crate::assign!(self, $style, $field);

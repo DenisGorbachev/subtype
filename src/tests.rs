@@ -1,8 +1,8 @@
 use crate::checkers::{Empty, Max};
 use crate::conjurers::inclusive::Inclusive;
 use crate::conjurers::u32::U32;
-use crate::errors::invalid_value_error::InvalidValueError;
 use crate::traits::validate::Validate;
+use crate::InvalidValueError;
 
 #[cfg(test)]
 mod validate {
