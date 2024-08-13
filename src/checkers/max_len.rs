@@ -2,8 +2,8 @@ use std::marker::PhantomData;
 
 use crate::traits::check::Check;
 use crate::traits::conjure::Conjure;
-use crate::traits::len::Len;
 use crate::validate_as_check;
+use standard_traits::Len;
 
 #[derive(Default, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy, Debug)]
 pub struct MaxLen<const MAXIMUM: usize, Inclusivity>(PhantomData<Inclusivity>);

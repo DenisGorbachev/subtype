@@ -16,6 +16,7 @@ num-traits = { version = "0.2.0", optional = true }
 serde = { version = "1.0.0", optional = true, features = ["derive"] }
 pretty-type-name = "1.0.1"
 time = { version = "0.3.36", optional = true }
+standard-traits = { path = "../standard-traits" }
 
 [dev-dependencies]
 derive_more = { version = "1.0.0", features = ["full"] }
