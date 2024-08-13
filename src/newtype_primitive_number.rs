@@ -3,7 +3,7 @@
 macro_rules! newtype_primitive_number {
     (
         $(#[$meta:meta])*
-        $visibility:vis struct $newtype:ident($oldtype:ty $([$preprocessor:ty])* | $checker:ty $([$postprocessor:ty])*)$(;)?
+        $newvis:vis struct $newtype:ident($oldtype:ty $([$preprocessor:ty])* | $checker:ty $([$postprocessor:ty])*)$(;)?
     ) => {
         $crate::newtype!(
             #[derive(Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy, Debug)]
@@ -11,12 +11,12 @@ macro_rules! newtype_primitive_number {
             #[derive(derive_more::Display)]
             // Numeric traits like Add, AddAssign, etc, are not derived because they can bypass the validation
             $(#[$meta])*
-            $visibility struct $newtype($oldtype $([$preprocessor])* | $checker $([$postprocessor])*);
+            $newvis struct $newtype($oldtype $([$preprocessor])* | $checker $([$postprocessor])*);
         );
     };
     (
         $(#[$meta:meta])*
-        $visibility:vis struct $newtype:ident($oldtype:ty $([$preprocessor:ty])*)$(;)?
+        $newvis:vis struct $newtype:ident($oldvis:vis $oldtype:ty $([$preprocessor:ty])*)$(;)?
     ) => {
         $crate::newtype!(
             #[derive(Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy, Debug)]
@@ -24,7 +24,7 @@ macro_rules! newtype_primitive_number {
             #[derive(derive_more::Display)]
             #[derive(derive_more::Add, derive_more::Sub, derive_more::Mul, derive_more::Div, derive_more::Rem, derive_more::Shr, derive_more::Shl)]
             $(#[$meta])*
-            $visibility struct $newtype($oldtype $([$preprocessor])*);
+            $newvis struct $newtype($oldvis $oldtype $([$preprocessor])*);
         );
     };
 }

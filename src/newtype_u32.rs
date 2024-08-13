@@ -2,20 +2,20 @@
 macro_rules! newtype_u32 {
     (
         $(#[$meta:meta])*
-        $visibility:vis struct $newtype:ident(u32 $([$preprocessor:ty])* | $checker:ty $([$postprocessor:ty])*)$(;)?
+        $newvis:vis struct $newtype:ident(u32 $([$preprocessor:ty])* | $checker:ty $([$postprocessor:ty])*)$(;)?
     ) => {
         $crate::newtype_primitive_number!(
             $(#[$meta])*
-            $visibility struct $newtype(u32 $([$preprocessor])* | $checker $([$postprocessor])*);
+            $newvis struct $newtype(u32 $([$preprocessor])* | $checker $([$postprocessor])*);
         );
     };
     (
         $(#[$meta:meta])*
-        $visibility:vis struct $newtype:ident(u32 $([$preprocessor:ty])*)$(;)?
+        $newvis:vis struct $newtype:ident($oldvis:vis u32 $([$preprocessor:ty])*)$(;)?
     ) => {
         $crate::newtype_primitive_number!(
             $(#[$meta])*
-            $visibility struct $newtype(u32 $([$preprocessor])*);
+            $newvis struct $newtype($oldvis u32 $([$preprocessor])*);
         );
     };
 }

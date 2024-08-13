@@ -51,12 +51,12 @@ macro_rules! newtype {
     // pub struct Username(String | Not<Empty>);
     (
         $(#[$meta:meta])*
-        $visibility:vis struct $newtype:ident$([$($generics:tt)*])?($oldtype:ty $([$preprocessor:ty])* | $checker:ty $([$postprocessor:ty])*)
+        $newvis:vis struct $newtype:ident$([$($generics:tt)*])?($oldtype:ty $([$preprocessor:ty])* | $checker:ty $([$postprocessor:ty])*)
         $(where [$($where_clause:tt)*])?$(;)?
     ) => {
         #[derive(derive_more::Deref, derive_more::AsRef, derive_more::Into)]
         $(#[$meta])*
-        $visibility struct $newtype$(<$($generics)*>)?($oldtype)
+        $newvis struct $newtype$(<$($generics)*>)?($oldtype)
         $(where $($where_clause)*)?;
 
         $crate::impl_all_with_validation!(impl$(<$($generics)*>)? for $newtype $(where [$($where_clause)*])?, $oldtype $([$preprocessor])* | $checker $([$postprocessor])*, tuple, value);
@@ -85,12 +85,12 @@ macro_rules! newtype {
     // pub struct Username(String);
     (
         $(#[$meta:meta])*
-        $visibility:vis struct $newtype:ident$([$($generics:tt)*])?($oldtype:ty $([$preprocessor:ty])*)
+        $newvis:vis struct $newtype:ident$([$($generics:tt)*])?($oldvis:vis $oldtype:ty $([$preprocessor:ty])*)
         $(where [$($where_clause:tt)*])?$(;)?
     ) => {
         #[derive(derive_more::Deref, derive_more::AsRef, derive_more::Into)]
         $(#[$meta])*
-        $visibility struct $newtype$(<$($generics)*>)?($oldtype) $(where $($where_clause)*)?;
+        $newvis struct $newtype$(<$($generics)*>)?($oldvis $oldtype) $(where $($where_clause)*)?;
 
         $crate::impl_all_without_validation!(impl$(<$($generics)*>)? for $newtype $(where [$($where_clause)*])?, $oldtype $([$preprocessor])*, tuple, value);
     };
