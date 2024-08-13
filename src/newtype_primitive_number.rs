@@ -6,7 +6,9 @@ macro_rules! newtype_primitive_number {
         $visibility:vis struct $newtype:ident($oldtype:ty $([$preprocessor:ty])* | $checker:ty $([$postprocessor:ty])*)$(;)?
     ) => {
         $crate::newtype!(
-            #[derive(derive_more::Display, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Debug)]
+            #[derive(Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy, Debug)]
+            // #[derive(Default)] is not present because it can bypass the validation
+            #[derive(derive_more::Display)]
             // Numeric traits like Add, AddAssign, etc, are not derived because they can bypass the validation
             $(#[$meta])*
             $visibility struct $newtype($oldtype $([$preprocessor])* | $checker $([$postprocessor])*);
@@ -17,7 +19,9 @@ macro_rules! newtype_primitive_number {
         $visibility:vis struct $newtype:ident($oldtype:ty $([$preprocessor:ty])*)$(;)?
     ) => {
         $crate::newtype!(
-            #[derive(derive_more::Display, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Debug)]
+            #[derive(Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy, Debug)]
+            #[derive(Default)]
+            #[derive(derive_more::Display)]
             #[derive(derive_more::Add, derive_more::Sub, derive_more::Mul, derive_more::Div, derive_more::Rem, derive_more::Shr, derive_more::Shl)]
             $(#[$meta])*
             $visibility struct $newtype($oldtype $([$preprocessor])*);

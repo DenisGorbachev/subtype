@@ -5,7 +5,9 @@ macro_rules! newtype_static_str {
         $visibility:vis struct $newtype:ident(&'static str $([$preprocessor:ty])* | $checker:ty $([$postprocessor:ty])*)$(;)?
     ) => {
         $crate::newtype!(
-            #[derive(derive_more::Display, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy, Debug)]
+            #[derive(Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy, Debug)]
+            // #[derive(Default)] is not present because it can bypass the validation
+            #[derive(derive_more::Display)]
             $(#[$meta])*
             $visibility struct $newtype(&'static str $([$preprocessor])* | $checker $([$postprocessor])*);
         );
@@ -15,7 +17,9 @@ macro_rules! newtype_static_str {
         $visibility:vis struct $newtype:ident(&'static str $([$preprocessor:ty])*)$(;)?
     ) => {
         $crate::newtype!(
-            #[derive(derive_more::Display, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy, Debug)]
+            #[derive(Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy, Debug)]
+            #[derive(Default)]
+            #[derive(derive_more::Display)]
             $(#[$meta])*
             $visibility struct $newtype(&'static str $([$preprocessor])*);
         );
