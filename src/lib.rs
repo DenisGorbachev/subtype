@@ -1,23 +1,23 @@
 mod checkers;
-pub mod conjurers;
+mod conjurers;
 mod errors;
-pub mod functions;
-pub mod macros;
-pub mod macros_helpers;
-pub mod macros_traits;
-pub mod newtype_primitive_number;
-pub mod newtype_static_str;
-pub mod newtype_string;
-pub mod newtype_u32;
-pub mod sigils;
+mod functions;
+mod macros;
+mod macros_helpers;
+mod macros_traits;
+mod newtype_primitive_number;
+mod newtype_static_str;
+mod newtype_string;
+mod newtype_u32;
 #[cfg(test)]
 mod tests;
-pub mod transformers;
-pub mod with_derive_neg;
-
-pub use errors::*;
-
 mod traits;
+mod transformers;
+mod with_derive_neg;
 
 pub use checkers::*;
+pub use conjurers::*;
+pub use errors::*;
+pub use functions::*;
 pub use traits::*;
+pub use transformers::*;

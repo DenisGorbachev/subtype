@@ -1,6 +1,6 @@
-use subtype::transformers::trim::Trim;
 use subtype::Empty;
 use subtype::Not;
+use subtype::Trim;
 use subtype::Validate;
 use subtype::{constructor_with_validation, impl_try_from_own, impl_try_from_ref, setter_with_validation};
 use subtype::{IncorrectValueError, ValidationError};

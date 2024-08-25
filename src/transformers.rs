@@ -1,1 +1,2 @@
-pub mod trim;
+mod trim;
+pub use trim::*;

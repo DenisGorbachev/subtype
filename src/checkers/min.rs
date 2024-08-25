@@ -1,10 +1,10 @@
 use std::marker::PhantomData;
 
-use crate::conjurers::exclusive::Exclusive;
-use crate::conjurers::inclusive::Inclusive;
 use crate::transform_as_validate_as_check;
 use crate::Check;
 use crate::Conjure;
+use crate::Exclusive;
+use crate::Inclusive;
 
 // This order and meta-type of generic arguments is better for informative errors
 #[derive(Default, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy, Debug)]
@@ -33,9 +33,9 @@ transform_as_validate_as_check!(impl[Value, Minimum, Inclusivity] of [Value] for
 
 #[cfg(test)]
 mod tests {
-    use crate::conjurers::exclusive::Exclusive;
-    use crate::conjurers::inclusive::Inclusive;
-    use crate::conjurers::u32::U32;
+    use crate::Exclusive;
+    use crate::Inclusive;
+    use crate::U32;
 
     use super::*;
 

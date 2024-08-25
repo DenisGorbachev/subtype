@@ -1,5 +1,5 @@
-use subtype::conjurers::space::Space;
 use subtype::newtype_string;
+use subtype::Space;
 use subtype::{Contains, Empty, Not};
 use subtype::{IncorrectValueError, ValidationError, ValidationError2};
 

@@ -1,7 +1,7 @@
 use subtype::newtype;
-use subtype::transformers::trim::Trim;
 use subtype::Empty;
 use subtype::Not;
+use subtype::Trim;
 use subtype::Validate;
 use subtype::{IncorrectValueError, ValidationError};
 

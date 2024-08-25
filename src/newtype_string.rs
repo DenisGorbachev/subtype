@@ -30,7 +30,7 @@ macro_rules! newtype_string {
 
 #[cfg(test)]
 mod tests {
-    use crate::checkers::{Empty, Not};
+    use crate::{Empty, Not};
 
     newtype_string! {
         pub struct NewtypeStringPlain(String)

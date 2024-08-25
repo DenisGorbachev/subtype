@@ -1,9 +1,9 @@
-use subtype::conjurers::inclusive::Inclusive;
 use subtype::constructor_with_validation;
-use subtype::transformers::trim::Trim;
 use subtype::Empty;
+use subtype::Inclusive;
 use subtype::MaxLen;
 use subtype::Not;
+use subtype::Trim;
 use subtype::{IncorrectValueError, ValidationError, ValidationError2};
 
 #[allow(dead_code)]

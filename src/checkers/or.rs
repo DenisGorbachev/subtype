@@ -1,9 +1,9 @@
 use std::marker::PhantomData;
 
-use crate::errors::{InvalidValueError, ValidationError};
 use crate::Check;
 use crate::TryTransform;
 use crate::Validate;
+use crate::{InvalidValueError, ValidationError};
 
 #[derive(Eq, PartialEq, Hash, Clone, Copy, Debug)]
 #[allow(dead_code)]
@@ -55,7 +55,7 @@ where
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::conjurers::i32::I32;
+    use crate::I32;
     use crate::{GreaterThan, LessThan};
 
     #[test]

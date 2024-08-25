@@ -28,7 +28,7 @@ macro_rules! newtype_static_str {
 
 #[cfg(test)]
 mod tests {
-    use crate::checkers::{Empty, Not};
+    use crate::{Empty, Not};
 
     newtype_static_str! {
         pub struct A(&'static str)

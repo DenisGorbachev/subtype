@@ -1,5 +1,5 @@
-use subtype::transformers::trim::Trim;
 use subtype::Empty;
+use subtype::Trim;
 
 #[macro_export]
 macro_rules! define_custom {

@@ -22,8 +22,8 @@ macro_rules! newtype_u32 {
 
 #[cfg(test)]
 mod tests {
-    use crate::conjurers::u32::U32;
     use crate::Equal;
+    use crate::U32;
     use assert_matches::assert_matches;
 
     newtype_u32! {

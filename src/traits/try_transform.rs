@@ -1,4 +1,4 @@
-use crate::errors::InvalidValueError;
+use crate::InvalidValueError;
 
 pub trait TryTransform<Value> {
     type Error;

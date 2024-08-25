@@ -1,1 +1,2 @@
-pub mod get_result;
+mod get_result;
+pub use get_result::*;

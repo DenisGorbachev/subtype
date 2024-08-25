@@ -1,9 +1,9 @@
 use std::marker::PhantomData;
 
-use crate::errors::{InvalidValueError, ValidationError};
 use crate::Check;
 use crate::TryTransform;
 use crate::Validate;
+use crate::{InvalidValueError, ValidationError};
 
 #[derive(Default, Eq, PartialEq, Hash, Clone, Copy, Debug)]
 pub struct Not<T>(PhantomData<T>);
