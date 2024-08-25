@@ -11,7 +11,7 @@ macro_rules! newtype_string {
             $(#[$meta])*
             $visibility struct $newtype(String $([$preprocessor])* | $checker $([$postprocessor])*);
         );
-        $crate::impl_try_from_ref!(impl TryFrom<&str> for $newtype, $crate::IncorrectValueError<String, <$checker as $crate::traits::validate::Validate<String>>::Error>, new, ToOwned::to_owned);
+        $crate::impl_try_from_ref!(impl TryFrom<&str> for $newtype, $crate::IncorrectValueError<String, <$checker as $crate::Validate<String>>::Error>, new, ToOwned::to_owned);
     };
     (
         $(#[$meta:meta])*

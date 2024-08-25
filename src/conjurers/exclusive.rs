@@ -1,4 +1,4 @@
-use crate::traits::conjure::Conjure;
+use crate::Conjure;
 
 #[derive(Default, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy, Debug)]
 pub struct Exclusive;

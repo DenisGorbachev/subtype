@@ -1,8 +1,8 @@
 use crate::checkers::{Empty, Max};
 use crate::conjurers::inclusive::Inclusive;
 use crate::conjurers::u32::U32;
-use crate::traits::validate::Validate;
 use crate::InvalidValueError;
+use crate::Validate;
 
 #[cfg(test)]
 mod validate {
@@ -38,9 +38,9 @@ mod transform {
 
 #[cfg(test)]
 mod tuples {
-    use crate::checkers::max_len::MaxLen;
-    use crate::checkers::not::Not;
     use crate::errors::{IncorrectValueError, ValidationError, ValidationError2};
+    use crate::MaxLen;
+    use crate::Not;
 
     use super::*;
 

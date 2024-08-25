@@ -2,9 +2,9 @@ use std::marker::PhantomData;
 
 use derive_more::Error;
 
-use crate::traits::check::Check;
-use crate::traits::try_transform::TryTransform;
-use crate::traits::validate::Validate;
+use crate::Check;
+use crate::TryTransform;
+use crate::Validate;
 
 #[derive(Default, Eq, PartialEq, Hash, Clone, Copy, Debug)]
 pub struct All<Checker>(PhantomData<Checker>);

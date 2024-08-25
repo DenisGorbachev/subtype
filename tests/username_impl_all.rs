@@ -1,7 +1,7 @@
-use subtype::checkers::not::Not;
-use subtype::checkers::Empty;
 use subtype::impl_all_with_validation;
-use subtype::traits::validate::Validate;
+use subtype::Empty;
+use subtype::Not;
+use subtype::Validate;
 use subtype::{IncorrectValueError, ValidationError};
 
 #[allow(dead_code)]

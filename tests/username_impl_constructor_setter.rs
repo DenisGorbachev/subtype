@@ -1,6 +1,6 @@
-use subtype::checkers::not::Not;
-use subtype::checkers::Empty;
-use subtype::traits::validate::Validate;
+use subtype::Empty;
+use subtype::Not;
+use subtype::Validate;
 use subtype::{impl_self_constructor_setter_with_validation, impl_try_from_own, impl_try_from_ref};
 use subtype::{IncorrectValueError, ValidationError};
 

@@ -1,8 +1,8 @@
 use std::fmt::Debug;
 
-use crate::traits::check::Check;
-use crate::traits::is_even::IsEven;
 use crate::transform_as_validate_as_check;
+use crate::Check;
+use crate::IsEven;
 
 #[derive(Default, Eq, PartialEq, Hash, Clone, Copy, Debug)]
 pub struct Even;

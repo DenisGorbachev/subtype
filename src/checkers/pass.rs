@@ -1,4 +1,4 @@
-use crate::traits::check::Check;
+use crate::Check;
 use crate::{try_transform_as_validate, validate_as_check};
 
 #[derive(Default, Eq, PartialEq, Hash, Clone, Copy, Debug)]

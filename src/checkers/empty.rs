@@ -1,6 +1,6 @@
-use crate::traits::check::Check;
-use crate::traits::is_empty::IsEmpty;
 use crate::transform_as_validate_as_check;
+use crate::Check;
+use crate::IsEmpty;
 
 #[derive(Default, Eq, PartialEq, Hash, Clone, Copy, Debug)]
 pub struct Empty;

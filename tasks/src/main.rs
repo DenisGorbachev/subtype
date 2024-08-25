@@ -8,10 +8,10 @@ use time::OffsetDateTime;
 use url::Url;
 use url_macro::url;
 
-use subtype::checkers::{Equal, LessThan};
 use subtype::conjurers::now::Now;
 use subtype::conjurers::u32::U32;
 use subtype::newtype;
+use subtype::{FieldEqual, LessThan};
 
 // struct CanUnify<A, B>;
 //
@@ -38,7 +38,7 @@ pub struct SupportedOperators {
 
 newtype!(
     #[derive(Eq, PartialEq, Hash, Clone, Copy, Debug)]
-    pub struct ExpectedTupleSize(u32 | Equal<U32<12>>)
+    pub struct ExpectedTupleSize(u32 | FieldEqual<U32<12>>)
 );
 
 #[derive(Eq, PartialEq, Hash, Clone, Copy, Debug)]
@@ -66,7 +66,7 @@ pub struct Node {
 }
 
 impl Node {
-    pub fn new(title: impl Into<String>, children: impl IntoIterator<Item=impl Into<Node>>) -> Self {
+    pub fn new(title: impl Into<String>, children: impl IntoIterator<Item = impl Into<Node>>) -> Self {
         Self {
             title: title.into(),
             children: children.into_iter().map(|v| v.into()).collect(),

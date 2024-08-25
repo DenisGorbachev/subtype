@@ -2,9 +2,9 @@ use std::marker::PhantomData;
 
 use crate::conjurers::exclusive::Exclusive;
 use crate::conjurers::inclusive::Inclusive;
-use crate::traits::check::Check;
-use crate::traits::conjure::Conjure;
 use crate::transform_as_validate_as_check;
+use crate::Check;
+use crate::Conjure;
 
 // This order and meta-type of generic arguments is better for informative errors
 #[derive(Default, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy, Debug)]

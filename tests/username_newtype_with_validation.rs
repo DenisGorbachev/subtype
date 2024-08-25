@@ -1,8 +1,8 @@
-use subtype::checkers::not::Not;
-use subtype::checkers::Empty;
 use subtype::newtype;
-use subtype::traits::validate::Validate;
 use subtype::transformers::trim::Trim;
+use subtype::Empty;
+use subtype::Not;
+use subtype::Validate;
 use subtype::{IncorrectValueError, ValidationError};
 
 newtype!(

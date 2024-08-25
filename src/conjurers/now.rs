@@ -5,7 +5,7 @@ use time::OffsetDateTime;
 pub struct Now;
 
 #[cfg(feature = "time")]
-impl crate::traits::conjure::Conjure<OffsetDateTime> for Now {
+impl crate::Conjure<OffsetDateTime> for Now {
     fn conjure() -> OffsetDateTime {
         OffsetDateTime::now_utc()
     }

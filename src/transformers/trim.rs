@@ -1,6 +1,6 @@
-use crate::traits::adjust::Adjust;
-use crate::traits::transform::Transform;
-use crate::traits::try_transform::TryTransform;
+use crate::Adjust;
+use crate::Transform;
+use crate::TryTransform;
 
 #[derive(Default, Eq, PartialEq, Hash, Clone, Copy, Debug)]
 pub struct Trim;

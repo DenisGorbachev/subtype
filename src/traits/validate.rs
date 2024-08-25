@@ -1,4 +1,4 @@
-use super::*;
+use crate::ValidationError2;
 
 pub trait Validate<Value> {
     type Error;
@@ -22,11 +22,11 @@ where
 #[macro_export]
 macro_rules! validate_as_check {
     (impl$([$($generics:tt)*])? Validate<$target:ty> for $checker:ty $(where [$($where_clause:tt)*])?) => {
-        impl$(<$($generics)*>)? $crate::traits::validate::Validate<$target> for $checker where $($($where_clause)*)* {
+        impl$(<$($generics)*>)? $crate::Validate<$target> for $checker where $($($where_clause)*)* {
             type Error = $crate::ValidationError<$checker>;
 
             fn validate(value: &$target) -> Option<Self::Error> {
-                if <$checker as $crate::traits::check::Check<$target>>::check(value) {
+                if <$checker as $crate::Check<$target>>::check(value) {
                     None
                 } else {
                     Some(Self::Error::new())

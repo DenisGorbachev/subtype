@@ -10,6 +10,7 @@
 
 * Preprocessors are supported
 * Postprocessors are supported
+* Visibility specifiers (e.g. `pub`, `pub(crate)`) are supported for newtypes that are not restricted by validation
 
 ## Footguns
 

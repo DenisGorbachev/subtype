@@ -1,6 +1,6 @@
-use subtype::checkers::{Contains, Empty, Not};
 use subtype::conjurers::space::Space;
 use subtype::newtype_string;
+use subtype::{Contains, Empty, Not};
 use subtype::{IncorrectValueError, ValidationError, ValidationError2};
 
 newtype_string!(

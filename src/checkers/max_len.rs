@@ -1,8 +1,8 @@
 use std::marker::PhantomData;
 
-use crate::traits::check::Check;
-use crate::traits::conjure::Conjure;
 use crate::validate_as_check;
+use crate::Check;
+use crate::Conjure;
 use standard_traits::Len;
 
 #[derive(Default, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy, Debug)]

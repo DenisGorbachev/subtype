@@ -1,5 +1,5 @@
-use subtype::checkers::Empty;
 use subtype::transformers::trim::Trim;
+use subtype::Empty;
 
 #[macro_export]
 macro_rules! define_custom {
@@ -14,8 +14,8 @@ macro_rules! define_custom {
         prae::define! {
             $(#[$meta])*
             $vis $wrapper: $inner;
-            $(adjust <$adjust as subtype::traits::adjust::Adjust<$inner>>::adjust;)?
-            $(ensure <$ensure as subtype::traits::check::Check<$inner>>::check;)?
+            $(adjust <$adjust as subtype::Adjust<$inner>>::adjust;)?
+            $(ensure <$ensure as subtype::Check<$inner>>::check;)?
             $(validate($err) $validate;)?
             $(plugins: [$($plugin),+ $(,)?];)?
         }
