@@ -268,3 +268,14 @@ macro_rules! impl_from_ref {
         }
     };
 }
+
+#[macro_export]
+macro_rules! impl_as_ref_delegate {
+    (impl$([$($generics:tt)*])? AsRef<$sometype:ty> for $newtype:ty $(where [$($where_clause:tt)*])?) => {
+        impl$(<$($generics)*>)? AsRef<$sometype> for $newtype $(where $($where_clause)*)? {
+            fn as_ref(&self) -> &$sometype {
+                self.0.as_ref()
+            }
+        }
+    };
+}

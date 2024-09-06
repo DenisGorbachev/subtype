@@ -11,6 +11,7 @@ macro_rules! newtype_path_buf {
             $visibility struct $newtype(std::path::PathBuf $([$preprocessor])* | $checker $([$postprocessor])*);
         );
         $crate::impl_try_from_ref!(impl TryFrom<&std::path::Path> for $newtype, $crate::IncorrectValueError<std::path::PathBuf, <$checker as $crate::Validate<std::path::PathBuf>>::Error>, new, ToOwned::to_owned);
+        $crate::impl_as_ref_delegate!(impl AsRef<std::path::Path> for $newtype);
     };
     (
         $(#[$meta:meta])*
@@ -23,6 +24,7 @@ macro_rules! newtype_path_buf {
             $visibility struct $newtype($oldvis std::path::PathBuf $([$preprocessor])*);
         );
         $crate::impl_from_ref!(impl From<&std::path::Path> for $newtype, new, ToOwned::to_owned);
+        $crate::impl_as_ref_delegate!(impl AsRef<std::path::Path> for $newtype);
     };
 }
 
