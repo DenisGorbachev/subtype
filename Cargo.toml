@@ -13,12 +13,12 @@ categories = ["rust-patterns"]
 [dependencies]
 derive_more = { version = "1.0.0", features = ["error"] }
 num-traits = { version = "0.2.0", optional = true }
-serde = { version = "1.0.0", optional = true, features = ["derive"] }
 pretty-type-name = "1.0.1"
-time = { version = "0.3.36", optional = true }
+serde = { version = "1.0.0", optional = true, features = ["derive"] }
 standard-traits = { git = "https://github.com/DenisGorbachev/standard-traits" }
+time = { version = "0.3.36", optional = true }
 
 [dev-dependencies]
-derive_more = { version = "1.0.0", features = ["full"] }
 assert_matches = { version = "1.5.0" }
+derive_more = { version = "1.0.0", features = ["full"] }
 prae = "0.8.4"

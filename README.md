@@ -19,9 +19,13 @@
 
 ## Gotchas
 
-* In macro invocations, the generics and trait bounds must be wrapped in square brackets (`[]`) instead of angle brackets (`<>`). This is a limitation of macro_rules. It applies only to the _definitions_ of generics and trait bounds, not to their usage. See example:
-  * Good: `validate_as_check!(impl[V] Validate<V> for Even where [V: IsEven]);`
-  * Bad: `validate_as_check!(impl<V> Validate<V> for Even where V: IsEven);`
+* In macro invocations, the generics and trait bounds must be wrapped in square brackets (`[]`) instead of angle brackets (`<>`). This is a limitation of macro_rules. It applies only to the _definitions_ of generics and trait bounds, not to their usage. See examples:
+  * `newtype!`
+    * Good: `newtype!(pub struct ProjectDirectoryRef['a](&'a Path));`
+    * Bad: `newtype!(pub struct ProjectDirectoryRef<'a>(&'a Path));`
+  * `validate_as_check!`
+    * Good: `validate_as_check!(impl[V] Validate<V> for Even where [V: IsEven]);`
+    * Bad: `validate_as_check!(impl<V> Validate<V> for Even where V: IsEven);`
 
 ## Constraint types
 
