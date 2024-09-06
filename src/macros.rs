@@ -16,7 +16,7 @@ macro_rules! newtype {
     //         $visibility struct $newtype$(<$($generics)*>)?($oldtype) $(where $($where_clause)*)?;
     //     );
     //
-    //     $crate::impl_all_with_validation!(impl$(<$($generics)*>)? for $newtype $(where [$($where_clause)*])?, $transformer, $oldtype, tuple, value);
+    //     $crate::impl_all_with_validation!(impl$([$($generics)*])? for $newtype $(where [$($where_clause)*])?, $transformer, $oldtype, tuple, value);
     // };
     // (#[derive_auto] $(#[$meta:meta])* $visibility:vis struct $newtype:ident$([$($generics:tt)*])? $(where [$($where_clause:tt)*])? { $field:ident: $oldtype:ty | $transformer:ty $(,)? }) => {
     //     $crate::newtype_derive_auto!(
@@ -26,7 +26,7 @@ macro_rules! newtype {
     //         }
     //     );
     //
-    //     $crate::impl_all_with_validation!(impl$(<$($generics)*>)? for $newtype $(where [$($where_clause)*])?, $transformer, $oldtype, regular, $field);
+    //     $crate::impl_all_with_validation!(impl$([$($generics)*])? for $newtype $(where [$($where_clause)*])?, $transformer, $oldtype, regular, $field);
     // };
     // (#[derive_auto] $(#[$meta:meta])* $visibility:vis struct $newtype:ident$([$($generics:tt)*])?($oldtype:ty) $(where [$($where_clause:tt)*])?$(;)?) => {
     //     $crate::newtype_derive_auto!(
@@ -34,7 +34,7 @@ macro_rules! newtype {
     //         $visibility struct $newtype$(<$($generics)*>)?($oldtype) $(where $($where_clause)*)?;
     //     );
     //
-    //     $crate::impl_self_constructor_setter_without_validation!(impl$(<$($generics)*>)? for $newtype $(where [$($where_clause)*])?, $oldtype, tuple, value);
+    //     $crate::impl_self_constructor_setter_without_validation!(impl$([$($generics)*])? for $newtype $(where [$($where_clause)*])?, $oldtype, tuple, value);
     // };
     // (#[derive_auto] $(#[$meta:meta])* $visibility:vis struct $newtype:ident$([$($generics:tt)*])? $(where [$($where_clause:tt)*])? { $field:ident: $oldtype:ty $(,)? }) => {
     //     $crate::newtype_derive_auto!(
@@ -44,7 +44,7 @@ macro_rules! newtype {
     //         }
     //     );
     //
-    // $crate::impl_self_constructor_setter_without_validation!(impl$(<$($generics)*>)? for $newtype $(where [$($where_clause)*])?, $oldtype, regular, $field);
+    // $crate::impl_self_constructor_setter_without_validation!(impl$([$($generics)*])? for $newtype $(where [$($where_clause)*])?, $oldtype, regular, $field);
     // };
     // --- #[not(derive_auto)]
 
@@ -59,7 +59,7 @@ macro_rules! newtype {
         $newvis struct $newtype$(<$($generics)*>)?($oldtype)
         $(where $($where_clause)*)?;
 
-        $crate::impl_all_with_validation!(impl$(<$($generics)*>)? for $newtype $(where [$($where_clause)*])?, $oldtype $([$preprocessor])* | $checker $([$postprocessor])*, tuple, value);
+        $crate::impl_all_with_validation!(impl$([$($generics)*])? for $newtype $(where [$($where_clause)*])?, $oldtype $([$preprocessor])* | $checker $([$postprocessor])*, tuple, value);
     };
 
     // // pub struct Username {
@@ -79,7 +79,7 @@ macro_rules! newtype {
     //         $field: $oldtype
     //     }
     //
-    //     $crate::impl_all_with_validation!(impl$(<$($generics)*>)? for $newtype $(where [$($where_clause)*])?, $oldtype $([$preprocessor])* | $checker $([$postprocessor])*, regular, $field);
+    //     $crate::impl_all_with_validation!(impl$([$($generics)*])? for $newtype $(where [$($where_clause)*])?, $oldtype $([$preprocessor])* | $checker $([$postprocessor])*, regular, $field);
     // };
 
     // pub struct Username(String);
@@ -92,7 +92,7 @@ macro_rules! newtype {
         $(#[$meta])*
         $newvis struct $newtype$(<$($generics)*>)?($oldvis $oldtype) $(where $($where_clause)*)?;
 
-        $crate::impl_all_without_validation!(impl$(<$($generics)*>)? for $newtype $(where [$($where_clause)*])?, $oldtype $([$preprocessor])*, tuple, value);
+        $crate::impl_all_without_validation!(impl$([$($generics)*])? for $newtype $(where [$($where_clause)*])?, $oldtype $([$preprocessor])*, tuple, value);
     };
 
     // // pub struct Username {
@@ -112,7 +112,7 @@ macro_rules! newtype {
     //         $field: $oldtype
     //     }
     //
-    //     $crate::impl_all_without_validation!(impl$(<$($generics)*>)? for $newtype $(where [$($where_clause)*])?, $oldtype, regular, $field);
+    //     $crate::impl_all_without_validation!(impl$([$($generics)*])? for $newtype $(where [$($where_clause)*])?, $oldtype, regular, $field);
     // };
 }
 
