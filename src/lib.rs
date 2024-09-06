@@ -5,6 +5,7 @@ mod functions;
 mod macros;
 mod macros_helpers;
 mod macros_traits;
+mod newtype_path_buf;
 mod newtype_primitive_number;
 mod newtype_static_str;
 mod newtype_string;

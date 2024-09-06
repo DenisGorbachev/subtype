@@ -1,3 +1,5 @@
+use std::path::{Path, PathBuf};
+
 pub trait IsEmpty {
     fn is_empty(&self) -> bool;
 }
@@ -47,6 +49,24 @@ impl<T> IsEmpty for Vec<T> {
 impl<T> IsEmpty for &Vec<T> {
     fn is_empty(&self) -> bool {
         <Vec<T>>::is_empty(self)
+    }
+}
+
+impl IsEmpty for PathBuf {
+    fn is_empty(&self) -> bool {
+        self.as_os_str().is_empty()
+    }
+}
+
+impl IsEmpty for &PathBuf {
+    fn is_empty(&self) -> bool {
+        self.as_os_str().is_empty()
+    }
+}
+
+impl IsEmpty for &Path {
+    fn is_empty(&self) -> bool {
+        self.as_os_str().is_empty()
     }
 }
 
