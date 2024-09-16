@@ -10,6 +10,7 @@ mod newtype_primitive_number;
 mod newtype_static_str;
 mod newtype_string;
 mod newtype_u32;
+mod newtype_u64;
 #[cfg(test)]
 mod tests;
 mod traits;
