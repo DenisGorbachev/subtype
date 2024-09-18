@@ -88,7 +88,7 @@ macro_rules! newtype {
         $newvis:vis struct $newtype:ident$([$($generics:tt)*])?($oldvis:vis $oldtype:ty $([$preprocessor:ty])*)
         $(where [$($where_clause:tt)*])?$(;)?
     ) => {
-        #[derive(derive_more::Deref, derive_more::AsRef, derive_more::Into)]
+        #[derive(derive_more::Deref, derive_more::DerefMut, derive_more::AsRef, derive_more::Into)]
         $(#[$meta])*
         $newvis struct $newtype$(<$($generics)*>)?($oldvis $oldtype) $(where $($where_clause)*)?;
 

@@ -22,7 +22,8 @@ macro_rules! newtype_primitive_number {
             #[derive(Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy, Debug)]
             #[derive(Default)]
             #[derive(derive_more::Display)]
-            #[derive(derive_more::Add, derive_more::Sub, derive_more::Mul, derive_more::Div, derive_more::Rem, derive_more::Shr, derive_more::Shl)]
+            #[derive(derive_more::Add, derive_more::Sub, derive_more::Mul, derive_more::Div, derive_more::Rem, derive_more::Shr, derive_more::Shl, derive_more::BitAnd, derive_more::BitOr, derive_more::BitXor)]
+            #[derive(derive_more::AddAssign, derive_more::SubAssign, derive_more::MulAssign, derive_more::DivAssign, derive_more::RemAssign, derive_more::ShrAssign, derive_more::ShlAssign, derive_more::BitAndAssign, derive_more::BitOrAssign, derive_more::BitXorAssign)]
             $(#[$meta])*
             $newvis struct $newtype($oldvis $oldtype $([$preprocessor])*);
         );
