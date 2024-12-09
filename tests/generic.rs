@@ -1,3 +1,12 @@
-pub struct Generic<T: Iterator>(T);
+use subtype::newtype;
 
-// constructor!(Pass, T, impl<T> for Generic<T> where T: Iterator, T: Debug);
+newtype!(
+    #[derive(PartialOrd, PartialEq, Clone, Debug)]
+    pub struct Generic[T](Option<T>) where [T: Clone];
+);
+
+// TODO: Implement generics with trait bounds (or move trait bounds to where clause & document it)
+// newtype!(
+//     #[derive(PartialOrd, PartialEq, Clone, Debug)]
+//     pub struct Generic[T: Iterator](Option<T>);
+// );

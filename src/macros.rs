@@ -59,7 +59,7 @@ macro_rules! newtype {
         $newvis struct $newtype$(<$($generics)*>)?($oldtype)
         $(where $($where_clause)*)?;
 
-        $crate::impl_all_with_validation!(impl$([$($generics)*])? for $newtype $(where [$($where_clause)*])?, $oldtype $([$preprocessor])* | $checker $([$postprocessor])*, tuple, value);
+        $crate::impl_all_with_validation!(impl$([$($generics)*])? for $newtype$(<$($generics)*>)? $(where [$($where_clause)*])?, $oldtype $([$preprocessor])* | $checker $([$postprocessor])*, tuple, value);
     };
 
     // // pub struct Username {
@@ -92,7 +92,7 @@ macro_rules! newtype {
         $(#[$meta])*
         $newvis struct $newtype$(<$($generics)*>)?($oldvis $oldtype) $(where $($where_clause)*)?;
 
-        $crate::impl_all_without_validation!(impl$([$($generics)*])? for $newtype $(where [$($where_clause)*])?, $oldtype $([$preprocessor])*, tuple, value);
+        $crate::impl_all_without_validation!(impl$([$($generics)*])? for $newtype$(<$($generics)*>)? $(where [$($where_clause)*])?, $oldtype $([$preprocessor])*, tuple, value);
     };
 
     // // pub struct Username {
@@ -119,25 +119,25 @@ macro_rules! newtype {
 #[macro_export]
 macro_rules! impl_all_with_validation {
     (impl$([$($generics:tt)*])? for $newtype:ty $(where [$($where_clause:tt)*])?, $oldtype:ty $([$preprocessor:ty])* | $checker:ty $([$postprocessor:ty])*, $style:ident, $field:ident) => {
-        $crate::impl_self_constructor_setter_with_validation!(impl$(<$($generics)*>)? for $newtype $(where [$($where_clause)*])?, $oldtype $([$preprocessor])* | $checker $([$postprocessor])*, $style, $field, new, set);
-        $crate::impl_try_from_own!(impl$(<$($generics)*>)? TryFrom<$oldtype> for $newtype $(where [$($where_clause)*])?, $crate::IncorrectValueError<$oldtype, <$checker as $crate::Validate<$oldtype>>::Error>, new);
-        $crate::impl_try_from_ref!(impl$(<$($generics)*>)? TryFrom<&$oldtype> for $newtype $(where [$($where_clause)*])?, $crate::IncorrectValueError<$oldtype, <$checker as $crate::Validate<$oldtype>>::Error>, new, Clone::clone);
+        $crate::impl_self_constructor_setter_with_validation!(impl$([$($generics)*])? for $newtype $(where [$($where_clause)*])?, $oldtype $([$preprocessor])* | $checker $([$postprocessor])*, $style, $field, new, set);
+        $crate::impl_try_from_own!(impl$([$($generics)*])? TryFrom<$oldtype> for $newtype $(where [$($where_clause)*])?, $crate::IncorrectValueError<$oldtype, <$checker as $crate::Validate<$oldtype>>::Error>, new);
+        $crate::impl_try_from_ref!(impl$([$($generics)*])? TryFrom<&$oldtype> for $newtype $(where [$($where_clause)*])?, $crate::IncorrectValueError<$oldtype, <$checker as $crate::Validate<$oldtype>>::Error>, new, Clone::clone);
     };
 }
 
 #[macro_export]
 macro_rules! impl_all_without_validation {
     (impl$([$($generics:tt)*])? for $newtype:ty $(where [$($where_clause:tt)*])?, $oldtype:ty $([$preprocessor:ty])*, $style:ident, $field:ident) => {
-        $crate::impl_self_constructor_setter_without_validation!(impl$(<$($generics)*>)? for $newtype $(where [$($where_clause)*])?, $oldtype $([$preprocessor])*, $style, $field, new, set);
-        $crate::impl_from_own!(impl$(<$($generics)*>)? From<$oldtype> for $newtype $(where [$($where_clause)*])?, new);
-        $crate::impl_from_ref!(impl$(<$($generics)*>)? From<&$oldtype> for $newtype $(where [$($where_clause)*])?, new, Clone::clone);
+        $crate::impl_self_constructor_setter_without_validation!(impl$([$($generics)*])? for $newtype $(where [$($where_clause)*])?, $oldtype $([$preprocessor])*, $style, $field, new, set);
+        $crate::impl_from_own!(impl$([$($generics)*])? From<$oldtype> for $newtype $(where [$($where_clause)*])?, new);
+        $crate::impl_from_ref!(impl$([$($generics)*])? From<&$oldtype> for $newtype $(where [$($where_clause)*])?, new, Clone::clone);
     };
 }
 
 #[macro_export]
 macro_rules! impl_self_constructor_setter_with_validation {
     (impl$([$($generics:tt)*])? for $newtype:ty $(where [$($where_clause:tt)*])?, $oldtype:ty $([$preprocessor:ty])* | $checker:ty $([$postprocessor:ty])*, $style:ident, $field:ident, $constructor_method:ident, $setter_method:ident) => {
-        impl$(<$($generics)*>)? $newtype $(where [$($where_clause)*])? {
+        impl$([$($generics)*])? $newtype$(<$($generics)*>)? $(where $($where_clause)*)? {
             $crate::constructor_with_validation!(pub fn $constructor_method, $oldtype $([$preprocessor])* | $checker $([$postprocessor])*, $style, $field);
             $crate::setter_with_validation!(pub fn $setter_method, $oldtype $([$preprocessor])* | $checker $([$postprocessor])*, $style, $field);
         }
@@ -147,7 +147,7 @@ macro_rules! impl_self_constructor_setter_with_validation {
 #[macro_export]
 macro_rules! impl_self_constructor_setter_without_validation {
     (impl$([$($generics:tt)*])? for $newtype:ty $(where [$($where_clause:tt)*])?, $oldtype:ty $([$preprocessor:ty])*, $style:ident, $field:ident, $constructor_method:ident, $setter_method:ident) => {
-        impl$(<$($generics)*>)? $newtype $(where [$($where_clause)*])? {
+        impl$(<$($generics)*>)? $newtype $(where $($where_clause)*)? {
             $crate::constructor_without_validation!(pub fn $constructor_method, $oldtype $([$preprocessor])*, $style, $field);
             $crate::setter_without_validation!(pub fn $setter_method, $oldtype $([$preprocessor])*, $style, $field);
         }
