@@ -1,3 +1,4 @@
+mod bool;
 mod exclusive;
 mod i32;
 mod inclusive;
@@ -6,6 +7,7 @@ mod space;
 mod u32;
 mod u64;
 
+pub use bool::*;
 pub use exclusive::*;
 pub use i32::*;
 pub use inclusive::*;
