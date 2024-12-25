@@ -137,7 +137,7 @@ macro_rules! impl_all_without_validation {
 #[macro_export]
 macro_rules! impl_self_constructor_setter_with_validation {
     (impl$([$($generics:tt)*])? for $newtype:ty $(where [$($where_clause:tt)*])?, $oldtype:ty $([$preprocessor:ty])* | $checker:ty $([$postprocessor:ty])*, $style:ident, $field:ident, $constructor_method:ident, $setter_method:ident) => {
-        impl$([$($generics)*])? $newtype$(<$($generics)*>)? $(where $($where_clause)*)? {
+        impl$(<$($generics)*>)? $newtype $(where $($where_clause)*)? {
             $crate::constructor_with_validation!(pub fn $constructor_method, $oldtype $([$preprocessor])* | $checker $([$postprocessor])*, $style, $field);
             $crate::setter_with_validation!(pub fn $setter_method, $oldtype $([$preprocessor])* | $checker $([$postprocessor])*, $style, $field);
         }
