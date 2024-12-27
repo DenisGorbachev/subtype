@@ -28,4 +28,5 @@ fn username_newtype_with_validation() {
     assert_eq!(UsernameTrim::new(" alice ").as_ref(), "alice");
     assert_eq!(UsernamePlain::new(""), UsernamePlain("".to_string()));
     assert_eq!(UsernamePlain::new("alice"), UsernamePlain("alice".to_string()));
+    assert_eq!(UsernamePlain::new("alice").into_inner(), "alice".to_string());
 }

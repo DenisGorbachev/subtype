@@ -15,4 +15,5 @@ fn username_impl_all() {
     type TheError = IncorrectValueError<String, <Not<Empty> as Validate<String>>::Error>;
     assert_eq!(Username::new(""), Err(TheError::new("", ValidationError::new())));
     assert_eq!(Username::new("alice"), Ok(Username("alice".to_string())));
+    assert_eq!(Username::new("alice").unwrap().into_inner(), "alice".to_string());
 }
