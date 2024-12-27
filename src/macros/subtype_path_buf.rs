@@ -1,10 +1,10 @@
 #[macro_export]
-macro_rules! newtype_path_buf {
+macro_rules! subtype_path_buf {
     (
         $(#[$meta:meta])*
         $visibility:vis struct $newtype:ident(PathBuf $([$preprocessor:ty])* | $checker:ty $([$postprocessor:ty])*)$(;)?
     ) => {
-        $crate::newtype!(
+        $crate::subtype!(
             #[derive(Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Debug)]
             // #[derive(Default)] is not present because it can bypass the validation
             $(#[$meta])*
@@ -17,7 +17,7 @@ macro_rules! newtype_path_buf {
         $(#[$meta:meta])*
         $visibility:vis struct $newtype:ident($oldvis:vis PathBuf $([$preprocessor:ty])*)$(;)?
     ) => {
-        $crate::newtype!(
+        $crate::subtype!(
             #[derive(Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Debug)]
             #[derive(Default)]
             $(#[$meta])*
@@ -32,11 +32,11 @@ macro_rules! newtype_path_buf {
 mod tests {
     use crate::{Empty, Not};
 
-    newtype_path_buf! {
+    subtype_path_buf! {
         pub struct NewtypePlain(PathBuf)
     }
 
-    newtype_path_buf! {
+    subtype_path_buf! {
         pub struct NewtypeWithChecker(PathBuf | Not<Empty>)
     }
 }

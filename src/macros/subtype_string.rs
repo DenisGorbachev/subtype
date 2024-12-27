@@ -1,10 +1,10 @@
 #[macro_export]
-macro_rules! newtype_string {
+macro_rules! subtype_string {
     (
         $(#[$meta:meta])*
         $visibility:vis struct $newtype:ident(String $([$preprocessor:ty])* | $checker:ty $([$postprocessor:ty])*)$(;)?
     ) => {
-        $crate::newtype!(
+        $crate::subtype!(
             #[derive(Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Debug)]
             // #[derive(Default)] is not present because it can bypass the validation
             #[derive(derive_more::Display)]
@@ -17,7 +17,7 @@ macro_rules! newtype_string {
         $(#[$meta:meta])*
         $visibility:vis struct $newtype:ident($oldvis:vis String $([$preprocessor:ty])*)$(;)?
     ) => {
-        $crate::newtype!(
+        $crate::subtype!(
             #[derive(Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Debug)]
             #[derive(Default)]
             #[derive(derive_more::Display)]
@@ -32,11 +32,11 @@ macro_rules! newtype_string {
 mod tests {
     use crate::{Empty, Not};
 
-    newtype_string! {
+    subtype_string! {
         pub struct NewtypeStringPlain(String)
     }
 
-    newtype_string! {
+    subtype_string! {
         pub struct NewtypeStringChecker(String | Not<Empty>)
     }
 }

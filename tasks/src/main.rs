@@ -10,7 +10,7 @@ use url_macro::url;
 
 use subtype::conjurers::now::Now;
 use subtype::conjurers::u32::U32;
-use subtype::newtype;
+use subtype::subtype;
 use subtype::{FieldEqual, LessThan};
 
 // struct CanUnify<A, B>;
@@ -36,7 +36,7 @@ pub struct SupportedOperators {
     or: bool,
 }
 
-newtype!(
+subtype!(
     #[derive(Eq, PartialEq, Hash, Clone, Copy, Debug)]
     pub struct ExpectedTupleSize(u32 | FieldEqual<U32<12>>)
 );
@@ -97,14 +97,13 @@ fn main() -> Outcome {
 
 fn implement_batteries_included_newtypes() -> Outcome {
     let _names = [
-        "email",
-        "username", // disallow special characters
+        "email", "username", // disallow special characters
         "",
     ];
     bail!("implement_batteries_included_newtypes")
 }
 
-newtype!(
+subtype!(
     pub struct StartedAt(OffsetDateTime | LessThan<Now>);
 );
 
@@ -120,9 +119,7 @@ pub enum Status<T> {
 }
 
 fn get_placement_urls() -> Vec<Url> {
-    vec![
-        url!("https://corrode.dev/blog/compile-time-invariants/")
-    ]
+    vec![url!("https://corrode.dev/blog/compile-time-invariants/")]
 }
 
 fn promote_the_crate() -> Outcome {

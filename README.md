@@ -62,5 +62,8 @@
 * [prae](https://github.com/teenjuna/prae)
   * Very similar design
   * It's actually better
+* [tightness](https://github.com/PabloMansanet/tightness)
+  * Last commit on May 30, 2021
+  * prae improves on tightness
 * [semval](https://github.com/slowtec/semval)
 * [validators](https://crates.io/crates/validators)

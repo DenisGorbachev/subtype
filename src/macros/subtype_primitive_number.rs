@@ -1,11 +1,11 @@
 /// This macro doesn't include [`derive_more::Neg`] because it is also used for non-negative types that don't implement [`std::ops::Neg`] (e.g. `u32`)
 #[macro_export]
-macro_rules! newtype_primitive_number {
+macro_rules! subtype_primitive_number {
     (
         $(#[$meta:meta])*
         $newvis:vis struct $newtype:ident($oldtype:ty $([$preprocessor:ty])* | $checker:ty $([$postprocessor:ty])*)$(;)?
     ) => {
-        $crate::newtype!(
+        $crate::subtype!(
             #[derive(Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy, Debug)]
             // #[derive(Default)] is not present because it can bypass the validation
             #[derive(derive_more::Display)]
@@ -18,7 +18,7 @@ macro_rules! newtype_primitive_number {
         $(#[$meta:meta])*
         $newvis:vis struct $newtype:ident($oldvis:vis $oldtype:ty $([$preprocessor:ty])*)$(;)?
     ) => {
-        $crate::newtype!(
+        $crate::subtype!(
             #[derive(Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy, Debug)]
             #[derive(Default)]
             #[derive(derive_more::Display)]

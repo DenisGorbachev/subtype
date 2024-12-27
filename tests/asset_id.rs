@@ -1,9 +1,9 @@
-use subtype::newtype_string;
+use subtype::subtype_string;
 use subtype::Space;
 use subtype::{Contains, Empty, Not};
 use subtype::{IncorrectValueError, ValidationError, ValidationError2};
 
-newtype_string!(
+subtype_string!(
     pub struct AssetId(String | (Not<Empty>, Not<Contains<Space>>))
 );
 

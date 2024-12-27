@@ -1,21 +1,21 @@
-use subtype::newtype;
+use subtype::subtype;
 use subtype::Empty;
 use subtype::Not;
 use subtype::Trim;
 use subtype::Validate;
 use subtype::{IncorrectValueError, ValidationError};
 
-newtype!(
+subtype!(
     #[derive(PartialOrd, PartialEq, Clone, Debug)]
     pub struct UsernameNotEmpty(String [Trim] | Not<Empty>);
 );
 
-newtype!(
+subtype!(
     #[derive(PartialOrd, PartialEq, Clone, Debug)]
     pub struct UsernameTrim(String [Trim]);
 );
 
-newtype!(
+subtype!(
     #[derive(PartialOrd, PartialEq, Clone, Debug)]
     pub struct UsernamePlain(String);
 );

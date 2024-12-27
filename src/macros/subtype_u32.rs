@@ -1,10 +1,10 @@
 #[macro_export]
-macro_rules! newtype_u32 {
+macro_rules! subtype_u32 {
     (
         $(#[$meta:meta])*
         $newvis:vis struct $newtype:ident(u32 $([$preprocessor:ty])* | $checker:ty $([$postprocessor:ty])*)$(;)?
     ) => {
-        $crate::newtype_primitive_number!(
+        $crate::subtype_primitive_number!(
             $(#[$meta])*
             $newvis struct $newtype(u32 $([$preprocessor])* | $checker $([$postprocessor])*);
         );
@@ -13,7 +13,7 @@ macro_rules! newtype_u32 {
         $(#[$meta:meta])*
         $newvis:vis struct $newtype:ident($oldvis:vis u32 $([$preprocessor:ty])*)$(;)?
     ) => {
-        $crate::newtype_primitive_number!(
+        $crate::subtype_primitive_number!(
             $(#[$meta])*
             $newvis struct $newtype($oldvis u32 $([$preprocessor])*);
         );
@@ -26,11 +26,11 @@ mod tests {
     use crate::U32;
     use assert_matches::assert_matches;
 
-    newtype_u32! {
+    subtype_u32! {
         pub struct NewtypeU32Plain(u32)
     }
 
-    newtype_u32! {
+    subtype_u32! {
         pub struct NewtypeU32Validated(u32 | Equal<U32<10>>)
     }
 

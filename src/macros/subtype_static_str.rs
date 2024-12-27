@@ -1,10 +1,10 @@
 #[macro_export]
-macro_rules! newtype_static_str {
+macro_rules! subtype_static_str {
     (
         $(#[$meta:meta])*
         $visibility:vis struct $newtype:ident(&'static str $([$preprocessor:ty])* | $checker:ty $([$postprocessor:ty])*)$(;)?
     ) => {
-        $crate::newtype!(
+        $crate::subtype!(
             #[derive(Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy, Debug)]
             // #[derive(Default)] is not present because it can bypass the validation
             #[derive(derive_more::Display)]
@@ -16,7 +16,7 @@ macro_rules! newtype_static_str {
         $(#[$meta:meta])*
         $visibility:vis struct $newtype:ident($oldvis:vis &'static str $([$preprocessor:ty])*)$(;)?
     ) => {
-        $crate::newtype!(
+        $crate::subtype!(
             #[derive(Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy, Debug)]
             #[derive(Default)]
             #[derive(derive_more::Display)]
@@ -30,11 +30,11 @@ macro_rules! newtype_static_str {
 mod tests {
     use crate::{Empty, Not};
 
-    newtype_static_str! {
+    subtype_static_str! {
         pub struct A(&'static str)
     }
 
-    newtype_static_str! {
+    subtype_static_str! {
         pub struct B(&'static str | Not<Empty>)
     }
 }

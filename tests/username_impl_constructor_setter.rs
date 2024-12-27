@@ -14,7 +14,8 @@ impl_self_constructor_setter_with_validation!(impl for Username, String | Not<Em
 impl_try_from_own!(impl TryFrom<String> for Username, TheError, new);
 impl_try_from_ref!(impl TryFrom<&String> for Username, TheError, new);
 
-fn main() {
+#[test]
+fn username_impl_constructor_setter() {
     assert_eq!(Username::new(""), Err(TheError::new("", ValidationError::new())));
     assert_eq!(Username::new("alice"), Ok(Username("alice".to_string())));
 }
