@@ -1,16 +1,31 @@
 [tools]
 rust = "stable"
 
-[tasks.build]
+[tasks."build"]
 run = "cargo build"
 
-[tasks.lint]
-run = "cargo clippy --all-targets --all-features {{args}} -- -D warnings"
+[tasks."fmt"]
+run = "cargo fmt --all"
 
-[tasks.test]
+[tasks."lint:code"]
+run = "cargo clippy --all-targets --all-features -- -D warnings"
+
+[tasks."lint:docs"]
+run = "remark --ignore-path .gitignore --quiet --frail --no-stdout ."
+
+[tasks."lint:deps"]
+run = "cargo machete --with-metadata"
+
+[tasks."test:code"]
 run = "cargo nextest run"
 
-[tasks.watch]
+[tasks."test:docs"]
+run = "cargo test --doc"
+
+[tasks."sort:deps"]
+run = "cargo sort"
+
+[tasks."watch"]
 run = """
 #!/usr/bin/env bash
 set -euxo pipefail
@@ -20,8 +35,8 @@ CMD_NO_WHITESPACE="$(echo -e "${CMD_RAW}" | sed -e 's/^[[:space:]]*//' -e 's/[[:
 cargo watch --clear --watch "$PWD" --exec "$CMD_NO_WHITESPACE"
 """
 
-[tasks.check]
+[tasks."check"]
 run = "cargo check --all-targets"
 
-[tasks.fix]
+[tasks."fix"]
 run = "cargo fix --workspace --allow-dirty --allow-staged"
