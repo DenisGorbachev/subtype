@@ -20,7 +20,7 @@ subtype!(
 );
 
 // TODO: Document that trait bounds for generics must be written in where clause
-// newtype!(
+// subtype!(
 //     #[derive(PartialOrd, PartialEq, Clone, Debug)]
 //     pub struct Generic[T: Iterator](Option<T>);
 // );
