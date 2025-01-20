@@ -1,4 +1,4 @@
-use subtype::Empty;
+use subtype::IsEmpty;
 use subtype::Not;
 use subtype::Trim;
 use subtype::Validate;
@@ -10,11 +10,11 @@ use subtype::{IncorrectValueError, ValidationError};
 pub struct Username(String);
 
 impl Username {
-    constructor_with_validation!(pub fn new, String [Trim] | Not<Empty>, tuple, value);
-    setter_with_validation!(pub fn set, String [Trim] | Not<Empty>, tuple, value);
+    constructor_with_validation!(pub fn new, String [Trim] | Not<IsEmpty>, tuple, value);
+    setter_with_validation!(pub fn set, String [Trim] | Not<IsEmpty>, tuple, value);
 }
 
-type TheError = IncorrectValueError<String, <Not<Empty> as Validate<String>>::Error>;
+type TheError = IncorrectValueError<String, <Not<IsEmpty> as Validate<String>>::Error>;
 
 impl_try_from_own!(impl TryFrom<String> for Username, TheError, new);
 impl_try_from_ref!(impl TryFrom<&String> for Username, TheError, new, Clone::clone);

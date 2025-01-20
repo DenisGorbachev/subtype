@@ -1,5 +1,5 @@
 use subtype::impl_all_with_validation;
-use subtype::Empty;
+use subtype::IsEmpty;
 use subtype::Not;
 use subtype::Validate;
 use subtype::{IncorrectValueError, ValidationError};
@@ -8,11 +8,11 @@ use subtype::{IncorrectValueError, ValidationError};
 #[derive(PartialOrd, PartialEq, Clone, Debug)]
 pub struct Username(String);
 
-impl_all_with_validation!(impl for Username, String | Not<Empty>, tuple, value);
+impl_all_with_validation!(impl for Username, String | Not<IsEmpty>, tuple, value);
 
 #[test]
 fn username_impl_all() {
-    type TheError = IncorrectValueError<String, <Not<Empty> as Validate<String>>::Error>;
+    type TheError = IncorrectValueError<String, <Not<IsEmpty> as Validate<String>>::Error>;
     assert_eq!(Username::new(""), Err(TheError::new("", ValidationError::new())));
     assert_eq!(Username::new("alice"), Ok(Username("alice".to_string())));
     assert_eq!(Username::new("alice").unwrap().into_inner(), "alice".to_string());

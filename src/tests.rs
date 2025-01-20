@@ -2,7 +2,7 @@ use crate::Inclusive;
 use crate::InvalidValueError;
 use crate::Validate;
 use crate::U32;
-use crate::{Empty, Max};
+use crate::{IsEmpty, Max};
 
 #[cfg(test)]
 mod validate {
@@ -13,8 +13,8 @@ mod validate {
     #[test]
     fn must_display_informative_error_message() {
         let value = "hello".to_string();
-        let error = Empty::validate(&value).unwrap();
-        assert_eq!(error.to_string(), "ValidationError { validator: \"Empty\" }")
+        let error = IsEmpty::validate(&value).unwrap();
+        assert_eq!(error.to_string(), "ValidationError { validator: \"IsEmpty\" }")
     }
 
     #[test]
@@ -46,9 +46,9 @@ mod tuples {
 
     #[test]
     fn must_display_good_error_message() {
-        type TheTupleError = ValidationError2<ValidationError<Not<Empty>>, ValidationError<MaxLen<255, Inclusive>>>;
+        type TheTupleError = ValidationError2<ValidationError<Not<IsEmpty>>, ValidationError<MaxLen<255, Inclusive>>>;
         type TheError = IncorrectValueError<String, TheTupleError>;
         let error = TheError::new("hello", TheTupleError::Variant1(ValidationError::new()));
-        assert_eq!(error.to_string(), "IncorrectValueError { value: \"hello\", error: Variant1(ValidationError(PhantomData<subtype::checkers::not::Not<subtype::checkers::empty::Empty>>)) }");
+        assert_eq!(error.to_string(), "IncorrectValueError { value: \"hello\", error: Variant1(ValidationError(PhantomData<subtype::checkers::not::Not<subtype::checkers::is_empty::IsEmpty>>)) }");
     }
 }

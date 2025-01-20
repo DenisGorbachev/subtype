@@ -30,13 +30,13 @@ macro_rules! subtype_string {
 
 #[cfg(test)]
 mod tests {
-    use crate::{Empty, Not};
+    use crate::{IsEmpty, Not};
 
     subtype_string! {
         pub struct NewtypeStringPlain(String)
     }
 
     subtype_string! {
-        pub struct NewtypeStringChecker(String | Not<Empty>)
+        pub struct NewtypeStringChecker(String | Not<IsEmpty>)
     }
 }

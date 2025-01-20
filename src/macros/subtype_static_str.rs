@@ -28,13 +28,13 @@ macro_rules! subtype_static_str {
 
 #[cfg(test)]
 mod tests {
-    use crate::{Empty, Not};
+    use crate::{IsEmpty, Not};
 
     subtype_static_str! {
         pub struct A(&'static str)
     }
 
     subtype_static_str! {
-        pub struct B(&'static str | Not<Empty>)
+        pub struct B(&'static str | Not<IsEmpty>)
     }
 }

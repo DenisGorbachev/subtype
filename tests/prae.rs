@@ -1,4 +1,4 @@
-use subtype::Empty;
+use subtype::IsEmpty;
 use subtype::Trim;
 
 #[macro_export]
@@ -47,5 +47,5 @@ macro_rules! define_string {
 define_string! {
     pub Username: String;
     adjust Trim;
-    ensure Empty;
+    ensure IsEmpty;
 }

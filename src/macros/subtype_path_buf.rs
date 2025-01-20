@@ -30,13 +30,13 @@ macro_rules! subtype_path_buf {
 
 #[cfg(test)]
 mod tests {
-    use crate::{Empty, Not};
+    use crate::{IsEmpty, Not};
 
     subtype_path_buf! {
         pub struct NewtypePlain(PathBuf)
     }
 
     subtype_path_buf! {
-        pub struct NewtypeWithChecker(PathBuf | Not<Empty>)
+        pub struct NewtypeWithChecker(PathBuf | Not<IsEmpty>)
     }
 }

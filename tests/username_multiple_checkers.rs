@@ -1,6 +1,6 @@
 use subtype::constructor_with_validation;
-use subtype::Empty;
 use subtype::Inclusive;
+use subtype::IsEmpty;
 use subtype::MaxLen;
 use subtype::Not;
 use subtype::Trim;
@@ -13,7 +13,7 @@ pub struct Username(String);
 type MaxLen255 = MaxLen<255, Inclusive>;
 
 impl Username {
-    constructor_with_validation!(pub fn new, String [Trim] | (Not<Empty>, MaxLen255) [Trim] , tuple, value);
+    constructor_with_validation!(pub fn new, String [Trim] | (Not<IsEmpty>, MaxLen255) [Trim] , tuple, value);
 }
 
 // #[derive(Error, Display, From, Eq, PartialEq, Hash, Clone, Debug)]
@@ -24,7 +24,7 @@ impl Username {
 
 #[test]
 fn username_explicit() {
-    type TheTupleError = ValidationError2<ValidationError<Not<Empty>>, ValidationError<MaxLen255>>;
+    type TheTupleError = ValidationError2<ValidationError<Not<IsEmpty>>, ValidationError<MaxLen255>>;
     type TheError = IncorrectValueError<String, TheTupleError>;
     assert_eq!(Username::new(""), Err(TheError::new("", TheTupleError::Variant1(ValidationError::new()))));
     assert_eq!(Username::new("alice"), Ok(Username("alice".to_string())));
