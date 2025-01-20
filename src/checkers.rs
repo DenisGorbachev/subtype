@@ -1,4 +1,5 @@
 mod all;
+mod all_chars;
 mod contains;
 mod equal;
 mod even;
@@ -16,6 +17,7 @@ mod starts_with;
 mod zero;
 
 pub use all::*;
+pub use all_chars::*;
 pub use contains::*;
 pub use equal::*;
 pub use even::*;
