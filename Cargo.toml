@@ -2,13 +2,16 @@
 name = "subtype"
 version = "0.1.0"
 edition = "2021"
-license-file = "LICENSE"
-description = ""
+description = "Better newtypes"
+license = "Apache-2.0 OR MIT"
 homepage = "https://github.com/DenisGorbachev/subtype"
 repository = "https://github.com/DenisGorbachev/subtype"
 readme = "README.md"
 keywords = ["newtype", "validation"]
 categories = ["rust-patterns"]
+
+[package.metadata.details]
+title = "Subtype"
 
 [dependencies]
 derive_more = { version = "1.0.0", features = ["error"] }
