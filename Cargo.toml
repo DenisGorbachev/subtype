@@ -25,3 +25,4 @@ time = { version = "0.3.36", optional = true }
 assert_matches = { version = "1.5.0" }
 derive_more = { version = "1.0.0", features = ["full"] }
 prae = "0.8.4"
+rustc-hash = "2.1.0"

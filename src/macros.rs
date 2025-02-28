@@ -2,6 +2,7 @@ mod assign;
 mod construct;
 mod define;
 mod subtype;
+mod subtype_hashmap;
 mod subtype_path_buf;
 mod subtype_primitive_number;
 mod subtype_static_str;
