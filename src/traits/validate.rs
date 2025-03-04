@@ -1,6 +1,6 @@
 use crate::ValidationError2;
 
-pub trait Validate<Value> {
+pub trait Validate<Value: ?Sized> {
     type Error;
 
     fn validate(value: &Value) -> Option<Self::Error>;

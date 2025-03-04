@@ -1,4 +1,4 @@
-pub trait Check<Value> {
+pub trait Check<Value: ?Sized> {
     fn check(value: &Value) -> bool;
 }
 
