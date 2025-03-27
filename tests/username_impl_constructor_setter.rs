@@ -1,7 +1,7 @@
 use subtype::IsEmpty;
 use subtype::Not;
 use subtype::Validate;
-use subtype::{impl_self_constructor_setter_with_validation, impl_try_from_own, impl_try_from_ref};
+use subtype::{impl_self_constructor_setter_with_generic_validation, impl_try_from_own, impl_try_from_ref};
 use subtype::{IncorrectValueError, ValidationError};
 
 #[allow(dead_code)]
@@ -10,7 +10,7 @@ pub struct Username(String);
 
 type TheError = IncorrectValueError<String, <Not<IsEmpty> as Validate<String>>::Error>;
 
-impl_self_constructor_setter_with_validation!(impl for Username, String | Not<IsEmpty>, tuple, value, new, set);
+impl_self_constructor_setter_with_generic_validation!(impl for Username, String | Not<IsEmpty>, tuple, value, new, set);
 impl_try_from_own!(impl TryFrom<String> for Username, TheError, new);
 impl_try_from_ref!(impl TryFrom<&String> for Username, TheError, new);
 

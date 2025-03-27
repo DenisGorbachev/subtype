@@ -1,4 +1,4 @@
-use subtype::impl_all_with_validation;
+use subtype::impl_all_with_generic_validation;
 use subtype::IsEmpty;
 use subtype::Not;
 use subtype::Validate;
@@ -8,7 +8,7 @@ use subtype::{IncorrectValueError, ValidationError};
 #[derive(PartialOrd, PartialEq, Clone, Debug)]
 pub struct Username(String);
 
-impl_all_with_validation!(impl for Username, String | Not<IsEmpty>, tuple, value);
+impl_all_with_generic_validation!(impl for Username, String | Not<IsEmpty>, tuple, value);
 
 #[test]
 fn username_impl_all() {
