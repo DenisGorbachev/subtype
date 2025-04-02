@@ -78,7 +78,9 @@ macro_rules! impl_self_destructor {
     }
 }
 
-/// There can be only one checker because the function returns a single `Result<Self, Error>` and the `Error` type can support only one checker
+// There can be only one checker because the function returns a single `Result<Self, Error>` and the `Error` type can support only one checker
+// `constructor_with_custom_validation` is not needed because the user can simply implement a `TryFrom` trait (and also perform pre & post processing there) (but then the user wouldn't be able to use `set` method on the custom type (but it's rarely used))
+// It's possible to implement helper macros to simplify the implementation of `TryFrom` that only calls a boolean-returning function
 #[macro_export]
 macro_rules! constructor_with_generic_validation {
     ($visibility:vis fn $name:ident, $oldtype:ty $([$preprocessor:ty])* | $checker:ty $([$postprocessor:ty])*, $style:ident, $field:ident) => {
