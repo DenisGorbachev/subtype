@@ -9,7 +9,7 @@ pub struct Even;
 
 impl<V: IsEven> Check<V> for Even {
     fn check(value: &V) -> bool {
-        !value.is_even()
+        value.is_even()
     }
 }
 
