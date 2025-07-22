@@ -1,6 +1,7 @@
 mod assign;
 mod construct;
 mod define;
+mod impl_trait;
 mod subtype;
 mod subtype_hashmap;
 mod subtype_path_buf;

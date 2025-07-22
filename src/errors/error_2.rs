@@ -14,16 +14,16 @@ impl<A: Error, B: Error> Display for ValidationError2<A, B> {
         match self {
             ValidationError2::Variant1(err) => {
                 if f.alternate() {
-                    write!(f, "{:#}", err)
+                    write!(f, "{err:#}")
                 } else {
-                    write!(f, "{}", err)
+                    write!(f, "{err}")
                 }
             }
             ValidationError2::Variant2(err) => {
                 if f.alternate() {
-                    write!(f, "{:#}", err)
+                    write!(f, "{err:#}")
                 } else {
-                    write!(f, "{}", err)
+                    write!(f, "{err}")
                 }
             }
         }

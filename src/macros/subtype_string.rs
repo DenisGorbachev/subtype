@@ -12,6 +12,9 @@ macro_rules! subtype_string {
             $visibility struct $newtype(String $([$preprocessor])* | $checker $([$postprocessor])*);
         );
         $crate::impl_try_from_ref!(impl TryFrom<&str> for $newtype, $crate::IncorrectValueError<String, <$checker as $crate::Validate<String>>::Error>, new, ToOwned::to_owned);
+        $crate::impl_partial_eq!($newtype, String);
+        $crate::impl_partial_eq!($newtype, &str);
+        $crate::impl_partial_eq!($newtype, str);
     };
     (
         $(#[$meta:meta])*
@@ -25,6 +28,9 @@ macro_rules! subtype_string {
             $visibility struct $newtype($oldvis String $([$preprocessor])*);
         );
         $crate::impl_from_ref!(impl From<&str> for $newtype, new, ToOwned::to_owned);
+        $crate::impl_partial_eq!($newtype, String);
+        $crate::impl_partial_eq!($newtype, &str);
+        $crate::impl_partial_eq!($newtype, str);
     };
 }
 
