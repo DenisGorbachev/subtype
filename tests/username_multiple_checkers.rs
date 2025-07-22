@@ -1,9 +1,9 @@
-use subtype::constructor_with_generic_validation;
 use subtype::Inclusive;
 use subtype::IsEmpty;
 use subtype::MaxLen;
 use subtype::Not;
 use subtype::Trim;
+use subtype::{constructor_with_generic_validation, purify_with_generic_validation};
 use subtype::{IncorrectValueError, ValidationError, ValidationError2};
 
 #[allow(dead_code)]
@@ -13,7 +13,8 @@ pub struct Username(String);
 type MaxLen255 = MaxLen<255, Inclusive>;
 
 impl Username {
-    constructor_with_generic_validation!(pub fn new, String [Trim] | (Not<IsEmpty>, MaxLen255) [Trim] , tuple, value);
+    constructor_with_generic_validation!(pub fn new, String [Trim] | (Not<IsEmpty>, MaxLen255) [Trim], tuple, value);
+    purify_with_generic_validation!(pub fn purify, String [Trim] | (Not<IsEmpty>, MaxLen255) [Trim], tuple, value);
 }
 
 // #[derive(Error, Display, From, Eq, PartialEq, Hash, Clone, Debug)]

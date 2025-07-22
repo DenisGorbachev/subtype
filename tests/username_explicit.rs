@@ -1,8 +1,8 @@
-use subtype::IsEmpty;
 use subtype::Not;
 use subtype::Trim;
 use subtype::Validate;
 use subtype::{constructor_with_generic_validation, impl_try_from_own, impl_try_from_ref, setter_with_generic_validation};
+use subtype::{purify_with_generic_validation, IsEmpty};
 use subtype::{IncorrectValueError, ValidationError};
 
 #[allow(dead_code)]
@@ -12,6 +12,7 @@ pub struct Username(String);
 impl Username {
     constructor_with_generic_validation!(pub fn new, String [Trim] | Not<IsEmpty>, tuple, value);
     setter_with_generic_validation!(pub fn set, String [Trim] | Not<IsEmpty>, tuple, value);
+    purify_with_generic_validation!(pub fn purify, String [Trim] | Not<IsEmpty>, tuple, value);
 }
 
 type TheError = IncorrectValueError<String, <Not<IsEmpty> as Validate<String>>::Error>;

@@ -42,7 +42,7 @@ macro_rules! impl_all_with_generic_validation {
 #[macro_export]
 macro_rules! impl_all_without_validation {
     (impl$([$($generics:tt)*])? for $newtype:ty $(where [$($where_clause:tt)*])?, $oldtype:ty $([$preprocessor:ty])*, $style:ident, $field:ident) => {
-        $crate::impl_self_constructor_setter_without_validation!(impl$([$($generics)*])? for $newtype $(where [$($where_clause)*])?, $oldtype $([$preprocessor])*, $style, $field, new, set);
+        $crate::impl_self_constructor_setter_without_validation!(impl$([$($generics)*])? for $newtype $(where [$($where_clause)*])?, $oldtype $([$preprocessor])*, $style, $field, new, set, purify);
         $crate::impl_self_destructor!(impl$([$($generics)*])? for $newtype $(where [$($where_clause)*])?, $oldtype, into_inner);
         $crate::impl_from_own!(impl$([$($generics)*])? From<$oldtype> for $newtype $(where [$($where_clause)*])?, new);
         $crate::impl_from_ref!(impl$([$($generics)*])? From<&$oldtype> for $newtype $(where [$($where_clause)*])?, new, Clone::clone);
@@ -55,17 +55,18 @@ macro_rules! impl_self_constructor_setter_purify_with_generic_validation {
         impl$(<$($generics)*>)? $newtype $(where $($where_clause)*)? {
             $crate::constructor_with_generic_validation!(pub fn $constructor_method, $oldtype $([$preprocessor])* | $checker $([$postprocessor])*, $style, $field);
             $crate::setter_with_generic_validation!(pub fn $setter_method, $oldtype $([$preprocessor])* | $checker $([$postprocessor])*, $style, $field);
-            $crate::purify!(pub fn $purify_method, $oldtype $([$preprocessor])* | $checker $([$postprocessor])*, $style, $field);
+            $crate::purify_with_generic_validation!(pub fn $purify_method, $oldtype $([$preprocessor])* | $checker $([$postprocessor])*, $style, $field);
         }
     }
 }
 
 #[macro_export]
 macro_rules! impl_self_constructor_setter_without_validation {
-    (impl$([$($generics:tt)*])? for $newtype:ty $(where [$($where_clause:tt)*])?, $oldtype:ty $([$preprocessor:ty])*, $style:ident, $field:ident, $constructor_method:ident, $setter_method:ident) => {
+    (impl$([$($generics:tt)*])? for $newtype:ty $(where [$($where_clause:tt)*])?, $oldtype:ty $([$preprocessor:ty])*, $style:ident, $field:ident, $constructor_method:ident, $setter_method:ident, $purify_method:ident) => {
         impl$(<$($generics)*>)? $newtype $(where $($where_clause)*)? {
             $crate::constructor_without_validation!(pub fn $constructor_method, $oldtype $([$preprocessor])*, $style, $field);
             $crate::setter_without_validation!(pub fn $setter_method, $oldtype $([$preprocessor])*, $style, $field);
+            $crate::purify_without_validation!(pub fn $purify_method, $oldtype $([$preprocessor])*, $style, $field);
         }
     }
 }
@@ -86,13 +87,7 @@ macro_rules! impl_self_destructor {
 macro_rules! constructor_with_generic_validation {
     ($visibility:vis fn $name:ident, $oldtype:ty $([$preprocessor:ty])* | $checker:ty $([$postprocessor:ty])*, $style:ident, $field:ident) => {
             $visibility fn $name($field: impl Into<$oldtype>) -> Result<Self, $crate::IncorrectValueError<$oldtype, <$checker as $crate::Validate<$oldtype>>::Error>> {
-                let $field = $field.into();$(
-                let $field = <$preprocessor as $crate::Transform<$oldtype>>::transform($field);)*
-                match <$checker as $crate::Validate<$oldtype>>::validate(&$field) {
-                    None => {}
-                    Some(err) => return Err($crate::IncorrectValueError::new($field, err))
-                }$(
-                let $field = <$postprocessor as $crate::Transform<$oldtype>>::transform($field);)*
+                let $field = Self::purify($field)?;
                 Ok($crate::construct!(Self, $style, $field))
             }
     };
@@ -102,8 +97,7 @@ macro_rules! constructor_with_generic_validation {
 macro_rules! constructor_without_validation {
     ($visibility:vis fn $name:ident, $oldtype:ty $([$preprocessor:ty])*, $style:ident, $field:ident) => {
             $visibility fn $name($field: impl Into<$oldtype>) -> Self {
-                let $field = $field.into();$(
-                let $field = <$preprocessor as $crate::Transform<$oldtype>>::transform($field);)*
+                let $field = Self::purify($field);
                 $crate::construct!(Self, $style, $field)
             }
     };
@@ -113,13 +107,7 @@ macro_rules! constructor_without_validation {
 macro_rules! setter_with_generic_validation {
     ($visibility:vis fn $name:ident, $oldtype:ty $([$preprocessor:ty])* | $checker:ty $([$postprocessor:ty])*, $style:ident, $field:ident) => {
             $visibility fn $name(&mut self, $field: impl Into<$oldtype>) -> Result<(), $crate::IncorrectValueError<$oldtype, <$checker as $crate::Validate<$oldtype>>::Error>> {
-                let $field = $field.into();$(
-                let $field = <$preprocessor as $crate::Transform<$oldtype>>::transform($field);)*
-                match <$checker as $crate::Validate<$oldtype>>::validate(&$field) {
-                    None => {}
-                    Some(err) => return Err($crate::IncorrectValueError::new($field, err))
-                }$(
-                let $field = <$postprocessor as $crate::Transform<$oldtype>>::transform($field);)*
+                let $field = Self::purify($field)?;
                 $crate::assign!(self, $style, $field);
                 Ok(())
             }
@@ -130,15 +118,14 @@ macro_rules! setter_with_generic_validation {
 macro_rules! setter_without_validation {
     ($visibility:vis fn $name:ident, $oldtype:ty $([$preprocessor:ty])*, $style:ident, $field:ident) => {
             $visibility fn $name(&mut self, $field: impl Into<$oldtype>) {
-                let $field = $field.into();$(
-                let $field = <$preprocessor as $crate::Transform<$oldtype>>::transform($field);)*
+                let $field = Self::purify($field);
                 $crate::assign!(self, $style, $field);
             }
     };
 }
 
 #[macro_export]
-macro_rules! purify {
+macro_rules! purify_with_generic_validation {
     ($visibility:vis fn $name:ident, $oldtype:ty $([$preprocessor:ty])* | $checker:ty $([$postprocessor:ty])*, $style:ident, $field:ident) => {
             $visibility fn $name($field: impl Into<$oldtype>) -> Result<$oldtype, $crate::IncorrectValueError<$oldtype, <$checker as $crate::Validate<$oldtype>>::Error>> {
                 let $field = $field.into();$(
@@ -150,6 +137,17 @@ macro_rules! purify {
                     }
                     Some(err) => Err($crate::IncorrectValueError::new($field, err))
                 }
+            }
+    };
+}
+
+#[macro_export]
+macro_rules! purify_without_validation {
+    ($visibility:vis fn $name:ident, $oldtype:ty $([$preprocessor:ty])*, $style:ident, $field:ident) => {
+            $visibility fn $name($field: impl Into<$oldtype>) -> $oldtype {
+                let $field = $field.into();$(
+                let $field = <$preprocessor as $crate::Transform<$oldtype>>::transform($field);)*
+                $field
             }
     };
 }
