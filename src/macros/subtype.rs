@@ -35,7 +35,6 @@ macro_rules! impl_all_with_generic_validation {
         $crate::impl_self_constructor_setter_purify_with_generic_validation!(impl$([$($generics)*])? for $newtype $(where [$($where_clause)*])?, $oldtype $([$preprocessor])* | $checker $([$postprocessor])*, $style, $field, new, set, purify);
         $crate::impl_self_destructor!(impl$([$($generics)*])? for $newtype $(where [$($where_clause)*])?, $oldtype, into_inner);
         $crate::impl_try_from_own!(impl$([$($generics)*])? TryFrom<$oldtype> for $newtype $(where [$($where_clause)*])?, $crate::IncorrectValueError<$oldtype, <$checker as $crate::Validate<$oldtype>>::Error>, new);
-        $crate::impl_try_from_ref!(impl$([$($generics)*])? TryFrom<&$oldtype> for $newtype $(where [$($where_clause)*])?, $crate::IncorrectValueError<$oldtype, <$checker as $crate::Validate<$oldtype>>::Error>, new, Clone::clone);
     };
 }
 
@@ -45,7 +44,6 @@ macro_rules! impl_all_without_validation {
         $crate::impl_self_constructor_setter_without_validation!(impl$([$($generics)*])? for $newtype $(where [$($where_clause)*])?, $oldtype $([$preprocessor])*, $style, $field, new, set, purify);
         $crate::impl_self_destructor!(impl$([$($generics)*])? for $newtype $(where [$($where_clause)*])?, $oldtype, into_inner);
         $crate::impl_from_own!(impl$([$($generics)*])? From<$oldtype> for $newtype $(where [$($where_clause)*])?, new);
-        $crate::impl_from_ref!(impl$([$($generics)*])? From<&$oldtype> for $newtype $(where [$($where_clause)*])?, new, Clone::clone);
     };
 }
 
