@@ -166,6 +166,7 @@ macro_rules! impl_try_from_own {
             type Error = $error;
 
             fn try_from(value: $oldtype) -> Result<Self, Self::Error> {
+                #[allow(clippy::double_parens)]
                 Self::$method($($wrapper)?(value))
             }
         }
@@ -179,6 +180,7 @@ macro_rules! impl_try_from_ref {
             type Error = $error;
 
             fn try_from(value: &$oldtype) -> Result<Self, Self::Error> {
+                #[allow(clippy::double_parens)]
                 Self::$method($($wrapper)?(value))
             }
         }
@@ -190,6 +192,7 @@ macro_rules! impl_from_own {
     (impl$([$($generics:tt)*])? From<$oldtype:ty> for $newtype:ty $(where [$($where_clause:tt)*])?, $method:ident $(, $wrapper:expr)?) => {
         impl$(<$($generics)*>)? From<$oldtype> for $newtype $(where $($where_clause)*)? {
             fn from(value: $oldtype) -> Self {
+                #[allow(clippy::double_parens)]
                 Self::$method($($wrapper)?(value))
             }
         }
@@ -201,6 +204,7 @@ macro_rules! impl_from_ref {
     (impl$([$($generics:tt)*])? From<&$oldtype:ty> for $newtype:ty $(where [$($where_clause:tt)*])?, $method:ident $(, $wrapper:expr)?) => {
         impl$(<$($generics)*>)? From<&$oldtype> for $newtype $(where $($where_clause)*)? {
             fn from(value: &$oldtype) -> Self {
+                #[allow(clippy::double_parens)]
                 Self::$method($($wrapper)?(value))
             }
         }
