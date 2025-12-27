@@ -2,6 +2,16 @@
 
 ## Notes
 
+* Subtypes without validation can just mark the inner type as `pub` or `pub(crate)`
+* Some subtypes should implement additional `TryFrom`
+  * Examples
+    * `GoogleMapsUrl`
+      * `impl TryFrom<Url> for GoogleMapsUrl`
+      * `impl TryFrom<String> for GoogleMapsUrl`
+* Some subtypes should implement numeric traits (`Add`, `AddAssign` and others)
+* Subtypes must implement `Deref`, `AsRef`, `Into`
+* Subtypes with validation must not implement `DerefMut`, `From`
+* Subtypes without validation must implement `DerefMut`, `From`
 * We can't let the user provide functions because we need to know the `Error` type for `Result<Self, Error>` in `pub fn new`
 
 ## Tasks

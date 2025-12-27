@@ -221,3 +221,17 @@ macro_rules! impl_as_ref_delegate {
         }
     };
 }
+
+/// This macro has a different pattern (doesn't use $method, uses TryFrom directly)
+#[macro_export]
+macro_rules! impl_try_from_ref_via_owned {
+    (impl$([$($generics:tt)*])? TryFrom<&$reftype:ty> for $newtype:ty $(where [$($where_clause:tt)*])?, $oldtype:ty) => {
+        impl$(<$($generics)*>)? TryFrom<&$reftype> for $newtype $(where $($where_clause)*)? {
+            type Error = <$newtype as TryFrom<$oldtype>>::Error;
+
+            fn try_from(value: &$reftype) -> Result<Self, Self::Error> {
+                <$newtype as TryFrom<$oldtype>>::try_from(value.to_owned())
+            }
+        }
+    };
+}
