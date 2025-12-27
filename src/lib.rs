@@ -56,7 +56,7 @@
 //!   * It only supports `String` as the base type
 //! * [prae](https://github.com/teenjuna/prae)
 //!   * Very similar design
-//!   * It's actually better
+//!   * Wrapper trait imposes too much structure (TryFrom already provides the Error type)
 //! * [tightness](https://github.com/PabloMansanet/tightness)
 //!   * Last commit on May 30, 2021
 //!   * prae improves on tightness

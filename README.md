@@ -62,7 +62,7 @@ This crate provides helper macros for defining newtypes with validation & prepro
   * It only supports `String` as the base type
 * [prae][__link4]
   * Very similar design
-  * It’s actually better
+  * Wrapper trait imposes too much structure (TryFrom already provides the Error type)
 * [tightness][__link5]
   * Last commit on May 30, 2021
   * prae improves on tightness
