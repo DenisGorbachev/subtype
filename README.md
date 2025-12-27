@@ -4,8 +4,6 @@
 
 # Subtype
 
-[![Build](https://github.com/DenisGorbachev/subtype/actions/workflows/ci.yml/badge.svg)](https://github.com/DenisGorbachev/subtype)
-
 This crate provides helper macros for defining newtypes with validation & preprocessors.
 
 ## Features
@@ -71,7 +69,9 @@ This crate provides helper macros for defining newtypes with validation & prepro
 * [semval][__link6]
 * [validators][__link7]
 
+  <!-- markdownlint-disable-next-line MD053 -->
    [__link0]: https://crates.io/crates/refinement
+
  [__link1]: https://crates.io/crates/nutype
  [__link2]: https://crates.io/crates/synonym
  [__link3]: https://crates.io/crates/aliri_braid
@@ -92,6 +92,6 @@ Like the project? [⭐ Star this repo](https://github.com/DenisGorbachev/subtype
 
 ## License
 
-[Apache License 2.0](LICENSE-APACHE) or [MIT License](LICENSE-MIT) at your option.
+[Apache-2.0](LICENSE-APACHE) or [MIT](LICENSE-MIT).
 
-Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in this crate by you, as defined in the Apache-2.0 license, shall be dual licensed as above, without any additional terms or conditions.
+Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in this crate by you, shall be licensed as above, without any additional terms or conditions.
