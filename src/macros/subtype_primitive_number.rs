@@ -1,4 +1,4 @@
-/// This macro doesn't include [`derive_more::Neg`] because it is also used for non-negative types that don't implement [`std::ops::Neg`] (e.g. `u32`)
+/// This macro doesn't include `derive_more::Neg` because it is also used for non-negative types that don't implement [`std::ops::Neg`] (e.g. `u32`)
 #[macro_export]
 macro_rules! subtype_primitive_number {
     (
