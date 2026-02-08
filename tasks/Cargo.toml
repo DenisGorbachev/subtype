@@ -12,4 +12,4 @@ anyhow = { version = "1.0.86" }
 derive_builder = "0.20.0"
 url = "2.5.2"
 url-macro = "0.2.3"
-time = "0.3.36"
+time = "0.3.47"
