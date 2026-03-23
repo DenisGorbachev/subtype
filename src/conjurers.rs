@@ -1,6 +1,7 @@
 mod bool;
 mod exclusive;
 mod i32;
+mod i64;
 mod inclusive;
 mod now;
 mod space;
@@ -10,6 +11,7 @@ mod u64;
 pub use bool::*;
 pub use exclusive::*;
 pub use i32::*;
+pub use i64::*;
 pub use inclusive::*;
 pub use now::*;
 pub use space::*;

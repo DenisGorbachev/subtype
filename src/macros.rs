@@ -5,6 +5,7 @@ mod impl_trait;
 mod subtype;
 mod subtype_hashmap;
 mod subtype_i32;
+mod subtype_i64;
 mod subtype_path_buf;
 mod subtype_primitive_number;
 mod subtype_static_str;
