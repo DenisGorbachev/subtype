@@ -64,6 +64,8 @@
 //! * [validators](https://crates.io/crates/validators)
 //!
 
+#![cfg_attr(not(test), deny(unused_crate_dependencies))]
+
 mod checkers;
 mod conjurers;
 mod errors;
