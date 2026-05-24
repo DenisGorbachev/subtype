@@ -423,6 +423,51 @@ You are running in a sandbox with limited network access.
 * If you need to run a network command, just do it without checking permissions (they will be enforced automatically)
 * If you need to read the data from other domains, use the web search tool (this tool is executed outside of sandbox)
 
+## Subtype concepts
+
+### Newtype
+
+A struct whose purpose is to enforce invariants at run-time and/or provide safety guarantees at compile-time.
+
+Examples:
+
+* `Name(String)` enforces a run-time invariant that the inner string is not empty.
+* `DurationSeconds(pub u32)` provides a compile-time guarantee that multiplying two values of its type returns `DurationSecondsSquared` (not `DurationSeconds`).
+
+### Raw newtype
+
+A newtype that doesn't enforce invariants at run-time.
+
+Examples:
+
+* `DurationSeconds(pub u32)`
+
+Requirements:
+
+* Must have a public visibility of the inner value
+* Should have `impl From` for constructing the outer value
+
+### Refined newtype
+
+A newtype that does enforce invariants at run-time.
+
+Examples:
+
+* `Name(String)`
+
+Requirements:
+
+* Must have a private visibility of the inner value
+* Must have at least one `impl TryFrom`
+* Must have functions:
+  * `pub fn new`
+    * Must call the primary `TryFrom`
+  * `pub unsafe fn new_unchecked`
+    * Must construct the value without safety checks
+  * `pub fn set`
+    * Must accept `&mut self`
+    * Must replace `self` with a value received from `TryFrom`
+
 ## Project files
 
 ### Cargo.toml
@@ -555,7 +600,6 @@ errgonomic = { git = "https://github.com/DenisGorbachev/errgonomic" }
 mod checkers;
 mod conjurers;
 mod errors;
-mod functions;
 mod macros;
 #[cfg(test)]
 mod tests;
@@ -565,7 +609,6 @@ mod transformers;
 pub use checkers::*;
 pub use conjurers::*;
 pub use errors::*;
-pub use functions::*;
 pub use traits::*;
 pub use transformers::*;
 ```
