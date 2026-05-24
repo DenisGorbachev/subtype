@@ -487,7 +487,7 @@ Requirements:
 name = "subtype"
 version = "0.1.0"
 edition = "2024"
-rust-version = "1.93.1"
+rust-version = "1.88.0"
 description = "Better newtypes"
 license = "Apache-2.0 OR MIT"
 homepage = "https://github.com/DenisGorbachev/subtype"
