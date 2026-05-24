@@ -1,5 +1,5 @@
-use subtype::subtype_string;
 use subtype::Space;
+use subtype::subtype_string;
 use subtype::{Contains, IsEmpty, Not};
 use subtype::{IncorrectValueError, ValidationError, ValidationError2};
 

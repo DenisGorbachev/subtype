@@ -1,10 +1,10 @@
 use std::marker::PhantomData;
 
-use crate::transform_as_validate_as_check;
 use crate::Check;
 use crate::Conjure;
 use crate::Exclusive;
 use crate::Inclusive;
+use crate::transform_as_validate_as_check;
 
 // This order and meta-type of generic arguments is better for informative errors
 #[derive(Default, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy, Debug)]
@@ -21,11 +21,7 @@ where
 {
     fn check(value: &Value) -> bool {
         let maximum = Maximum::conjure();
-        if Inclusivity::conjure() {
-            value <= &maximum
-        } else {
-            value < &maximum
-        }
+        if Inclusivity::conjure() { value <= &maximum } else { value < &maximum }
     }
 }
 

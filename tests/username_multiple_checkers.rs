@@ -3,8 +3,8 @@ use subtype::IsEmpty;
 use subtype::MaxLen;
 use subtype::Not;
 use subtype::Trim;
-use subtype::{constructor_with_generic_validation, purify_with_generic_validation};
 use subtype::{IncorrectValueError, ValidationError, ValidationError2};
+use subtype::{constructor_with_generic_validation, purify_with_generic_validation};
 
 #[allow(dead_code)]
 #[derive(PartialOrd, PartialEq, Clone, Debug)]

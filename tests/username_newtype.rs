@@ -1,8 +1,8 @@
-use subtype::subtype;
 use subtype::IsEmpty;
 use subtype::Not;
 use subtype::Trim;
 use subtype::Validate;
+use subtype::subtype;
 use subtype::{IncorrectValueError, ValidationError};
 
 subtype!(

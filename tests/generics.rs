@@ -1,4 +1,4 @@
-use subtype::{subtype, Conjure, Equal, IncorrectValueError, ValidationError};
+use subtype::{Conjure, Equal, IncorrectValueError, ValidationError, subtype};
 
 subtype!(
     #[derive(PartialOrd, PartialEq, Clone, Debug)]

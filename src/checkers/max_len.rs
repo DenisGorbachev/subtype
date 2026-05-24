@@ -1,8 +1,8 @@
 use std::marker::PhantomData;
 
-use crate::validate_as_check;
 use crate::Check;
 use crate::Conjure;
+use crate::validate_as_check;
 use standard_traits::Len;
 
 #[derive(Default, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy, Debug)]
@@ -14,11 +14,7 @@ where
     Inclusivity: Conjure<bool>,
 {
     fn check(value: &Value) -> bool {
-        if Inclusivity::conjure() {
-            value.len() <= MAXIMUM
-        } else {
-            value.len() < MAXIMUM
-        }
+        if Inclusivity::conjure() { value.len() <= MAXIMUM } else { value.len() < MAXIMUM }
     }
 }
 

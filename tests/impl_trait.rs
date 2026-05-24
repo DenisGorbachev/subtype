@@ -1,4 +1,4 @@
-use subtype::{subtype_string, IsEmpty, Not, Trim};
+use subtype::{IsEmpty, Not, Trim, subtype_string};
 
 subtype_string!(
     pub struct UsernameNotEmpty(String [Trim] | Not<IsEmpty>);

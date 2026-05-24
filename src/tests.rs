@@ -1,7 +1,7 @@
 use crate::Inclusive;
 use crate::InvalidValueError;
-use crate::Validate;
 use crate::U32;
+use crate::Validate;
 use crate::{IsEmpty, Max};
 
 #[cfg(test)]

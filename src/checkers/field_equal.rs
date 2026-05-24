@@ -1,7 +1,7 @@
-use crate::transform_as_validate_as_check;
 use crate::Check;
 use crate::Conjure;
 use crate::GetRef;
+use crate::transform_as_validate_as_check;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 

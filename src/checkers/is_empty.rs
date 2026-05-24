@@ -1,5 +1,5 @@
-use crate::transform_as_validate_as_check;
 use crate::Check;
+use crate::transform_as_validate_as_check;
 use standard_traits::IsEmpty as IsEmptyTrait;
 
 #[derive(Default, Eq, PartialEq, Hash, Clone, Copy, Debug)]

@@ -1,9 +1,9 @@
 use subtype::Not;
 use subtype::Trim;
 use subtype::Validate;
-use subtype::{constructor_with_generic_validation, impl_try_from_own, impl_try_from_ref, setter_with_generic_validation};
-use subtype::{purify_with_generic_validation, IsEmpty};
 use subtype::{IncorrectValueError, ValidationError};
+use subtype::{IsEmpty, purify_with_generic_validation};
+use subtype::{constructor_with_generic_validation, impl_try_from_own, impl_try_from_ref, setter_with_generic_validation};
 
 #[allow(dead_code)]
 #[derive(PartialOrd, PartialEq, Clone, Debug)]

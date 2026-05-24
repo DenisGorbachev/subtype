@@ -1,7 +1,7 @@
-use subtype::impl_all_with_generic_validation;
 use subtype::IsEmpty;
 use subtype::Not;
 use subtype::Validate;
+use subtype::impl_all_with_generic_validation;
 use subtype::{IncorrectValueError, ValidationError};
 
 #[allow(dead_code)]

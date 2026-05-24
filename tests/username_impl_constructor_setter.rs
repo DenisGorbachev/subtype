@@ -1,8 +1,8 @@
 use subtype::IsEmpty;
 use subtype::Not;
 use subtype::Validate;
-use subtype::{impl_self_constructor_setter_purify_with_generic_validation, impl_try_from_own, impl_try_from_ref};
 use subtype::{IncorrectValueError, ValidationError};
+use subtype::{impl_self_constructor_setter_purify_with_generic_validation, impl_try_from_own, impl_try_from_ref};
 
 #[allow(dead_code)]
 #[derive(PartialOrd, PartialEq, Clone, Debug)]
