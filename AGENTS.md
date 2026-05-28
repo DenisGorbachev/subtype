@@ -450,14 +450,10 @@ Examples:
 Requirements:
 
 * Must have `#[repr(transparent)]`
-* For each custom derive:
-  * Must have attributes that "proxy" to inner value:
-    * Examples:
-      * For `serde::Serialize` and `serde::Deserialize`: must have `#[serde(transparent)]`
+* Must derive `Deref`, `Borrow` via `derive_more`
 * If newtype is [refined](#refined-newtype):
   * Then:
   * Else:
-    * Must implement `Deref`, `Borrow`
     * If the inner field is semantically mutable:
       * Then:
         * Must have a public visibility of the inner value
@@ -466,6 +462,18 @@ Requirements:
         * Must have a private visibility of the inner value
         * Must not implement `DerefMut`, `BorrowMut`
     * Must have `impl From` for constructing the outer value
+* If the crate contains a `serde` dependency, then:
+  * Must have `Serialize` and `Deserialize` impls
+    * Notes:
+      * The impls may be derived or custom
+      * The impls may be feature-gated if the `serde` dependency is optional
+      * The derives may be spelled as `serde::Serialize` or just `Serialize`, depending on whether other items with "Serialize" name are used (e.g. `rkyv::Serialize`)
+  * Must have `#[serde(transparent)]`
+    * Notes:
+      * This attribute is necessary for `Serialize`, and it doesn't conflict with `#[serde(try_from = I)]`
+  * If newtype has a `Deserialize` derive:
+    * If newtype is [refined](#refined-newtype), then:
+      * Must have `#[serde(try_from = I)]` (`I` is the inner type)
 
 Decisions:
 
