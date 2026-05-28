@@ -19,6 +19,26 @@ Requirements:
   - Must have attributes that "proxy" to inner value:
     - Examples:
       - For `serde::Serialize` and `serde::Deserialize`: must have `#[serde(transparent)]`
+- If newtype is [refined](#refined-newtype):
+  - Then:
+  - Else:
+    - Must implement `Deref`, `Borrow`
+    - If the inner field is semantically mutable:
+      - Then:
+        - Must have a public visibility of the inner value
+        - Must implement `DerefMut`, `BorrowMut`
+      - Else:
+        - Must have a private visibility of the inner value
+        - Must not implement `DerefMut`, `BorrowMut`
+    - Must have `impl From` for constructing the outer value
+
+Decisions:
+
+- Should implement `AsRef`?
+  - Facts:
+    - `Borrow` is better than `AsRef` in this case
+    - Some functions may have an `AsRef` bound, not `Borrow` bound
+      - Lots of functions in `std` accept `AsRef<Path>`, so `AbsolutePathBuf` must implement `AsRef<Path>`
 
 Purposes:
 
@@ -41,38 +61,13 @@ Purposes:
     - Define `impl Serialize` and `impl Deserialize` for newtype of `solana_address::Address` that serialize/deserialize the address as string (not byte array)
     - Define `impl Deserialize` for newtype of `rust_bitcoin::Address` that calls `assume_checked`
 
-Non-purposes:
+Counter-purposes:
 
 - "Define methods on inner type" - it's better to implement traits or define free functions
 
-### Raw newtype
+### Mutable newtype
 
-A newtype that doesn't enforce invariants at run-time.
-
-Examples:
-
-- [DurationSeconds](#durationseconds)
-- [Id](#id)
-
-Requirements:
-
-- Must implement `Deref`, `Borrow`
-- If the inner field is semantically mutable:
-  - Then:
-    - Must have a public visibility of the inner value
-    - Must implement `DerefMut`, `BorrowMut`
-  - Else:
-    - Must have a private visibility of the inner value
-    - Must not implement `DerefMut`, `BorrowMut`
-- Must have `impl From` for constructing the outer value
-
-Decisions:
-
-- Should implement `AsRef`?
-  - Facts:
-    - `Borrow` is better than `AsRef` in this case
-    - Some functions may have an `AsRef` bound, not `Borrow` bound
-      - Lots of functions in `std` accept `AsRef<Path>`,
+A newtype whose inner value can be mutated.
 
 ### Refined newtype
 
@@ -81,6 +76,11 @@ A newtype that enforces invariants at run-time.
 Examples:
 
 - [Name](#name)
+
+Counter-examples:
+
+- [DurationSeconds](#durationseconds)
+- [Id](#id)
 
 Requirements:
 
@@ -115,9 +115,10 @@ Notes:
 
 `struct Name(String)`
 
-Concepts:
+Properties:
 
-- [Refined newtype](#refined-newtype)
+- [refined](#refined-newtype): true
+- [marked](#marked-newtype): false
 
 Purposes:
 
@@ -127,9 +128,10 @@ Purposes:
 
 `struct DurationSeconds(pub u32)`
 
-Concepts:
+Properties:
 
-- [Raw newtype](#raw-newtype)
+- [refined](#refined-newtype): false
+- [marked](#marked-newtype): false
 
 Purposes:
 
@@ -137,12 +139,13 @@ Purposes:
 
 ### Id
 
-`struct Id<T> { pub inner: u64, pub marker: PhantomData<T> }`
+`struct Id<T> { inner: u64, pub marker: PhantomData<T> }`
 
-Concepts:
+Properties:
 
-- [Raw newtype](#raw-newtype)
-- [Marked newtype](#marked-newtype)
+- [refined](#refined-newtype): false
+- [marked](#marked-newtype): true
+- [mutable](#mutable-newtype): false
 
 Aliases:
 
@@ -160,3 +163,7 @@ Notes:
   - Lower build time
   - Lower codebase size
   - Less trait impls
+
+### AbsolutePathBuf
+
+`struct AbsolutePathBuf(PathBuf)`
