@@ -433,16 +433,27 @@ You are running in a sandbox with limited network access.
 * If you need to run a network command, just do it without checking permissions (they will be enforced automatically)
 * If you need to read the data from other domains, use the web search tool (this tool is executed outside of sandbox)
 
-## Subtype concepts
+## Project description
 
-### Newtype
+### Concepts
+
+#### Newtype
 
 A struct that contains exactly one data-carrying field.
 
 Examples:
 
-* `Name(String)` enforces a run-time invariant that the inner string is not empty.
-* `DurationSeconds(pub u32)` provides a compile-time guarantee that multiplying two values of its type returns `DurationSecondsSquared` (not `DurationSeconds`).
+* [Name](#name)
+* [DurationSeconds](#durationseconds)
+* [Id](#id)
+
+Requirements:
+
+* Must have `#[repr(transparent)]`
+* For each custom derive:
+  * Must have attributes that "proxy" to inner value:
+    * Examples:
+      * For `serde::Serialize` and `serde::Deserialize`: must have `#[serde(transparent)]`
 
 Purposes:
 
@@ -456,7 +467,7 @@ Purposes:
     * Enforce that only values with the same unit can be added or subtracted
     * Enforce that ids of objects in different collections cannot be used interchangeably
       * `Id<User>` cannot be used instead of `Id<Order>`
-* Enforce cleanup of resources in a `Drop` impl
+* Release locks / free the resources in a `Drop` impl
   * Examples:
     * Enforce that a `RawFd` is closed when `File` goes out of scope
 * Define impls of foreign traits for foreign types
@@ -465,20 +476,30 @@ Purposes:
     * Define `impl Serialize` and `impl Deserialize` for newtype of `solana_address::Address` that serialize/deserialize the address as string (not byte array)
     * Define `impl Deserialize` for newtype of `rust_bitcoin::Address` that calls `assume_checked`
 
-### Raw newtype
+Non-purposes:
+
+* "Define methods on inner type" - it's better to implement traits or define free functions
+
+#### Raw newtype
 
 A newtype that doesn't enforce invariants at run-time.
 
 Examples:
 
-* `DurationSeconds(pub u32)`
+* [DurationSeconds](#durationseconds)
+* [Id](#id)
 
 Requirements:
 
-* Must have a public visibility of the inner value
-  * This also provides mutable access to the inner value
-* Must implement `Deref`, `DerefMut`, `Borrow`, `BorrowMut`
-* Should have `impl From` for constructing the outer value
+* Must implement `Deref`, `Borrow`
+* If the inner field is semantically mutable:
+  * Then:
+    * Must have a public visibility of the inner value
+    * Must implement `DerefMut`, `BorrowMut`
+  * Else:
+    * Must have a private visibility of the inner value
+    * Must not implement `DerefMut`, `BorrowMut`
+* Must have `impl From` for constructing the outer value
 
 Decisions:
 
@@ -488,13 +509,13 @@ Decisions:
     * Some functions may have an `AsRef` bound, not `Borrow` bound
       * Lots of functions in `std` accept `AsRef<Path>`,
 
-### Refined newtype
+#### Refined newtype
 
 A newtype that enforces invariants at run-time.
 
 Examples:
 
-* `Name(String)`
+* [Name](#name)
 
 Requirements:
 
@@ -511,26 +532,69 @@ Requirements:
     * Must accept `&mut self`
     * Must replace `self` with a value received from `TryFrom`
 
-### Marked newtype
+#### Marked newtype
 
 A newtype that contains an additional field for a generic argument `T`
 
 Examples:
 
-* `struct Id<T> { pub inner: u64, pub marker: PhantomData<T> }`
-  * Examples:
-    * `type UserId = Id<UserMarker>;`
-    * `type OrderId = Id<OrderMarker>;`
-  * Reasons:
-    * Reduces the build time
-    * Reduces the code size
-    * Allows to implement traits
-  * Notes:
-    * It is safe to have `pub` fields because the `Id` does not enforce run-time invariants
+* [Id](#id)
 
 Notes:
 
 * A marked newtype can be raw or refined.
+
+### Examples
+
+#### Name
+
+`struct Name(String)`
+
+Concepts:
+
+* [Refined newtype](#refined-newtype)
+
+Purposes:
+
+* Enforces a run-time invariant that the inner string is not empty.
+
+#### DurationSeconds
+
+`struct DurationSeconds(pub u32)`
+
+Concepts:
+
+* [Raw newtype](#raw-newtype)
+
+Purposes:
+
+* Enforces a compile-time check that multiplying two values of its type returns `DurationSecondsSquared` (not `DurationSeconds`).
+
+#### Id
+
+`struct Id<T> { pub inner: u64, pub marker: PhantomData<T> }`
+
+Concepts:
+
+* [Raw newtype](#raw-newtype)
+* [Marked newtype](#marked-newtype)
+
+Aliases:
+
+* `type UserId = Id<UserMarker>`
+* `type OrderId = Id<OrderMarker>`
+
+Purposes:
+
+* Enforces a compile-time check that `UserId` is distinct from `OrderId`
+
+Notes:
+
+* It is safe to have `pub` fields because the `Id` does not enforce run-time invariants
+* Defining `Id` with aliases is better than defining `UserId`, `OrderId` and other ids as separate types:
+  * Lower build time
+  * Lower codebase size
+  * Less trait impls
 
 ## Project files
 
