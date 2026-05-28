@@ -451,8 +451,28 @@ Requirements:
 
 * Must have `#[repr(transparent)]`
 * Must derive `Deref`, `Borrow` via `derive_more`
+* Must derive `AsRef` via `derive_more`
+  * Requirements:
+    * Must have `#[as_ref(forward)]`
+  * Reasons:
+    * Lots of functions in `std` accept `AsRef<Path>`, so [AbsolutePathBuf](#absolutepathbuf) must implement `AsRef<Path>`
 * If newtype is [refined](#refined-newtype):
   * Then:
+    * Must have a doc comment
+      * Must contain a `## Safety` section that describes the invariants
+    * Must have a private visibility of the inner value
+    * Must not provide mutable access to inner value
+      * Must not implement `DerefMut`
+    * Must have at least one `impl TryFrom`
+      * Must not call `Self::new`
+    * Must have functions:
+      * `pub fn new`
+        * Must call the primary `TryFrom`
+      * `pub unsafe fn new_unchecked`
+        * Must construct the value without safety checks
+      * `pub fn set`
+        * Must accept `&mut self`
+        * Must replace `self` with a value received from `TryFrom`
   * Else:
     * If the inner field is semantically mutable:
       * Then:
@@ -474,14 +494,6 @@ Requirements:
   * If newtype has a `Deserialize` derive:
     * If newtype is [refined](#refined-newtype), then:
       * Must have `#[serde(try_from = I)]` (`I` is the inner type)
-
-Decisions:
-
-* Should implement `AsRef`?
-  * Facts:
-    * `Borrow` is better than `AsRef` in this case
-    * Some functions may have an `AsRef` bound, not `Borrow` bound
-      * Lots of functions in `std` accept `AsRef<Path>`, so `AbsolutePathBuf` must implement `AsRef<Path>`
 
 Purposes:
 
@@ -525,21 +537,6 @@ Counter-examples:
 * [DurationSeconds](#durationseconds)
 * [Id](#id)
 
-Requirements:
-
-* Must have a private visibility of the inner value
-* Must not provide mutable access to inner value
-  * Must not implement `DerefMut`
-* Must have at least one `impl TryFrom`
-* Must have functions:
-  * `pub fn new`
-    * Must call the primary `TryFrom`
-  * `pub unsafe fn new_unchecked`
-    * Must construct the value without safety checks
-  * `pub fn set`
-    * Must accept `&mut self`
-    * Must replace `self` with a value received from `TryFrom`
-
 #### Marked newtype
 
 A newtype that contains an additional field for a generic argument `T`
@@ -582,7 +579,7 @@ Purposes:
 
 #### Id
 
-`struct Id<T> { inner: u64, pub marker: PhantomData<T> }`
+`struct Id<T> { inner: u64, marker: PhantomData<T> }`
 
 Properties:
 
@@ -601,7 +598,6 @@ Purposes:
 
 Notes:
 
-* It is safe to have `pub` fields because the `Id` does not enforce run-time invariants
 * Defining `Id` with aliases is better than defining `UserId`, `OrderId` and other ids as separate types:
   * Lower build time
   * Lower codebase size
