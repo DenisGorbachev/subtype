@@ -24,6 +24,11 @@ Purposes:
 - Enforce cleanup of resources in a `Drop` impl
   - Examples:
     - Enforce that a `RawFd` is closed when `File` goes out of scope
+- Define impls of foreign traits for foreign types
+- Define impls that are different from existing impls for the inner type
+  - Examples:
+    - Define `impl Serialize` and `impl Deserialize` for newtype of `solana_address::Address` that serialize/deserialize the address as string (not byte array)
+    - Define `impl Deserialize` for newtype of `rust_bitcoin::Address` that calls `assume_checked`
 
 ## Raw newtype
 
