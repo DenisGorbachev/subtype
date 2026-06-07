@@ -677,8 +677,8 @@ errgonomic = { git = "https://github.com/DenisGorbachev/errgonomic" }
 if_missing = "error"
 
 [providers]
-keychain = { type = "keychain", service = "rust-public-lib-template" }
-pass = { type = "password-store", prefix = "rust-public-lib-template/" }
+keychain = { type = "keychain", service = "subtype" }
+pass = { type = "password-store", prefix = "subtype/" }
 ```
 
 ### src/lib.rs
