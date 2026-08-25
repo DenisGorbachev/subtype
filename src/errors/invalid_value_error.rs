@@ -1,4 +1,4 @@
-use std::fmt::{Debug, Display, Formatter};
+use std::fmt::{self, Debug, Display, Formatter};
 use std::marker::PhantomData;
 
 use derive_more::Error;
@@ -34,7 +34,7 @@ impl<Value, Validator> From<Value> for InvalidValueError<Value, Validator> {
 
 impl<Value: Debug, Validator> Display for InvalidValueError<Value, Validator> {
     #[inline]
-    fn fmt(&self, f: &mut Formatter) -> ::core::fmt::Result {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         f.debug_struct("InvalidValueError")
             .field("value", &self.value)
             .field("validator", &pretty_type_name::<Validator>())

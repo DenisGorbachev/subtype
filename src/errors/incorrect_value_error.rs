@@ -1,4 +1,4 @@
-use std::fmt::{Debug, Display, Formatter};
+use std::fmt::{self, Debug, Display, Formatter};
 
 use derive_more::Error;
 
@@ -20,7 +20,7 @@ impl<Value, Error> IncorrectValueError<Value, Error> {
 
 impl<Value: Debug, Error: Debug> Display for IncorrectValueError<Value, Error> {
     #[inline]
-    fn fmt(&self, f: &mut Formatter) -> ::core::fmt::Result {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         f.debug_struct("IncorrectValueError")
             .field("value", &self.value)
             .field("error", &self.error)

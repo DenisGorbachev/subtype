@@ -1,4 +1,4 @@
-use std::fmt::{Display, Formatter};
+use std::fmt::{self, Display, Formatter};
 use std::marker::PhantomData;
 
 use derive_more::Error;
@@ -21,7 +21,7 @@ impl<Validator> Default for ValidationError<Validator> {
 }
 
 impl<Validator> Display for ValidationError<Validator> {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         f.debug_struct("ValidationError")
             .field("validator", &pretty_type_name::<Validator>())
             .finish()

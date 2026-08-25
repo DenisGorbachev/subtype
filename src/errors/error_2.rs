@@ -1,5 +1,5 @@
 use std::error::Error;
-use std::fmt::{Debug, Display, Formatter};
+use std::fmt::{self, Debug, Display, Formatter};
 
 /// This error type is used for tuples of checkers (which can return any error)
 #[derive(derive_more::Error, Eq, PartialEq, Hash, Clone, Copy, Debug)]
@@ -10,7 +10,7 @@ pub enum ValidationError2<A, B> {
 
 impl<A: Error, B: Error> Display for ValidationError2<A, B> {
     #[inline]
-    fn fmt(&self, f: &mut Formatter) -> ::core::fmt::Result {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         match self {
             ValidationError2::Variant1(err) => {
                 if f.alternate() {

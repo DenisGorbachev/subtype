@@ -29,8 +29,6 @@ transform_as_validate_as_check!(impl[Value, Maximum, Inclusivity] of [Value] for
 
 #[cfg(test)]
 mod tests {
-    use crate::Exclusive;
-    use crate::Inclusive;
     use crate::U32;
 
     use super::*;
