@@ -572,12 +572,17 @@ Requirements:
       - The impls may be derived or custom
       - The impls may be feature-gated if the `serde` dependency is optional
       - The derives may be spelled as `serde::Serialize` or just `Serialize`, depending on whether other items with "Serialize" name are used (e.g. `rkyv::Serialize`)
-  - Must have `#[serde(transparent)]`
-    - Notes:
-      - This attribute is necessary for `Serialize`, and it doesn't conflict with `#[serde(try_from = I)]`
-  - If newtype has a `Deserialize` derive:
-    - If newtype is [refined](#refined-newtype), then:
-      - Must have `#[serde(try_from = I)]` (`I` is the inner type)
+  - If the newtype has a `Deserialize` derive and is [refined](#refined-newtype):
+    - Must have `#[serde(try_from = "I")]` (`I` is the inner type)
+    - Must not have `#[serde(transparent)]`
+    - If the newtype also has a `Serialize` derive:
+      - Must have `#[serde(into = "I")]`
+      - Must implement `Into<I>`
+      - Must implement `Clone`
+  - If the newtype derives both `Serialize` and `Deserialize` without a `from`, `try_from`, or `into` container attribute:
+    - Must have `#[serde(transparent)]`
+    - Rationale:
+      - `serde_derive` rejects combining the `transparent` container attribute with any of the `from`, `try_from`, or `into` container attributes because they select mutually exclusive serialization or deserialization strategies
 
 Purposes:
 
