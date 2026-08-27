@@ -497,6 +497,16 @@ Notes:
 
 - Should match the thread topic
 
+#### Chat thread id heading
+
+A Markdown heading level 3 that contains only [chat thread id](#chat-thread-id).
+
+Examples:
+
+- `### RVC`
+- `### AKE`
+- `### LMY`
+
 #### findings.md
 
 - If it exists:
@@ -515,6 +525,26 @@ Notes:
     - If there is at least one proposed fix:
       - Then: "\n\n" and a Markdown nested list of fixes where each fix must have a format `{number}. {description}` (the numbers should start from 1 for each list of fixes)
       - Else: the exact text "none."
+
+### Guidelines for `serde`
+
+#### Requirements
+
+- Every input data type must derive `Serialize` and `Deserialize`
+- Every `Option`-wrapped field must have attributes:
+  - `#[serde(skip_serializing_if = "Option::is_none")]`
+- Every `OffsetDateTime` field must have attributes:
+  - `#[serde(with = "time::serde::rfc3339")]`
+- Every `Option<OffsetDateTime>` field must have attributes:
+  - `#[serde(with = "time::serde::rfc3339::option")]`
+- Every field that stores a physical value must be serialized as a map that includes at least two fields: `value` and `unit`
+  - `value` must be a primitive type
+  - `unit` must be a string that contains the unit name in singular form (for example: "nanosecond", "second", "minute", "kilogram", "meter")
+    - `unit` may contain a prefix (for example: "nano", "kilo")
+
+#### Notes
+
+- It is recommended to use `serde_with` to reduce the code size by avoiding custom `Serialize`/`Deserialize` impls
 
 ### Project description
 
@@ -539,6 +569,7 @@ Requirements:
     - Must have `#[as_ref(forward)]`
   - Reasons:
     - Lots of functions in `std` accept `AsRef<Path>`, so [AbsolutePathBuf](#absolutepathbuf) must implement `AsRef<Path>`
+- Must implement validation and preprocessing in `From` / `TryFrom`, not with checker or preprocessor APIs
 - If newtype is [refined](#refined-newtype):
   - Then:
     - Must have a doc comment
@@ -574,14 +605,11 @@ Requirements:
   - If the newtype has a `Deserialize` derive and is [refined](#refined-newtype):
     - Must have `#[serde(try_from = "I")]` (`I` is the inner type)
     - Must not have `#[serde(transparent)]`
-    - If the newtype also has a `Serialize` derive:
-      - Must have `#[serde(into = "I")]`
-      - Must implement `Into<I>`
-      - Must implement `Clone`
-  - If the newtype derives both `Serialize` and `Deserialize` without a `from`, `try_from`, or `into` container attribute:
+    - To serialize identically to `I`:
+      - Must derive `SerializeTransparent` instead of `Serialize`
+      - Must not have `#[serde(into = "I")]`
+  - If the newtype derives both `Serialize` and `Deserialize` without `from`, `try_from`, or `into`:
     - Must have `#[serde(transparent)]`
-    - Rationale:
-      - `serde_derive` rejects combining the `transparent` container attribute with any of the `from`, `try_from`, or `into` container attributes because they select mutually exclusive serialization or deserialization strategies
 
 Purposes:
 
@@ -607,6 +635,13 @@ Purposes:
 Counter-purposes:
 
 - "Define methods on inner type" - it's better to implement traits or define free functions
+
+##### SerializeTransparent
+
+Requirements:
+
+- Must error if input is not a struct with exactly one field.
+- Must derive `serde::Serialize` by serializing a reference to the sole field.
 
 ##### Mutable newtype
 
@@ -882,6 +917,7 @@ age = { type = "age", recipients = [
 
 ```toml
 [workspace]
+members = ["packages/subtype-macros"]
 resolver = "3"
 
 [workspace.package]
@@ -948,21 +984,151 @@ title = "Subtype"
 workspace = true
 
 [dependencies]
-derive_more = { version = "1.0.0", features = ["error"] }
-num-traits = { version = "0.2.0", optional = true }
-pretty-type-name = "1.0.1"
-serde = { version = "1.0.0", optional = true, features = ["derive"] }
+derive_more = { version = "1", features = ["error"] }
+num-traits = { version = "0.2", optional = true }
+pretty-type-name = "1"
+serde = { version = "1", optional = true, features = ["derive"] }
 standard-traits = { git = "https://github.com/DenisGorbachev/standard-traits" }
-time = { version = "0.3.47", optional = true }
+subtype-macros = { version = "0.1", path = "packages/subtype-macros", optional = true }
+time = { version = "0.3", optional = true }
 
 [dev-dependencies]
-assert_matches = { version = "1.5.0" }
-derive_more = { version = "1.0.0", features = ["full"] }
+assert_matches = { version = "1" }
+derive_more = { version = "1", features = ["full"] }
 prae = "0.8"
-rustc-hash = "2.1"
-thiserror = "2.0"
-url = "2.5"
+rustc-hash = "2"
+thiserror = "2"
+url = "2"
 errgonomic = { git = "https://github.com/DenisGorbachev/errgonomic" }
+serde_test = "1"
+serde = { version = "1", features = ["derive"] }
+
+[features]
+macros = ["dep:subtype-macros"]
+```
+
+#### packages/subtype-macros/Cargo.toml
+
+```toml
+[package]
+name = "subtype-macros"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+description = "Derive macros for newtypes"
+license.workspace = true
+homepage.workspace = true
+repository.workspace = true
+keywords.workspace = true
+categories.workspace = true
+exclude.workspace = true
+
+[package.metadata.details]
+title = "Subtype macros"
+
+[lib]
+proc-macro = true
+
+[lints]
+workspace = true
+
+[dependencies]
+proc-macro2 = "1"
+quote = "1"
+syn = "3"
+
+[dev-dependencies]
+assertables = "10"
+```
+
+#### packages/subtype-macros/src/lib.rs
+
+```rust
+//! Procedural macros for newtypes.
+
+use proc_macro::TokenStream;
+use proc_macro2::TokenStream as TokenStream2;
+use quote::quote;
+use syn::{Data, DeriveInput, Fields, Index, Member, parse_macro_input};
+
+/// Implements `serde::Serialize` by serializing the newtype's borrowed inner field directly.
+///
+/// Unlike Serde's `into` container attribute, this implementation does not clone or convert the newtype. The derive accepts tuple and named structs containing exactly one field.
+#[proc_macro_derive(SerializeTransparent)]
+pub fn derive_serialize_transparent(input: TokenStream) -> TokenStream {
+    let input = parse_macro_input!(input as DeriveInput);
+    expand_serialize_transparent(input).into()
+}
+
+fn expand_serialize_transparent(input: DeriveInput) -> TokenStream2 {
+    let DeriveInput {
+        ident,
+        generics,
+        data,
+        ..
+    } = input;
+    let (field_type, member) = match data {
+        Data::Struct(data) => match data.fields {
+            Fields::Named(fields) => {
+                let mut fields_iter = fields.named.into_iter();
+                match (fields_iter.next(), fields_iter.next()) {
+                    (Some(field), None) => match field.ident {
+                        Some(field_ident) => (field.ty, Member::Named(field_ident)),
+                        None => {
+                            return syn::Error::new_spanned(&ident, "SerializeTransparent requires a named or tuple struct containing exactly one field").into_compile_error();
+                        }
+                    },
+                    _ => {
+                        return syn::Error::new_spanned(&ident, "SerializeTransparent requires a struct containing exactly one field").into_compile_error();
+                    }
+                }
+            }
+            Fields::Unnamed(fields) => {
+                let mut fields_iter = fields.unnamed.into_iter();
+                match (fields_iter.next(), fields_iter.next()) {
+                    (Some(field), None) => (field.ty, Member::Unnamed(Index::from(0))),
+                    _ => {
+                        return syn::Error::new_spanned(&ident, "SerializeTransparent requires a struct containing exactly one field").into_compile_error();
+                    }
+                }
+            }
+            Fields::Unit => {
+                return syn::Error::new_spanned(&ident, "SerializeTransparent requires a struct containing exactly one field").into_compile_error();
+            }
+        },
+        Data::Enum(_) => {
+            return syn::Error::new_spanned(&ident, "SerializeTransparent does not support enums").into_compile_error();
+        }
+        Data::Union(_) => {
+            return syn::Error::new_spanned(&ident, "SerializeTransparent does not support unions").into_compile_error();
+        }
+    };
+    let where_predicates = generics
+        .where_clause
+        .as_ref()
+        .map(|where_clause| &where_clause.predicates);
+    let (impl_generics, type_generics, _) = generics.split_for_impl();
+
+    quote! {
+        #[automatically_derived]
+        impl #impl_generics ::serde::Serialize for #ident #type_generics
+        where
+            #field_type: ::serde::Serialize,
+            #where_predicates
+        {
+            #[inline]
+            fn serialize<S>(&self, serializer: S) -> ::core::result::Result<S::Ok, S::Error>
+            where
+                S: ::serde::Serializer,
+            {
+                ::serde::Serialize::serialize(&self.#member, serializer)
+            }
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests;
 ```
 
 #### src/lib.rs
@@ -972,6 +1138,7 @@ errgonomic = { git = "https://github.com/DenisGorbachev/errgonomic" }
 //!
 //! ## Features
 //!
+//! * Clone-free transparent serialization for newtypes via `SerializeTransparent` (feature: `macros`)
 //! * Validators
 //! * Preprocessors
 //! * Postprocessors
@@ -1050,4 +1217,7 @@ pub use conjurers::*;
 pub use errors::*;
 pub use traits::*;
 pub use transformers::*;
+
+#[cfg(feature = "macros")]
+pub use subtype_macros::SerializeTransparent;
 ```

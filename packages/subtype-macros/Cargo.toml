@@ -1,0 +1,29 @@
+[package]
+name = "subtype-macros"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+description = "Derive macros for newtypes"
+license.workspace = true
+homepage.workspace = true
+repository.workspace = true
+keywords.workspace = true
+categories.workspace = true
+exclude.workspace = true
+
+[package.metadata.details]
+title = "Subtype macros"
+
+[lib]
+proc-macro = true
+
+[lints]
+workspace = true
+
+[dependencies]
+proc-macro2 = "1"
+quote = "1"
+syn = "3"
+
+[dev-dependencies]
+assertables = "10"

@@ -2,6 +2,7 @@
 //!
 //! ## Features
 //!
+//! * Clone-free transparent serialization for newtypes via `SerializeTransparent` (feature: `macros`)
 //! * Validators
 //! * Preprocessors
 //! * Postprocessors
@@ -80,3 +81,6 @@ pub use conjurers::*;
 pub use errors::*;
 pub use traits::*;
 pub use transformers::*;
+
+#[cfg(feature = "macros")]
+pub use subtype_macros::SerializeTransparent;

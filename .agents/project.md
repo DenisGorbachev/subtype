@@ -21,6 +21,7 @@ Requirements:
     - Must have `#[as_ref(forward)]`
   - Reasons:
     - Lots of functions in `std` accept `AsRef<Path>`, so [AbsolutePathBuf](#absolutepathbuf) must implement `AsRef<Path>`
+- Must implement validation and preprocessing in `From` / `TryFrom`, not with checker or preprocessor APIs
 - If newtype is [refined](#refined-newtype):
   - Then:
     - Must have a doc comment
@@ -56,14 +57,11 @@ Requirements:
   - If the newtype has a `Deserialize` derive and is [refined](#refined-newtype):
     - Must have `#[serde(try_from = "I")]` (`I` is the inner type)
     - Must not have `#[serde(transparent)]`
-    - If the newtype also has a `Serialize` derive:
-      - Must have `#[serde(into = "I")]`
-      - Must implement `Into<I>`
-      - Must implement `Clone`
-  - If the newtype derives both `Serialize` and `Deserialize` without a `from`, `try_from`, or `into` container attribute:
+    - To serialize identically to `I`:
+      - Must derive `SerializeTransparent` instead of `Serialize`
+      - Must not have `#[serde(into = "I")]`
+  - If the newtype derives both `Serialize` and `Deserialize` without `from`, `try_from`, or `into`:
     - Must have `#[serde(transparent)]`
-    - Rationale:
-      - `serde_derive` rejects combining the `transparent` container attribute with any of the `from`, `try_from`, or `into` container attributes because they select mutually exclusive serialization or deserialization strategies
 
 Purposes:
 
@@ -89,6 +87,13 @@ Purposes:
 Counter-purposes:
 
 - "Define methods on inner type" - it's better to implement traits or define free functions
+
+### SerializeTransparent
+
+Requirements:
+
+- Must error if input is not a struct with exactly one field.
+- Must derive `serde::Serialize` by serializing a reference to the sole field.
 
 ### Mutable newtype
 
