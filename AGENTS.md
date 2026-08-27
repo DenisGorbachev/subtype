@@ -984,24 +984,24 @@ title = "Subtype"
 workspace = true
 
 [dependencies]
-derive_more = { version = "1", features = ["error"] }
-num-traits = { version = "0.2", optional = true }
-pretty-type-name = "1"
-serde = { version = "1", optional = true, features = ["derive"] }
+derive_more = { version = "1.0.0", features = ["error"] }
+num-traits = { version = "0.2.0", optional = true }
+pretty-type-name = "1.0.0"
+serde = { version = "1.0.228", optional = true, features = ["derive"] }
 standard-traits = { git = "https://github.com/DenisGorbachev/standard-traits" }
-subtype-macros = { version = "0.1", path = "packages/subtype-macros", optional = true }
-time = { version = "0.3", optional = true }
+subtype-macros = { version = "0.1.0", path = "packages/subtype-macros", optional = true }
+time = { version = "0.3.0", optional = true }
 
 [dev-dependencies]
-assert_matches = { version = "1" }
-derive_more = { version = "1", features = ["full"] }
-prae = "0.8"
-rustc-hash = "2"
-thiserror = "2"
-url = "2"
+assert_matches = { version = "1.5.0" }
+derive_more = { version = "1.0.0", features = ["full"] }
+prae = "0.8.4"
+rustc-hash = "2.1.0"
+thiserror = "2.0.0"
+url = "2.5.0"
 errgonomic = { git = "https://github.com/DenisGorbachev/errgonomic" }
-serde_test = "1"
-serde = { version = "1", features = ["derive"] }
+serde_test = "1.0.177"
+serde = { version = "1.0.228", features = ["derive"] }
 
 [features]
 macros = ["dep:subtype-macros"]
@@ -1033,12 +1033,12 @@ proc-macro = true
 workspace = true
 
 [dependencies]
-proc-macro2 = "1"
-quote = "1"
-syn = "3"
+proc-macro2 = "1.0.0"
+quote = "1.0.0"
+syn = "3.0.0"
 
 [dev-dependencies]
-assertables = "10"
+assertables = "10.1.0"
 ```
 
 #### packages/subtype-macros/src/lib.rs
