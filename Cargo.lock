@@ -72,8 +72,8 @@ dependencies = [
 
 [[package]]
 name = "errgonomic"
-version = "0.2.2"
-source = "git+https://github.com/DenisGorbachev/errgonomic#63ee51c23216baa7d7f0e02142027812f06dba1d"
+version = "0.5.1"
+source = "git+https://github.com/DenisGorbachev/errgonomic#2b30275ee759decf53a39d72b19a4af8c637195d"
 dependencies = [
  "cfg-if",
  "tempfile",
