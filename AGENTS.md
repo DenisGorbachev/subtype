@@ -1147,7 +1147,7 @@ fn expand_serialize_transparent(input: DeriveInput) -> TokenStream2 {
 mod tests;
 ```
 
-#### src/lib.rs
+### src/lib.rs
 
 ```rust
 //! This crate provides helper macros for defining newtypes with validation & preprocessors.
