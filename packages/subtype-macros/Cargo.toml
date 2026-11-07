@@ -5,7 +5,6 @@ edition.workspace = true
 rust-version.workspace = true
 description = "Derive macros for newtypes"
 license.workspace = true
-homepage.workspace = true
 repository.workspace = true
 keywords.workspace = true
 categories.workspace = true
