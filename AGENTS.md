@@ -1739,8 +1739,9 @@ assertables = "10.1.0"
 
 use proc_macro::TokenStream;
 use proc_macro2::TokenStream as TokenStream2;
-use quote::quote;
-use syn::{Data, DeriveInput, Fields, Index, Member, parse_macro_input};
+use quote::{format_ident, quote};
+use syn::ext::IdentExt;
+use syn::{Data, DeriveInput, Index, Member, parse_macro_input};
 
 /// Implements `serde::Serialize` by serializing the newtype's borrowed inner field directly.
 ///
@@ -1758,35 +1759,8 @@ fn expand_serialize_transparent(input: DeriveInput) -> TokenStream2 {
         data,
         ..
     } = input;
-    let (field_type, member) = match data {
-        Data::Struct(data) => match data.fields {
-            Fields::Named(fields) => {
-                let mut fields_iter = fields.named.into_iter();
-                match (fields_iter.next(), fields_iter.next()) {
-                    (Some(field), None) => match field.ident {
-                        Some(field_ident) => (field.ty, Member::Named(field_ident)),
-                        None => {
-                            return syn::Error::new_spanned(&ident, "SerializeTransparent requires a named or tuple struct containing exactly one field").into_compile_error();
-                        }
-                    },
-                    _ => {
-                        return syn::Error::new_spanned(&ident, "SerializeTransparent requires a struct containing exactly one field").into_compile_error();
-                    }
-                }
-            }
-            Fields::Unnamed(fields) => {
-                let mut fields_iter = fields.unnamed.into_iter();
-                match (fields_iter.next(), fields_iter.next()) {
-                    (Some(field), None) => (field.ty, Member::Unnamed(Index::from(0))),
-                    _ => {
-                        return syn::Error::new_spanned(&ident, "SerializeTransparent requires a struct containing exactly one field").into_compile_error();
-                    }
-                }
-            }
-            Fields::Unit => {
-                return syn::Error::new_spanned(&ident, "SerializeTransparent requires a struct containing exactly one field").into_compile_error();
-            }
-        },
+    let fields = match data {
+        Data::Struct(data) => data.fields,
         Data::Enum(_) => {
             return syn::Error::new_spanned(&ident, "SerializeTransparent does not support enums").into_compile_error();
         }
@@ -1794,6 +1768,26 @@ fn expand_serialize_transparent(input: DeriveInput) -> TokenStream2 {
             return syn::Error::new_spanned(&ident, "SerializeTransparent does not support unions").into_compile_error();
         }
     };
+    let mut fields = fields.into_iter();
+    let (Some(field), None) = (fields.next(), fields.next()) else {
+        return syn::Error::new_spanned(&ident, "SerializeTransparent requires a struct containing exactly one field").into_compile_error();
+    };
+    let member = field
+        .ident
+        .map(Member::Named)
+        .unwrap_or(Member::Unnamed(Index::from(0)));
+    let field_type = field.ty;
+    let mut serializer = format_ident!("__Serializer");
+    let mut serializer_value = format_ident!("__serializer");
+    while generics
+        .type_params()
+        .map(|param| &param.ident)
+        .chain(generics.const_params().map(|param| &param.ident))
+        .any(|ident| ident.unraw() == serializer || ident.unraw() == serializer_value)
+    {
+        serializer = format_ident!("_{serializer}");
+        serializer_value = format_ident!("_{serializer_value}");
+    }
     let where_predicates = generics
         .where_clause
         .as_ref()
@@ -1808,11 +1802,11 @@ fn expand_serialize_transparent(input: DeriveInput) -> TokenStream2 {
             #where_predicates
         {
             #[inline]
-            fn serialize<S>(&self, serializer: S) -> ::core::result::Result<S::Ok, S::Error>
+            fn serialize<#serializer>(&self, #serializer_value: #serializer) -> ::core::result::Result<#serializer::Ok, #serializer::Error>
             where
-                S: ::serde::Serializer,
+                #serializer: ::serde::Serializer,
             {
-                ::serde::Serialize::serialize(&self.#member, serializer)
+                ::serde::Serialize::serialize(&self.#member, #serializer_value)
             }
         }
     }
