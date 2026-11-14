@@ -1647,6 +1647,9 @@ name = "subtype"
 title = "Subtype"
 readme = { generate = false }
 
+[workspace.lints.cargo]
+unused_dependencies = "deny"
+
 [workspace.lints.rust]
 redundant_imports = "deny"
 unused_import_braces = "deny"
@@ -1885,8 +1888,6 @@ mod tests;
 //! * [semval](https://github.com/slowtec/semval)
 //! * [validators](https://crates.io/crates/validators)
 //!
-
-#![cfg_attr(not(test), deny(unused_crate_dependencies))]
 
 mod checkers;
 mod conjurers;

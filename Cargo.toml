@@ -40,6 +40,9 @@ name = "subtype"
 title = "Subtype"
 readme = { generate = false }
 
+[workspace.lints.cargo]
+unused_dependencies = "deny"
+
 [workspace.lints.rust]
 redundant_imports = "deny"
 unused_import_braces = "deny"
